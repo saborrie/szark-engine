@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2036
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "olcPixelGameEngineCSHARP", "olcPixelGameEngineCSHARP\olcPixelGameEngineCSHARP.csproj", "{A05BE9B8-51FC-4147-A29C-E0B95029433D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A05BE9B8-51FC-4147-A29C-E0B95029433D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A05BE9B8-51FC-4147-A29C-E0B95029433D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A05BE9B8-51FC-4147-A29C-E0B95029433D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A05BE9B8-51FC-4147-A29C-E0B95029433D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ABB053CC-D728-4F91-A82C-6F24A1DD4D26}
+	EndGlobalSection
+EndGlobal
