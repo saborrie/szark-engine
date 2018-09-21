@@ -19,5 +19,6 @@ Make Sure to Have System.Drawing in your project
 Add Make Sure to Have OpenTK Installed
 ![alt text](https://i.imgur.com/AALeSw9.gif)
 
+!EPILEPSY WARNING!
 The Example.cs gives you a start!
 https://i.imgur.com/JTVguNg.gif
