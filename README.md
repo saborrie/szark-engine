@@ -8,9 +8,7 @@ https://github.com/OneLoneCoder/olcPixelGameEngine
 Please Refer to the Original Documentation!
 
 You can find me on the One Lone Coder Discord
-@JakubSzark
-My Website: 
-http://jakubszark.com/
+@JakubSzark and my website at http://jakubszark.com/
 
 What has not been ported:
 - FillTriangle()
