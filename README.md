@@ -18,4 +18,4 @@ Add Make Sure to Have OpenTK Installed
 ![alt text](https://i.imgur.com/AALeSw9.gif)
 
 The Example.cs gives you a start!
-![alt text](https://i.imgur.com/JTVguNg.gif)
+https://i.imgur.com/JTVguNg.gif
