@@ -11,7 +11,8 @@ You can find me on the One Lone Coder Discord
 @JakubSzark and my website at http://jakubszark.com/
 
 What has not been ported:
-- FillTriangle()
+- FillTriangle
+- DrawString
 
 How to use:
 - Put the olcPixelGameEngine.cs in your project
