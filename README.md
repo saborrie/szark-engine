@@ -13,6 +13,15 @@ You can find me on the One Lone Coder Discord
 What has not been ported:
 - FillTriangle()
 
+How to use:
+- Put the olcPixelGameEngine.cs in your project
+- (Optional) Put the Example.cs in your project
+V Install Below V
+
+or
+
+ - Just Clone the Project
+
 Make Sure to Have System.Drawing in your project
 ![alt text](https://i.imgur.com/Q0NdfHd.gif)
 
