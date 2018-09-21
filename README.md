@@ -16,7 +16,6 @@ What has not been ported:
 How to use:
 - Put the olcPixelGameEngine.cs in your project
 - (Optional) Put the Example.cs in your project
-V Install Below V
 
 or
 
