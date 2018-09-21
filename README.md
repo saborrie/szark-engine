@@ -8,7 +8,7 @@ Please Refer to the Original Documentation!
 You can find me on the One Lone Coder Discord
 @JakubSzark
 
-What Has not been ported:
+What has not been ported:
 - FillTriangle()
 
 Make Sure to Have System.Drawing in your project
