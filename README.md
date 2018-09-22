@@ -25,7 +25,7 @@ or
 Make Sure to Have System.Drawing in your project
 ![alt text](https://i.imgur.com/Q0NdfHd.gif)
 
-Add Make Sure to Have OpenTK Installed
+And Make Sure to Have OpenTK Installed
 ![alt text](https://i.imgur.com/AALeSw9.gif)
 
 !EPILEPSY WARNING!
