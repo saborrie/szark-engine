@@ -619,13 +619,18 @@ namespace olc
                     Draw(x + i, y + j, sprite.GetPixel(i + ox, j + oy));
         }
 
-        public void DrawString(int x, int y, string text, Pixel col, int spacing = -4)
+        public void DrawString(int x, int y, string text, Pixel col, int spacing = -4, int spaceSize = 6)
         {
             int offset = 0;
             foreach (var c in text)
             {
+                if (char.IsWhiteSpace(c))
+                {
+                    offset += spaceSize;
+                    continue;
+                }
+
                 var index = Characters.IndexOf(c);
-                if (index == -1) continue;
                 var bitmap = alphabet[index];
 
                 for (int i = 0; i < bitmap.Width; i++)
