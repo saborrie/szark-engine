@@ -10,10 +10,6 @@ Please Refer to the Original Documentation!
 You can find me on the One Lone Coder Discord
 @JakubSzark and my website at http://jakubszark.com/
 
-What has not been ported:
-- FillTriangle
-- DrawString
-
 How to use:
 - Put the olcPixelGameEngine.cs in your project
 - (Optional) Put the Example.cs in your project
