@@ -113,8 +113,10 @@ namespace olc
         }
 
         public static Pixel WHITE = new Pixel(255, 255, 255);
-        public static Pixel GREY = new Pixel(100, 100, 100, 100);
-        public static Pixel BLACK = new Pixel(0, 0, 0, 0);
+        public static Pixel GREY = new Pixel(192, 192, 192);
+        public static Pixel BLACK = new Pixel(0, 0, 0);
+
+        public static Pixel BLANK = new Pixel(0, 0, 0, 0);
 
         public static Pixel RED = new Pixel(255, 0, 0);
         public static Pixel GREEN = new Pixel(0, 255, 0);
@@ -123,6 +125,22 @@ namespace olc
         public static Pixel YELLOW = new Pixel(255, 255, 0);
         public static Pixel MAGENTA = new Pixel(255, 0, 255);
         public static Pixel CYAN = new Pixel(0, 255, 255);
+
+        public static Pixel DARK_GREY = new Pixel(128, 128, 128);
+        public static Pixel DARK_RED = new Pixel(128, 0, 0);
+        public static Pixel DARK_YELLOW = new Pixel(128, 128, 0);
+        public static Pixel DARK_GREEN = new Pixel(0, 128, 0);
+        public static Pixel DARK_CYAN = new Pixel(0, 128, 128);
+        public static Pixel DARK_BLUE = new Pixel(0, 0, 128);
+        public static Pixel DARK_MAGENTA = new Pixel(128, 0, 128);
+
+        public static Pixel VERY_DARK_GREY = new Pixel(64, 64, 64);
+        public static Pixel VERY_DARK_RED = new Pixel(64, 0, 0);
+        public static Pixel VERY_DARK_YELLOW = new Pixel(64, 64, 0);
+        public static Pixel VERY_DARK_GREEN = new Pixel(0, 64, 0);
+        public static Pixel VERY_DARK_CYAN = new Pixel(0, 64, 64);
+        public static Pixel VERY_DARK_BLUE = new Pixel(0, 0, 64);
+        public static Pixel VERY_DARK_MAGENTA = new Pixel(64, 0, 64);
 
         public uint ToInt() =>
             (uint)((r << 0) | (g << 8) | (b << 16) | (a << 24));
@@ -380,36 +398,25 @@ namespace olc
             return Mouse.GetState().IsButtonUp(button);
         }
 
-        public int GetMouseX() { return Mouse.GetState().X; }
-        public int GetMouseY() { return Mouse.GetState().Y; }
+        public int GetMouseX() => Mouse.GetState().X;
+        public int GetMouseY() => Mouse.GetState().Y;
 
-        public int ScreenWidth() {
-            return nScreenWidth;
+        public int ScreenWidth() => nScreenWidth;
+        public int ScreenHeight() => nScreenHeight;
+
+        public int GetDrawTargetWidth() => drawTarget.width;
+        public int GetDrawTargetHeight() => drawTarget.height;
+
+        public Sprite GetDrawTarget() => drawTarget;
+
+        public void SetDrawTarget(Sprite target)
+        {
+            if (target != null) drawTarget = target;
+            else drawTarget = new Sprite(nScreenWidth, nScreenHeight);
         }
 
-        public int ScreenHeight() {
-            return nScreenHeight;
-        }
-
-        public int GetDrawTargetWidth() {
-            return drawTarget.width;
-        }
-
-        public int GetDrawTargetHeight() {
-            return drawTarget.height;
-        }
-
-        public Sprite GetDrawTarget() {
-            return drawTarget;
-        }
-
-        public void SetDrawTarget(Sprite target) {
-            drawTarget = target;
-        }
-
-        public void SetPixelMode(Pixel.Mode mode) {
+        public void SetPixelMode(Pixel.Mode mode) => 
             pixelMode = mode;
-        }
 
         public void SetPixelBlend(float fBlend)
         {
@@ -418,26 +425,33 @@ namespace olc
             if (fBlendFactor > 1.0f) fBlendFactor = 1.0f;
         }
 
-        public virtual void Draw(int x, int y, Pixel p) {
+        public virtual void Draw(int x, int y, Pixel p) => 
             drawTarget.SetPixel(x, y, p);
-        }
 
         public void DrawLine(int x1, int y1, int x2, int y2, Pixel p)
         {
-            int dx, dy;
+            float x, y;
+            float step;
 
-            dx = x2 - x1;
-            dy = y2 - y1;
+            float dx = x2 - x1;
+            float dy = y2 - y1;
 
-            if (dx != 0)
-            {
-                for (int x = 0; x < dx; x++)
-                    Draw(x + x1, y1 + dy * (x - x1) / dx, p);
-            }
+            if (Math.Abs(dx) >= Math.Abs(dy))
+                step = Math.Abs(dx);
             else
+                step = Math.Abs(dy);
+
+            dx /= step;
+            dy /= step;
+
+            x = x1;
+            y = y1;
+
+            for (int i = 1; i <= step; i++)
             {
-                for (int y = 0; y < dy; y++)
-                    Draw(x1, y + y1, p);
+                Draw((int)x, (int)y, p);
+                x += dx;
+                y += dy;
             }
         }
 
@@ -517,8 +531,7 @@ namespace olc
             int y0 = r / 2;
 
             Action<int, int, int> drawStraight;
-            drawStraight = (int sx, int ex, int ny) =>
-            {
+            drawStraight = (int sx, int ex, int ny) => {
                 for (int i = sx; i <= ex; i++) Draw(i, ny, p);
             };
 
@@ -538,13 +551,27 @@ namespace olc
         {
             DrawLine(x1, y1, x2, y2, p);
             DrawLine(x2, y2, x3, y3, p);
-            DrawLine(x3, y3, x1, y1, p);
+            DrawLine(x1, y1, x3, y3, p);
         }
 
         public void FillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Pixel p)
         {
+            DrawTriangle(x1, y1, x2, y2, x3, y3, p);
 
+            int xL = 0;
+            int yL = 0;
+
+            var sideLength = (int)Distance(x2, y2, x3, y3);
+            for (int i = 0; i < sideLength; i++)
+            {
+                xL = (i / sideLength) * x3;
+                yL = (i / sideLength) * y3;
+                DrawLine(x1, y1, xL, yL, p);
+            }
         }
+
+        private float Distance(int x1, int y1, int x2, int y2) =>
+            (float)Math.Sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 
         public void DrawSprite(int x, int y, Sprite sprite)
         {
