@@ -1,7 +1,7 @@
 ﻿using System;
 using olc;
 
-namespace MyGame
+namespace Example
 {
     class Game : PixelGameEngine
     {

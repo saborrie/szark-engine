@@ -264,7 +264,7 @@ namespace olc
         private Bitmap[] alphabet;
         private const string Characters = @"qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVB" + 
             @"NM0123456789µ§½!""#¤%&/()=?^*@£€${[]}\~¨'-_.:,;<>|°©®±¥+";
-        Font font = new Font("Arial", 16);
+        Font font = new Font("Arial", 9);
 
         public bool IsFocused { get; }
 
