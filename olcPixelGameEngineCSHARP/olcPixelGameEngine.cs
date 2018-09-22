@@ -97,7 +97,6 @@ using OpenTK.Graphics;
 using OpenTK.Input;
 using System.Drawing;
 using System;
-using System.Collections.Generic;
 
 namespace olc
 {
@@ -264,7 +263,7 @@ namespace olc
 
         private Bitmap[] alphabet;
         private const string Characters = @"qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVB" + 
-            @"NM0123456789µ§½!""#¤%&/()=?^*@£€${[]}\~¨'-_.:,;<>|°©®±¥";
+            @"NM0123456789µ§½!""#¤%&/()=?^*@£€${[]}\~¨'-_.:,;<>|°©®±¥+";
         Font font = new Font("Arial", 16);
 
         public bool IsFocused { get; }
@@ -624,7 +623,7 @@ namespace olc
             int offset = 0;
             foreach (var c in text)
             {
-                if (char.IsWhiteSpace(c))
+                if (c == ' ')
                 {
                     offset += spaceSize;
                     continue;
@@ -647,9 +646,8 @@ namespace olc
             }
         }
 
-        public void Clear(Pixel p) {
+        public void Clear(Pixel p) =>
             FillRect(0, 0, nScreenWidth, nScreenHeight, p);
-        }
 
         private Bitmap GenerateCharacter(Font font, char c)
         {
