@@ -22,7 +22,9 @@ namespace MyGame
             //    for (int j = 0; j < ScreenHeight(); j++)
             //        Draw(i, j, new Pixel((byte)r.Next(255), (byte)r.Next(255), (byte)r.Next(255)));
 
-            FillTriangle(0, 0, 0, 32, 32, 16, Pixel.RED);
+            DrawString(0, 0, "the red fox", Pixel.RED);
+            DrawString(0, 24, "jumps over the", Pixel.WHITE);
+            DrawString(0, 48, "lazy brown dog", Pixel.BLUE);
         }
 
         protected override void OnUserDestroy()
