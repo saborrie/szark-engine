@@ -1,48 +1,10 @@
 ﻿/*
+  	Whats This?
+	~~~~~~~~~~~
+    A Port for the olcPixelGameEngine from C++ to C#
+  
 	olcPixelGameEngine.cs
 
-	+-------------------------------------------------------------+
-	|           OneLoneCoder Pixel Game Engine v1.2               |
-	| "Like the command prompt console one, but not..." - javidx9 |
-	+-------------------------------------------------------------+
-
-	What is this?
-	~~~~~~~~~~~~~
-	The olcConsoleGameEngine has been a surprsing and wonderful
-	success for me, and I'm delighted how people have reacted so
-	positively towards it, so thanks for that.
-	However, there are limitations that I simply cannot avoid.
-	Firstly, I need to maintain several different versions of
-	it to accommodate users on Windows7, 8, 10, Linux, Mac,
-	Visual Studio & Code::Blocks. Secondly, this year I've been
-	pushing the console to the limits of its graphical capabilities
-	and the effect is becoming underwhelming. The engine itself
-	is not slow at all, but the process that Windows uses to
-	draw the command prompt to the screen is, and worse still,
-	it's dynamic based upon the variation of character colours
-	and glyphs. Sadly I have no control over this, and recent
-	videos that are extremely graphical (for a command prompt :P )
-	have been dipping to unacceptable framerates. As the channel
-	has been popular with aspiring game developers, I'm concerned
-	that the visual appeal of the command prompt is perhaps
-	limited to us oldies, and I dont want to alienate younger
-	learners. Finally, I'd like to demonstrate many more
-	algorithms and image processing that exist in the graphical
-	domain, for which the console is insufficient.
-	For this reason, I have created olcPixelGameEngine! The look
-	and feel to the programmer is almost identical, so all of my
-	existing code from the videos is easily portable, and the
-	programmer uses this file in exactly the same way. But I've
-	decided that rather than just build a command prompt emulator,
-	that I would at least harness some modern(ish) portable
-	technologies.
-	As a result, the olcPixelGameEngine supports 32-bit colour, is
-	written in a cross-platform style, uses modern(ish) C++
-	conventions and most importantly, renders much much faster. I
-	will use this version when my applications are predominantly
-	graphics based, but use the console version when they are
-	predominantly text based - Don't worry, loads more command
-	prompt silliness to come yet, but evolution is important!!
 	License (OLC-3)
 	~~~~~~~~~~~~~~~
 	Copyright 2018 OneLoneCoder.com
@@ -69,6 +31,7 @@
 	THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 	Links
 	~~~~~
 	YouTube:	https://www.youtube.com/javidx9
@@ -77,17 +40,10 @@
 	Twitch:		https://www.twitch.tv/javidx9
 	GitHub:		https://www.github.com/onelonecoder
 	Homepage:	https://www.onelonecoder.com
-	Relevant Videos
-	~~~~~~
-	I'd like to extend thanks to Eremiell, slavka, Phantim, JackOJC,
-	KrossX, Huhlig, Dragoneye, Appa & MagetzUb for advice, ideas and testing,
-	and I'd like to extend my appreciation to the 13K YouTube followers
-	and 1K Discord server members who give me the motivation to keep
-	going with all this :D
+
 	Author
 	~~~~~~
 	David Barr, aka javidx9, ©OneLoneCoder 2018
-
     Ported By: Jakub P. Szarkowicz / JakubSzark
 */
 
@@ -97,9 +53,14 @@ using OpenTK.Graphics;
 using OpenTK.Input;
 using System.Drawing;
 using System;
+using System.IO;
 
 namespace olc
 {
+    /// <summary>
+    /// A struct containing RGBA information for a pixel.
+    /// This also can be used for representing color
+    /// </summary>
     struct Pixel
     {
         public byte r, g, b, a;
@@ -142,6 +103,12 @@ namespace olc
         public static Pixel VERY_DARK_BLUE = new Pixel(0, 0, 64);
         public static Pixel VERY_DARK_MAGENTA = new Pixel(64, 0, 64);
 
+        public static Pixel Lerp(Pixel a, Pixel b, float t)
+        {
+            return new Pixel((byte)((1 - t) * a.r + t * b.r), (byte)((1 - t) * a.g + t * b.g),
+                (byte)((1 - t) * a.b + t * b.b), (byte)((1 - t) * a.a + t * b.a));
+        }
+
         public uint ToInt() =>
             (uint)((r << 0) | (g << 8) | (b << 16) | (a << 24));
 
@@ -178,27 +145,33 @@ namespace olc
                 pixelData[i] = new Pixel();
         }
 
-        public Sprite(string name)
+        public Sprite(string path)
         {
-            Image image = Image.FromFile(name);
-            Bitmap b = new Bitmap(image);
-            width = b.Width;
-            height = b.Height;
-
-            pixelData = new Pixel[width * height];
-
-            for (var x = 0; x < b.Width; x++)
+            try
             {
-                for (var y = 0; y < b.Height; y++)
-                {
-                    var p = b.GetPixel(x, y);
-                    var col = new Pixel(p.R, p.G, p.B, p.A);
-                    SetPixel(x, y, col);
-                }
-            }
+                Image image = Image.FromFile(path);
+                Bitmap b = new Bitmap(image);
+                width = b.Width;
+                height = b.Height;
 
-            image.Dispose();
-            b.Dispose();
+                pixelData = new Pixel[width * height];
+
+                for (var x = 0; x < b.Width; x++)
+                {
+                    for (var y = 0; y < b.Height; y++)
+                    {
+                        var p = b.GetPixel(x, y);
+                        var col = new Pixel(p.R, p.G, p.B, p.A);
+                        SetPixel(x, y, col);
+                    }
+                }
+
+                image.Dispose();
+                b.Dispose();
+            }
+            catch(FileNotFoundException) {
+                Console.WriteLine($"[ERROR]: Image / File not found at\n \"{path}\"");
+            }
         }
 
         public Pixel[] GetPixels() => pixelData;
@@ -214,7 +187,7 @@ namespace olc
         public Pixel GetPixel(int x, int y)
         {
             if (x >= 0 && x < width && y >= 0 && y < height)
-                return pixelData[x * width + y];
+                return pixelData[y * width + x];
             else
                 return new Pixel();
         }
@@ -240,7 +213,7 @@ namespace olc
         private Pixel.Mode pixelMode = 
             Pixel.Mode.NORMAL;
 
-        private float fBlendFactor = 1.0f;
+        private float fBlendFactor = 0.5f;
 
         private int nScreenWidth = 256;
         private int nScreenHeight = 240;
@@ -280,7 +253,7 @@ namespace olc
 
             title = "OLC Pixel Game Engine (C# Edition)";
             gameWindow = new GameWindow(sWidth * pWidth, sHeight * pHeight,
-                GraphicsMode.Default, "");
+                GraphicsMode.Default, title + " - " + sAppName);
 
             gameWindow.RenderFrame += Render;
             gameWindow.Load += Loaded;
@@ -430,8 +403,22 @@ namespace olc
             if (fBlendFactor > 1.0f) fBlendFactor = 1.0f;
         }
 
-        public virtual void Draw(int x, int y, Pixel p) => 
+        public virtual void Draw(int x, int y, Pixel p)
+        {
+            if (pixelMode == Pixel.Mode.ALPHA && p.a < 255)
+            {
+                var d = drawTarget.GetPixel(x, y);
+                var n = Pixel.Lerp(p, d, fBlendFactor * 1 - (p.a / 255f));
+                drawTarget.SetPixel(x, y, new Pixel(n.r, n.g, n.b, 
+                    (byte)((d.a + p.a) / 2f)));
+                return;
+            }
+
+            if (pixelMode == Pixel.Mode.MASK && p.a < 255)
+                return;
+
             drawTarget.SetPixel(x, y, p);
+        }
 
         public void DrawLine(int x1, int y1, int x2, int y2, Pixel p, int thickness = 1)
         {

@@ -12,7 +12,7 @@ namespace Example
 
         protected override void OnUserCreate()
         {
-            
+
         }
 
         protected override void OnUserUpdate(float fElapsedTime)
