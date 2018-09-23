@@ -65,6 +65,15 @@ namespace olc
     {
         public byte r, g, b, a;
 
+        /// <summary>
+        /// The Constructor for a Pixel in RGBA Form
+        /// Alpha is not required and will just render
+        /// completely opaque.
+        /// </summary>
+        /// <param name="r">Red</param>
+        /// <param name="g">Green</param>
+        /// <param name="b">Blue</param>
+        /// <param name="a">Alpha</param>
         public Pixel(byte r, byte g, byte b, byte a = 255)
         {
             this.r = r;
@@ -73,46 +82,66 @@ namespace olc
             this.a = a;
         }
 
+        // Greyscale Colors
+        public static Pixel BLANK = new Pixel(0, 0, 0, 0);
         public static Pixel WHITE = new Pixel(255, 255, 255);
         public static Pixel GREY = new Pixel(192, 192, 192);
         public static Pixel BLACK = new Pixel(0, 0, 0);
 
-        public static Pixel BLANK = new Pixel(0, 0, 0, 0);
+        public static Pixel DARK_GREY = new Pixel(128, 128, 128);
 
+        public static Pixel VERY_DARK_GREY = new Pixel(64, 64, 64);
+
+        // RGB Colors
         public static Pixel RED = new Pixel(255, 0, 0);
         public static Pixel GREEN = new Pixel(0, 255, 0);
         public static Pixel BLUE = new Pixel(0, 0, 255);
 
+        public static Pixel DARK_RED = new Pixel(128, 0, 0);
+        public static Pixel DARK_GREEN = new Pixel(0, 128, 0);
+        public static Pixel DARK_BLUE = new Pixel(0, 0, 128);
+
+        public static Pixel VERY_DARK_RED = new Pixel(64, 0, 0);
+        public static Pixel VERY_DARK_GREEN = new Pixel(0, 64, 0);
+        public static Pixel VERY_DARK_BLUE = new Pixel(0, 0, 64);
+
+        // YMK Colors
         public static Pixel YELLOW = new Pixel(255, 255, 0);
         public static Pixel MAGENTA = new Pixel(255, 0, 255);
         public static Pixel CYAN = new Pixel(0, 255, 255);
 
-        public static Pixel DARK_GREY = new Pixel(128, 128, 128);
-        public static Pixel DARK_RED = new Pixel(128, 0, 0);
         public static Pixel DARK_YELLOW = new Pixel(128, 128, 0);
-        public static Pixel DARK_GREEN = new Pixel(0, 128, 0);
-        public static Pixel DARK_CYAN = new Pixel(0, 128, 128);
-        public static Pixel DARK_BLUE = new Pixel(0, 0, 128);
         public static Pixel DARK_MAGENTA = new Pixel(128, 0, 128);
+        public static Pixel DARK_CYAN = new Pixel(0, 128, 128);
 
-        public static Pixel VERY_DARK_GREY = new Pixel(64, 64, 64);
-        public static Pixel VERY_DARK_RED = new Pixel(64, 0, 0);
         public static Pixel VERY_DARK_YELLOW = new Pixel(64, 64, 0);
-        public static Pixel VERY_DARK_GREEN = new Pixel(0, 64, 0);
-        public static Pixel VERY_DARK_CYAN = new Pixel(0, 64, 64);
-        public static Pixel VERY_DARK_BLUE = new Pixel(0, 0, 64);
         public static Pixel VERY_DARK_MAGENTA = new Pixel(64, 0, 64);
+        public static Pixel VERY_DARK_CYAN = new Pixel(0, 64, 64);
+        
 
-        public static Pixel Lerp(Pixel a, Pixel b, float t)
-        {
-            return new Pixel((byte)((1 - t) * a.r + t * b.r), (byte)((1 - t) * a.g + t * b.g),
+        /// <summary>
+        /// Interpolates Two Pixels based on T between 0 to 1
+        /// </summary>
+        /// <param name="a">First Pixel</param>
+        /// <param name="b">Second Pixel</param>
+        /// <param name="t">Alpha</param>
+        /// <returns>The Blended Pixel</returns>
+        public static Pixel Lerp(Pixel a, Pixel b, float t) =>
+            new Pixel((byte)((1 - t) * a.r + t * b.r), (byte)((1 - t) * a.g + t * b.g),
                 (byte)((1 - t) * a.b + t * b.b), (byte)((1 - t) * a.a + t * b.a));
-        }
 
+        /// <summary>
+        /// Converts a Pixel in a UInt
+        /// </summary>
+        /// <returns>A UInt that represents a Pixel</returns>
         public uint ToInt() =>
             (uint)((r << 0) | (g << 8) | (b << 16) | (a << 24));
 
-        public void ToColor(uint i)
+        /// <summary>
+        /// Converts a UInt to a Pixel
+        /// </summary>
+        /// <param name="i">The UInt</param>
+        public void ToPixel(uint i)
         {
             r = (byte)(i >> 0);
             g = (byte)(i >> 8);
@@ -120,6 +149,12 @@ namespace olc
             g = (byte)(i >> 24);
         }
 
+        /// <summary>
+        /// The Alpha 'Blending' Modes
+        /// Normal - Alpha has no Affect
+        /// Mask - Any Alpha below 255 doesn't get rendered
+        /// Alpha - 'Proper' Alpha Blending
+        /// </summary>
         public enum Mode
         {
             NORMAL,
@@ -128,13 +163,20 @@ namespace olc
         }
     }
 
+    /// <summary>
+    /// A Class that contains an Array of Pixels
+    /// and may Represent an Image
+    /// </summary>
     class Sprite
     {
-        public int width;
-        public int height;
-
+        public int width, height;
         private Pixel[] pixelData;
 
+        /// <summary>
+        /// Constructor for a Blank Sprite
+        /// </summary>
+        /// <param name="width">Width</param>
+        /// <param name="height">Height</param>
         public Sprite(int width, int height)
         {
             this.width = width;
@@ -145,6 +187,11 @@ namespace olc
                 pixelData[i] = new Pixel();
         }
 
+        /// <summary>
+        /// Constructor for a Sprite that will
+        /// be retrieved from a file on the computer
+        /// </summary>
+        /// <param name="path">The Path on the Computer</param>
         public Sprite(string path)
         {
             try
@@ -174,8 +221,17 @@ namespace olc
             }
         }
 
+        /// <summary>
+        /// The Whole Array of Pixels
+        /// </summary>
+        /// <returns>A Pixel Array</returns>
         public Pixel[] GetPixels() => pixelData;
 
+        /// <summary>
+        /// The Whole Array of Pixels each converted
+        /// to UInts
+        /// </summary>
+        /// <returns>A UInt Array</returns>
         public uint[] GetData()
         {
             uint[] data = new uint[pixelData.Length];
@@ -184,6 +240,12 @@ namespace olc
             return data;
         }
 
+        /// <summary>
+        /// Retrieves a Pixel from the Sprite
+        /// </summary>
+        /// <param name="x">X</param>
+        /// <param name="y">Y</param>
+        /// <returns>A Pixel</returns>
         public Pixel GetPixel(int x, int y)
         {
             if (x >= 0 && x < width && y >= 0 && y < height)
@@ -192,12 +254,24 @@ namespace olc
                 return new Pixel();
         }
 
-        public void SetPixel(int x, int y, Pixel color)
+        /// <summary>
+        /// Sets a Pixel in the Sprite
+        /// </summary>
+        /// <param name="x">X</param>
+        /// <param name="y">Y</param>
+        /// <param name="color">Pixel Replacement</param>
+        public void SetPixel(int x, int y, Pixel p)
         {
             if (x >= 0 && x < width && y >= 0 && y < height)
-                pixelData[y * width + x] = color;
+                pixelData[y * width + x] = p;
         }
 
+        /// <summary>
+        /// Samples a Position of the Sprite
+        /// </summary>
+        /// <param name="x">X</param>
+        /// <param name="y">Y</param>
+        /// <returns>A Pixel</returns>
         public Pixel Sample(float x, float y)
         {
             int sx = (int)(x * width);
@@ -206,6 +280,11 @@ namespace olc
         }
     }
 
+    /// <summary>
+    /// The main engine with all Open GL and Drawing
+    /// Methods. Derive from this class to access the engine.
+    /// Make sure to construct the Engine and Call Start
+    /// </summary>
     class PixelGameEngine
     {
         public string sAppName = "";
@@ -213,24 +292,23 @@ namespace olc
         private Pixel.Mode pixelMode = 
             Pixel.Mode.NORMAL;
 
-        private float fBlendFactor = 0.5f;
+        private float blendFactor = 0.5f;
 
-        private int nScreenWidth = 256;
-        private int nScreenHeight = 240;
+        private int screenWidth = 256;
+        private int screenHeight = 240;
 
-        private int nPixelWidth = 4;
-        private int nPixelHeight = 4;
+        private int pixelWidth = 4;
+        private int pixelHeight = 4;
 
-        private int fps;
-        private int fpsCheck;
+        private int fps, fpsCheck;
 
-        private bool bHasStarted = false;
+        private bool bHasStarted;
 
         private string title;
 
         private int glBuffer;
-        private GameWindow gameWindow;
 
+        private GameWindow gameWindow;
         private KeyboardState keyboardState,
             lastKeyboardState;
 
@@ -241,14 +319,24 @@ namespace olc
 
         public bool IsFocused { get; }
 
+        /// <summary>
+        /// Creates a Window and Starts OpenGL. This needs to
+        /// be called before calling start.
+        /// </summary>
+        /// <param name="sWidth">Width of the Screen</param>
+        /// <param name="sHeight">Height of the Screen</param>
+        /// <param name="pWidth">Width of Each Pixel</param>
+        /// <param name="pHeight">Height of Each Pixel</param>
+        /// <param name="fps">FPS to Run At</param>
+        /// <returns>If Construction of Success</returns>
         public bool Construct(int sWidth, int sHeight, int pWidth, int pHeight, int fps = -1)
         {
             if (bHasStarted) return false;
 
-            nScreenWidth = sWidth;
-            nScreenHeight = sHeight;
-            nPixelWidth = pWidth;
-            nPixelHeight = pHeight;
+            screenWidth = sWidth;
+            screenHeight = sHeight;
+            pixelWidth = pWidth;
+            pixelHeight = pHeight;
             this.fps = fps;
 
             title = "OLC Pixel Game Engine (C# Edition)";
@@ -277,10 +365,8 @@ namespace olc
                     drawTarget.GetData());
 
             // Enable Transparency
-
             GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactor.SrcAlpha,
-                BlendingFactor.OneMinusSrcAlpha);
+            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
             // Setup Texture Parameters to have clean pixels with no filters
 
@@ -296,6 +382,10 @@ namespace olc
             return true;
         }
 
+        /// <summary>
+        /// Starts the Engine. Requires Construct to be
+        /// called before hand.
+        /// </summary>
         public void Start()
         {
             bHasStarted = true;
@@ -303,27 +393,27 @@ namespace olc
             else if (fps > 0) gameWindow.Run(fps);
         }
 
+        // Keeps the Window the Same Size
         private void Resize(object sender, EventArgs e)
         {
-            gameWindow.Width = nScreenWidth * nPixelWidth;
-            gameWindow.Height = nScreenHeight * nPixelHeight;
+            gameWindow.Width = screenWidth * pixelWidth;
+            gameWindow.Height = screenHeight * pixelHeight;
         }
 
-        private void Loaded(object sender, EventArgs e) {
-            OnUserCreate();
-        }
+        // On Window Loaded
+        private void Loaded(object sender, EventArgs e) => OnUserCreate();
 
-        private void Disposed(object sender, EventArgs e) {
-            OnUserDestroy();
-        }
+        // On Window Disposed
+        private void Disposed(object sender, EventArgs e) => OnUserDestroy();
 
+        // On Window Render Frame
         private void Render(object sender, FrameEventArgs e)
         {
             if (!bHasStarted) return;
 
             keyboardState = Keyboard.GetState();
 
-            GL.Viewport(0, 0, drawTarget.width * nPixelWidth, drawTarget.height * nPixelHeight);
+            GL.Viewport(0, 0, drawTarget.width * pixelWidth, drawTarget.height * pixelHeight);
             var targetPixels = drawTarget.GetData();
 
             if (fpsCheck++ * e.Time > 1)
@@ -336,7 +426,7 @@ namespace olc
             // Draw the Graphics on the Screen
             OnUserUpdate((float)e.Time);
 
-            GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, nScreenWidth, nScreenHeight,
+            GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, screenWidth, screenHeight,
                 PixelFormat.Rgba, PixelType.UnsignedByte, targetPixels);
 
             GL.Begin(PrimitiveType.Quads);
@@ -351,64 +441,132 @@ namespace olc
             lastKeyboardState = keyboardState;
         }
 
-        // Called once on application startup, use to load your resources
+        /// <summary>
+        /// Called once on application startup, use to load your resources
+        /// </summary>
         protected virtual void OnUserCreate() { }
 
-        // Called every frame, and provides you with a time per frame value
+        /// <summary>
+        /// Called every frame, and provides you with a time per frame value
+        /// </summary>
+        /// <param name="fElapsedTime">Engine Time</param>
         protected virtual void OnUserUpdate(float fElapsedTime) { }
 
-        // Called once on application termination, so you can be a clean coder
+        /// <summary>
+        /// Called once on application termination, so you can be a clean coder
+        /// </summary>
         protected virtual void OnUserDestroy() { }
 
-        public bool GetKeyHeld(Key key) {
-            return keyboardState[key];
-        }
+        /// <summary>
+        /// Checks if a Key is Held
+        /// </summary>
+        /// <param name="key">The Key</param>
+        /// <returns>Is Held?</returns>
+        public bool GetKeyHeld(Key key) => keyboardState[key];
 
-        public bool GetKeyDown(Key key) {
-            return keyboardState[key] && (keyboardState[key] != lastKeyboardState[key]);
-        }
+        /// <summary>
+        /// Check if a Key is Pressed Once
+        /// </summary>
+        /// <param name="key">The Key</param>
+        /// <returns>Was Pressed?</returns>
+        public bool GetKeyDown(Key key) =>
+            keyboardState[key] && (keyboardState[key] != lastKeyboardState[key]);
 
-        public bool GetMouseDown(MouseButton button) {
-            return Mouse.GetState().IsButtonDown(button);
-        }
+        /// <summary>
+        /// Checks if Mouse is Down
+        /// </summary>
+        /// <param name="button">The Button</param>
+        /// <returns>Is Down?</returns>
+        public bool GetMouseDown(MouseButton button) =>
+            Mouse.GetState().IsButtonDown(button);
 
-        public bool GetMouseUp(MouseButton button) {
-            return Mouse.GetState().IsButtonUp(button);
-        }
+        /// <summary>
+        /// Checks if Mouse is Up
+        /// </summary>
+        /// <param name="button">The Button</param>
+        /// <returns>Is Up?</returns>
+        public bool GetMouseUp(MouseButton button) =>
+            Mouse.GetState().IsButtonUp(button);
 
+        /// <summary>
+        /// Gets the Mouse Relative X Position
+        /// </summary>
+        /// <returns>Relative X Position</returns>
         public int GetMouseX() => Mouse.GetState().X;
+
+        /// <summary>
+        /// Gets the Mouse Relative Y Position
+        /// </summary>
+        /// <returns>Relative Y Position</returns>
         public int GetMouseY() => Mouse.GetState().Y;
 
-        public int ScreenWidth() => nScreenWidth;
-        public int ScreenHeight() => nScreenHeight;
+        /// <summary>
+        /// Gets the Screen Width
+        /// </summary>
+        /// <returns>Screen Width</returns>
+        public int ScreenWidth() => screenWidth;
 
+        /// <summary>
+        /// Gets the Screen Height
+        /// </summary>
+        /// <returns>Screen Height</returns>
+        public int ScreenHeight() => screenHeight;
+
+        /// <summary>
+        /// Returns the Draw Target Width
+        /// </summary>
+        /// <returns>Draw Target Width</returns>
         public int GetDrawTargetWidth() => drawTarget.width;
+
+        /// <summary>
+        /// Return the Draw Target Height
+        /// </summary>
+        /// <returns>Draw Target Height</returns>
         public int GetDrawTargetHeight() => drawTarget.height;
 
+        /// <summary>
+        /// Returns the Actual Draw Target
+        /// </summary>
+        /// <returns>Draw Target</returns>
         public Sprite GetDrawTarget() => drawTarget;
 
+        /// <summary>
+        /// Set the Draw Target. If Target is null
+        /// Creates a new Draw Target.
+        /// </summary>
+        /// <param name="target">The New Target</param>
         public void SetDrawTarget(Sprite target)
         {
             if (target != null) drawTarget = target;
-            else drawTarget = new Sprite(nScreenWidth, nScreenHeight);
+            else drawTarget = new Sprite(screenWidth, screenHeight);
         }
 
+        /// <summary>
+        /// Sets the Alpha Blending Mode
+        /// </summary>
+        /// <param name="mode">The Mode</param>
         public void SetPixelMode(Pixel.Mode mode) => 
             pixelMode = mode;
 
-        public void SetPixelBlend(float fBlend)
-        {
-            fBlendFactor = fBlend;
-            if (fBlendFactor < 0.0f) fBlendFactor = 0.0f;
-            if (fBlendFactor > 1.0f) fBlendFactor = 1.0f;
-        }
+        /// <summary>
+        /// Sets the Alpha Blend Factor
+        /// </summary>
+        /// <param name="fBlend">The Factor</param>
+        public void SetPixelBlend(float fBlend) =>
+            blendFactor = fBlend < 0 ? 0 : fBlend > 1 ? 1 : fBlend;
 
+        /// <summary>
+        /// Draws a Pixel on the Screen
+        /// </summary>
+        /// <param name="x">X</param>
+        /// <param name="y">Y</param>
+        /// <param name="p">Color</param>
         public virtual void Draw(int x, int y, Pixel p)
         {
             if (pixelMode == Pixel.Mode.ALPHA && p.a < 255)
             {
                 var d = drawTarget.GetPixel(x, y);
-                var n = Pixel.Lerp(p, d, fBlendFactor * 1 - (p.a / 255f));
+                var n = Pixel.Lerp(p, d, blendFactor * 1 - (p.a / 255f));
                 drawTarget.SetPixel(x, y, new Pixel(n.r, n.g, n.b, 
                     (byte)((d.a + p.a) / 2f)));
                 return;
@@ -420,6 +578,15 @@ namespace olc
             drawTarget.SetPixel(x, y, p);
         }
 
+        /// <summary>
+        /// Draws a Line
+        /// </summary>
+        /// <param name="x1">X1</param>
+        /// <param name="y1">Y1</param>
+        /// <param name="x2">X2</param>
+        /// <param name="y2">Y2</param>
+        /// <param name="p">Color</param>
+        /// <param name="thickness">Thickness</param>
         public void DrawLine(int x1, int y1, int x2, int y2, Pixel p, int thickness = 1)
         {
             float x, y;
@@ -457,6 +624,14 @@ namespace olc
             }
         }
 
+        /// <summary>
+        /// Draws a Rectangle Outline
+        /// </summary>
+        /// <param name="x">X</param>
+        /// <param name="y">Y</param>
+        /// <param name="w">Width</param>
+        /// <param name="h">Height</param>
+        /// <param name="p">Color</param>
         public void DrawRect(int x, int y, int w, int h, Pixel p)
         {
             if (w < 0)
@@ -471,6 +646,14 @@ namespace olc
             DrawLine(x, y, x, y + h, p);
         }
 
+        /// <summary>
+        /// Draws a Filled In Rectangle
+        /// </summary>
+        /// <param name="x">X</param>
+        /// <param name="y">Y</param>
+        /// <param name="w">Width</param>
+        /// <param name="h">Height</param>
+        /// <param name="p">Color</param>
         public void FillRect(int x, int y, int w, int h, Pixel p)
         {
             int x2 = x + w;
@@ -489,6 +672,13 @@ namespace olc
                     Draw(i, j, p);
         }
 
+        /// <summary>
+        /// Draws a Circle Outline
+        /// </summary>
+        /// <param name="x">X</param>
+        /// <param name="y">Y</param>
+        /// <param name="r">Radius</param>
+        /// <param name="p">Color</param>
         public void DrawCircle(int x, int y, int r, Pixel p)
         {
             if (r == 0) return;
@@ -518,6 +708,13 @@ namespace olc
             }
         }
 
+        /// <summary>
+        /// Draws a Filled in Circle
+        /// </summary>
+        /// <param name="x">X</param>
+        /// <param name="y">Y</param>
+        /// <param name="r">Radius</param>
+        /// <param name="p">Color</param>
         public void FillCircle(int x, int y, int r, Pixel p)
         {
             if (r == 0) return;
@@ -549,6 +746,16 @@ namespace olc
             }
         }
 
+        /// <summary>
+        /// Draw a Triangle Outline
+        /// </summary>
+        /// <param name="x1">X1</param>
+        /// <param name="y1">Y1</param>
+        /// <param name="x2">X2</param>
+        /// <param name="y2">Y2</param>
+        /// <param name="x3">X3</param>
+        /// <param name="y3">Y3</param>
+        /// <param name="p">Color</param>
         public void DrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Pixel p)
         {
             DrawLine(x1, y1, x2, y2, p);
@@ -556,6 +763,16 @@ namespace olc
             DrawLine(x1, y1, x3, y3, p);
         }
 
+        /// <summary>
+        /// Draws a Filled In Triangle
+        /// </summary>
+        /// <param name="x1">X1</param>
+        /// <param name="y1">Y1</param>
+        /// <param name="x2">X2</param>
+        /// <param name="y2">Y2</param>
+        /// <param name="x3">X3</param>
+        /// <param name="y3">Y3</param>
+        /// <param name="p">Color</param>
         public void FillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Pixel p)
         {
             DrawTriangle(x1, y1, x2, y2, x3, y3, p);
@@ -577,9 +794,23 @@ namespace olc
             }
         }
 
-        private float Distance(int x1, int y1, int x2, int y2) =>
+        /// <summary>
+        /// Gives you the Distance Between to Points
+        /// </summary>
+        /// <param name="x1">X1</param>
+        /// <param name="y1">Y1</param>
+        /// <param name="x2">X2</param>
+        /// <param name="y2">Y2</param>
+        /// <returns>The Distance</returns>
+        public float Distance(int x1, int y1, int x2, int y2) =>
             (float)Math.Sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 
+        /// <summary>
+        /// Draws a Sprite on the Screen
+        /// </summary>
+        /// <param name="x">X</param>
+        /// <param name="y">Y</param>
+        /// <param name="sprite">The Sprite</param>
         public void DrawSprite(int x, int y, Sprite sprite)
         {
             if (sprite == null)
@@ -595,6 +826,16 @@ namespace olc
             }
         }
 
+        /// <summary>
+        /// Partially Draws a Sprite
+        /// </summary>
+        /// <param name="x">X</param>
+        /// <param name="y">Y</param>
+        /// <param name="sprite">The Sprite</param>
+        /// <param name="ox">Offset X</param>
+        /// <param name="oy">Offset Y</param>
+        /// <param name="w">Width</param>
+        /// <param name="h">Height</param>
         public void DrawPartialSprite(int x, int y, Sprite sprite, int ox, int oy, int w, int h)
         {
             if (sprite == null)
@@ -605,7 +846,16 @@ namespace olc
                     Draw(x + i, y + j, sprite.GetPixel(i + ox, j + oy));
         }
 
-        public void DrawString(int x, int y, string text, Pixel col, int spacing = -4, int spaceSize = 6)
+        /// <summary>
+        /// Draws a String on the Screen
+        /// </summary>
+        /// <param name="x">X</param>
+        /// <param name="y">Y</param>
+        /// <param name="text">The String</param>
+        /// <param name="p">Color</param>
+        /// <param name="spacing">Letter Spacing</param>
+        /// <param name="spaceSize">Space Size</param>
+        public void DrawString(int x, int y, string text, Pixel p, int spacing = -4, int spaceSize = 6)
         {
             int offset = 0;
             foreach (var c in text)
@@ -625,7 +875,7 @@ namespace olc
                     {
                         var pixel = bitmap.GetPixel(i, j);
                         if (pixel.R == 0) continue;
-                        Draw(x + offset + i, y + j, col);
+                        Draw(x + offset + i, y + j, p);
                     }
                 }
 
@@ -633,9 +883,14 @@ namespace olc
             }
         }
 
+        /// <summary>
+        /// Fills the Whole Screen with a Color
+        /// </summary>
+        /// <param name="p">The Color</param>
         public void Clear(Pixel p) =>
-            FillRect(0, 0, nScreenWidth, nScreenHeight, p);
+            FillRect(0, 0, screenWidth, screenHeight, p);
 
+        // Makes a Bitmap out of a char
         private Bitmap GenerateCharacter(Font font, char c)
         {
             var size = GetSize(font, c);
