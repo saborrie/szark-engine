@@ -51,8 +51,9 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Graphics;
 using OpenTK.Input;
-using System.Drawing;
+
 using System;
+using System.Drawing;
 using System.IO;
 
 namespace olc
@@ -196,8 +197,8 @@ namespace olc
         {
             try
             {
-                Image image = Image.FromFile(path);
-                Bitmap b = new Bitmap(image);
+                System.Drawing.Image image = System.Drawing.Image.FromFile(path);
+                System.Drawing.Bitmap b = new System.Drawing.Bitmap(image);
                 width = b.Width;
                 height = b.Height;
 
@@ -309,10 +310,9 @@ namespace olc
         private int glBuffer;
 
         private GameWindow gameWindow;
-        private KeyboardState keyboardState,
-            lastKeyboardState;
+        private KeyboardState keyboardState, lastKeyboardState;
 
-        private Bitmap[] alphabet;
+        private System.Drawing.Bitmap[] alphabet;
         private const string Characters = @"qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVB" + 
             @"NM0123456789µ§½!""#¤%&/()=?^*@£€${[]}\~¨'-_.:,;<>|°©®±¥+";
         Font font = new Font("Arial", 9);
@@ -348,6 +348,9 @@ namespace olc
             gameWindow.Disposed += Disposed;
             gameWindow.Resize += Resize;
 
+            gameWindow.KeyDown += KeyDown;
+            gameWindow.KeyUp += KeyUp;
+
             gameWindow.VSync = VSyncMode.Off;
             drawTarget = new Sprite(sWidth, sHeight);
 
@@ -366,7 +369,7 @@ namespace olc
 
             // Enable Transparency
             GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 
             // Setup Texture Parameters to have clean pixels with no filters
 
@@ -411,8 +414,6 @@ namespace olc
         {
             if (!bHasStarted) return;
 
-            keyboardState = Keyboard.GetState();
-
             GL.Viewport(0, 0, drawTarget.width * pixelWidth, drawTarget.height * pixelHeight);
             var targetPixels = drawTarget.GetData();
 
@@ -436,10 +437,18 @@ namespace olc
             GL.TexCoord2(1, 1); GL.Vertex2(1, -1);
             GL.End();
 
-            gameWindow.SwapBuffers();
-
             lastKeyboardState = keyboardState;
+
+            gameWindow.SwapBuffers();
         }
+
+        // On Key Pressed Down
+        private void KeyDown(object sender, KeyboardKeyEventArgs e) =>
+            keyboardState = e.Keyboard;
+
+        // On Key Lifted Up
+        private void KeyUp(object sender, KeyboardKeyEventArgs e) =>
+            keyboardState = e.Keyboard;
 
         /// <summary>
         /// Called once on application startup, use to load your resources
@@ -462,15 +471,16 @@ namespace olc
         /// </summary>
         /// <param name="key">The Key</param>
         /// <returns>Is Held?</returns>
-        public bool GetKeyHeld(Key key) => keyboardState[key];
+        public bool GetKey(Key key) => keyboardState[key];
 
         /// <summary>
         /// Check if a Key is Pressed Once
         /// </summary>
         /// <param name="key">The Key</param>
         /// <returns>Was Pressed?</returns>
-        public bool GetKeyDown(Key key) =>
-            keyboardState[key] && (keyboardState[key] != lastKeyboardState[key]);
+        public bool GetKeyDown(Key key) { 
+            return keyboardState[key] && (keyboardState[key] != lastKeyboardState[key]);
+        }
 
         /// <summary>
         /// Checks if Mouse is Down
@@ -891,10 +901,10 @@ namespace olc
             FillRect(0, 0, screenWidth, screenHeight, p);
 
         // Makes a Bitmap out of a char
-        private Bitmap GenerateCharacter(Font font, char c)
+        private System.Drawing.Bitmap GenerateCharacter(Font font, char c)
         {
             var size = GetSize(font, c);
-            var bmp = new Bitmap((int)size.Width, (int)size.Height);
+            var bmp = new System.Drawing.Bitmap((int)size.Width, (int)size.Height);
 
             using (var gfx = Graphics.FromImage(bmp))
             {
@@ -905,16 +915,16 @@ namespace olc
             return bmp;
         }
 
-        private SizeF GetSize(Font font, char c)
+        private System.Drawing.SizeF GetSize(Font font, char c)
         {
-            using (var bmp = new Bitmap(512, 512))
+            using (var bmp = new System.Drawing.Bitmap(512, 512))
                 using (var gfx = Graphics.FromImage(bmp))
                     return gfx.MeasureString(c.ToString(), font);
         }
 
         private void GenerateAlphabet()
         {
-            alphabet = new Bitmap[Characters.Length];
+            alphabet = new System.Drawing.Bitmap[Characters.Length];
             for (int i = 0; i < alphabet.Length; i++)
                 alphabet[i] = GenerateCharacter(font, Characters[i]);
         }

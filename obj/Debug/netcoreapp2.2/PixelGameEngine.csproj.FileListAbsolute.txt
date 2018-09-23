@@ -1,0 +1,11 @@
+C:\Users\Jakub\Desktop\PixelGameEngine\obj\Debug\netcoreapp2.2\PixelGameEngine.csprojAssemblyReference.cache
+C:\Users\Jakub\Desktop\PixelGameEngine\obj\Debug\netcoreapp2.2\PixelGameEngine.csproj.CoreCompileInputs.cache
+C:\Users\Jakub\Desktop\PixelGameEngine\obj\Debug\netcoreapp2.2\PixelGameEngine.AssemblyInfoInputs.cache
+C:\Users\Jakub\Desktop\PixelGameEngine\obj\Debug\netcoreapp2.2\PixelGameEngine.AssemblyInfo.cs
+C:\Users\Jakub\Desktop\PixelGameEngine\bin\Debug\netcoreapp2.2\PixelGameEngine.deps.json
+C:\Users\Jakub\Desktop\PixelGameEngine\bin\Debug\netcoreapp2.2\PixelGameEngine.runtimeconfig.json
+C:\Users\Jakub\Desktop\PixelGameEngine\bin\Debug\netcoreapp2.2\PixelGameEngine.runtimeconfig.dev.json
+C:\Users\Jakub\Desktop\PixelGameEngine\bin\Debug\netcoreapp2.2\PixelGameEngine.dll
+C:\Users\Jakub\Desktop\PixelGameEngine\bin\Debug\netcoreapp2.2\PixelGameEngine.pdb
+C:\Users\Jakub\Desktop\PixelGameEngine\obj\Debug\netcoreapp2.2\PixelGameEngine.dll
+C:\Users\Jakub\Desktop\PixelGameEngine\obj\Debug\netcoreapp2.2\PixelGameEngine.pdb

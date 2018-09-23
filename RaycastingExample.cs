@@ -46,18 +46,15 @@ namespace Example
             map += "#----#---#-----#";
             map += "################";
 
-            string path = Directory.GetParent(Directory.
-                GetCurrentDirectory()).Parent.FullName;
+            string path = Directory.GetCurrentDirectory();
             brickTexture = new Sprite(path + "\\Brick.png");
         }
 
         protected override void OnUserUpdate(float time)
         {
             // Input
-            var vert = 5f * time * (GetKeyHeld(Key.W) ? 1 :
-                GetKeyHeld(Key.S) ? -1 : 0);
-            var rot = 3 * time * (GetKeyHeld(Key.D) ? -1 :
-                GetKeyHeld(Key.A) ? 1 : 0);
+            var vert = 5f * time * (GetKey(Key.W) ? 1 : GetKey(Key.S) ? -1 : 0);
+            var rot = 3 * time * (GetKey(Key.D) ? -1 : GetKey(Key.A) ? 1 : 0);
 
             // Movement
             playerX += dirX * vert;
@@ -170,7 +167,7 @@ namespace Example
                     {
                         int d = y * 256 - ScreenHeight() * 128 + lineHeight * 128;
                         int texY = ((d * 64) / lineHeight) / 256;
-                        Pixel col = brickTexture.GetPixel(texY, texX);
+                        Pixel col = brickTexture.GetPixel(texX, texY);
 
                         if (side == 1)
                         {
