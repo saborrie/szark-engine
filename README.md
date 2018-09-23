@@ -18,5 +18,5 @@ from your IDE if you are using visual studio or visual studio code. (USE NUGET P
 ![alt text](https://i.imgur.com/RtYa9AR.gif)
 ![alt text](https://i.imgur.com/rRDdgQi.gif)
 
-# Raycasting Exmaple
+# Raycasting Example
 ![alt text](https://i.imgur.com/OPpvQep.gif)
