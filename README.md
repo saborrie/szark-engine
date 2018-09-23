@@ -1,8 +1,5 @@
-# PixelGameEngineCSharp
-This is a C# port of the One Lone Coder Pixel Game Engine
-
 # What is it?
-A Port of the olcPixelGameEngine into the C# programming language. Now we use 
+A Port of the One Lone Coder PixelGameEngine into the C# programming language. Now we use 
 .Net Core instead of .Net Framework to maximize usability on other platforms. This also
 decreases runtime by alittle bit.
 
