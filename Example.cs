@@ -31,7 +31,7 @@ namespace Example
         [STAThread]
         static void Main()
         {
-            var game = new RaycastingExample();
+            var game = new Game();
             if (game.Construct(256, 240, 4, 4))
                 game.Start();
         }
