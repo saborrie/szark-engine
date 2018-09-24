@@ -47,7 +47,7 @@ namespace Example
             map += "################";
 
             string path = Directory.GetCurrentDirectory();
-            brickTexture = new Sprite(path + "\\Brick.png");
+            brickTexture = new Sprite(path + "\\Examples\\Assets\\Brick.png");
         }
 
         protected override void OnUserUpdate(float time)

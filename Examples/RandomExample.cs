@@ -3,9 +3,9 @@ using olc;
 
 namespace Example
 {
-    class Game : PixelGameEngine
+    class RandomExample : PixelGameEngine
     {
-        Game()
+        RandomExample()
         {
             appName = "Example";
         }
@@ -32,7 +32,7 @@ namespace Example
         [STAThread]
         static void Main()
         {
-            var game = new Game();
+            var game = new RandomExample();
             if (game.Construct(128, 128, 8, 8))
                 game.Start();
         }
