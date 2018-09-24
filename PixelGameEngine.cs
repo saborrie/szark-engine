@@ -328,18 +328,16 @@ namespace olc
 
             maxFPS = fps;
 
-            title = "OLC Pixel Game Engine (C# Edition)";
+            title = "Pixel Game Engine (C# Edition)";
             gameWindow = new GameWindow(sWidth * pWidth, sHeight * pHeight,
                 GraphicsMode.Default, title + " - " + appName);
+            gameWindow.VSync = VSyncMode.Off;
 
-            gameWindow.RenderFrame += Render;
             gameWindow.Load += Loaded;
+            gameWindow.RenderFrame += Render;
             gameWindow.Disposed += Disposed;
-
             gameWindow.KeyDown += KeyDown;
             gameWindow.KeyUp += KeyUp;
-
-            gameWindow.VSync = VSyncMode.Off;
 
             drawTarget = new Sprite(sWidth, sHeight);
             for (int i = 0; i < drawTarget.Width; i++)
@@ -403,8 +401,7 @@ namespace olc
 
             if (lastFPSCheck++ * e.Time > 1)
             {
-                gameWindow.Title = title + " - " + appName + 
-                    " | FPS: " + (int)(1 / e.Time);
+                gameWindow.Title = $"{title} - {appName} | FPS: {(int)(1 / e.Time)}";
                 lastFPSCheck = 0;
             }
 
