@@ -348,14 +348,13 @@ namespace olc
             gameWindow.RenderFrame += Render;
             gameWindow.Load += Loaded;
             gameWindow.Disposed += Disposed;
-            gameWindow.Resize += Resize;
 
             gameWindow.KeyDown += KeyDown;
             gameWindow.KeyUp += KeyUp;
 
             gameWindow.VSync = VSyncMode.Off;
-            drawTarget = new Sprite(sWidth, sHeight);
 
+            drawTarget = new Sprite(sWidth, sHeight);
             for (int i = 0; i < drawTarget.width; i++)
                 for (int j = 0; j < drawTarget.height; j++)
                     drawTarget.SetPixel(i, j, new Pixel(0, 0, 0, 0));
@@ -385,6 +384,9 @@ namespace olc
             GenerateAlphabet();
             ConstructFontSheet();
 
+            // Disable Window Resizing
+            gameWindow.WindowBorder = WindowBorder.Fixed;
+
             return true;
         }
 
@@ -399,13 +401,6 @@ namespace olc
             else if (fps > 0) gameWindow.Run(fps);
         }
 
-        // Keeps the Window the Same Size
-        private void Resize(object sender, EventArgs e)
-        {
-            gameWindow.Width = screenWidth * pixelWidth;
-            gameWindow.Height = screenHeight * pixelHeight;
-        }
-
         // On Window Loaded
         private void Loaded(object sender, EventArgs e) => OnUserCreate();
 
@@ -417,8 +412,7 @@ namespace olc
         {
             if (!bHasStarted) return;
 
-            GL.Viewport(0, 0, drawTarget.width * pixelWidth, drawTarget.height * pixelHeight);
-            var targetPixels = drawTarget.GetData();
+            GL.Viewport(0, 0, screenWidth * pixelWidth, screenHeight * pixelHeight);
 
             if (fpsCheck++ * e.Time > 1)
             {
@@ -431,7 +425,7 @@ namespace olc
             OnUserUpdate((float)e.Time);
 
             GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, screenWidth, screenHeight,
-                PixelFormat.Rgba, PixelType.UnsignedByte, targetPixels);
+                PixelFormat.Rgba, PixelType.UnsignedByte, drawTarget.GetData());
 
             GL.Begin(PrimitiveType.Quads);
             GL.TexCoord2(0, 1); GL.Vertex2(-1, -1);

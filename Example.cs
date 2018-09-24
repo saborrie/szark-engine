@@ -17,10 +17,13 @@ namespace Example
 
         protected override void OnUserUpdate(float fElapsedTime)
         {
-            Random r = new Random();
-            for (int i = 0; i < ScreenWidth(); i++)
-                for (int j = 0; j < ScreenHeight(); j++)
-                    Draw(i, j, new Pixel((byte)r.Next(255), (byte)r.Next(255), (byte)r.Next(255)));
+            Clear(Pixel.VERY_DARK_GREY);
+            DrawLine(0, 0, 16, 16, Pixel.WHITE);
+            DrawRect(16, 0, 16, 16, Pixel.RED);
+            FillRect(32, 0, 16, 16, Pixel.GREEN);
+            DrawCircle(64, 64, 12, Pixel.YELLOW);
+            FillCircle(64, 96, 12, Pixel.MAGENTA);
+
         }
 
         protected override void OnUserDestroy()
@@ -32,7 +35,7 @@ namespace Example
         static void Main()
         {
             var game = new Game();
-            if (game.Construct(256, 240, 4, 4))
+            if (game.Construct(128, 128, 8, 8))
                 game.Start();
         }
     }
