@@ -469,9 +469,8 @@ namespace olc
         /// </summary>
         /// <param name="key">The Key</param>
         /// <returns>Was Pressed?</returns>
-        public bool GetKeyDown(Key key) { 
-            return keyboardState[key] && (keyboardState[key] != lastKeyboardState[key]);
-        }
+        public bool GetKeyDown(Key key) => 
+            keyboardState[key] && (keyboardState[key] != lastKeyboardState[key]);
 
         /// <summary>
         /// Checks if Mouse is Down
@@ -536,11 +535,9 @@ namespace olc
         /// Creates a new Draw Target.
         /// </summary>
         /// <param name="target">The New Target</param>
-        public void SetDrawTarget(Sprite target)
-        {
-            if (target != null) drawTarget = target;
-            else drawTarget = new Sprite(screenWidth, screenHeight);
-        }
+        public void SetDrawTarget(Sprite target) =>
+            drawTarget = target == null ? new Sprite(screenWidth, 
+                screenHeight) : target;
 
         /// <summary>
         /// Sets the Alpha Blending Mode
@@ -590,16 +587,14 @@ namespace olc
         /// <param name="thickness">Thickness</param>
         public void DrawLine(int x1, int y1, int x2, int y2, Pixel p, int thickness = 1)
         {
-            float x, y;
-            float step;
-
+            float x, y, step;
             float dx = x2 - x1;
             float dy = y2 - y1;
 
-            if (Math.Abs(dx) >= Math.Abs(dy))
-                step = Math.Abs(dx);
-            else
-                step = Math.Abs(dy);
+            float absDX = Math.Abs(dx);
+            float absDY = Math.Abs(dy);
+
+            step = absDX >= absDY ? absDX : absDY;
 
             dx /= step;
             dy /= step;
@@ -814,17 +809,10 @@ namespace olc
         /// <param name="sprite">The Sprite</param>
         public void DrawSprite(int x, int y, Sprite sprite)
         {
-            if (sprite == null)
-                return;
-
+            if (sprite == null) return;
             for (int j = 0; j < sprite.Width; j++)
-            {
                 for (int i = 0; i < sprite.Height; i++)
-                {
-                    if (sprite.GetPixel(j, i).a == 255)
-                        Draw(x + i, y + j, sprite.GetPixel(j, i));
-                }
-            }
+                    Draw(x + i, y + j, sprite.GetPixel(j, i));
         }
 
         /// <summary>
@@ -839,9 +827,7 @@ namespace olc
         /// <param name="h">Height</param>
         public void DrawPartialSprite(int x, int y, Sprite sprite, int ox, int oy, int w, int h)
         {
-            if (sprite == null)
-                return;
-
+            if (sprite == null) return;
             for (int i = 0; i < w; i++)
                 for (int j = 0; j < h; j++)
                     Draw(x + i, y + j, sprite.GetPixel(i + ox, j + oy));
