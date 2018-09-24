@@ -1,9 +1,9 @@
 ﻿/*
+	PixelGameEngine.cs
+
   	Whats This?
 	~~~~~~~~~~~
     A Port for the olcPixelGameEngine from C++ to C#
-  
-	olcPixelGameEngine.cs
 
 	License (OLC-3)
 	~~~~~~~~~~~~~~~
