@@ -7,7 +7,7 @@ namespace Example
     {
         Game()
         {
-            sAppName = "Example";
+            appName = "Example";
         }
 
         protected override void OnUserCreate()

@@ -67,7 +67,7 @@ namespace olc
         public byte r, g, b, a;
 
         /// <summary>
-        /// The Constructor for a Pixel in RGBA Form
+        /// The Constructor for a Pixel in RGBA Form.
         /// Alpha is not required and will just render
         /// completely opaque.
         /// </summary>
@@ -118,7 +118,6 @@ namespace olc
         public static Pixel VERY_DARK_YELLOW = new Pixel(64, 64, 0);
         public static Pixel VERY_DARK_MAGENTA = new Pixel(64, 0, 64);
         public static Pixel VERY_DARK_CYAN = new Pixel(0, 64, 64);
-        
 
         /// <summary>
         /// Interpolates Two Pixels based on T between 0 to 1
@@ -141,14 +140,11 @@ namespace olc
         /// <summary>
         /// Converts a UInt to a Pixel
         /// </summary>
-        /// <param name="i">The UInt</param>
-        public void ToPixel(uint i)
-        {
-            r = (byte)(i >> 0);
-            g = (byte)(i >> 8);
-            b = (byte)(i >> 16);
-            g = (byte)(i >> 24);
-        }
+        /// <param name="i">UInt</param>
+        /// <returns>Pixel</returns>
+        public static Pixel ToPixel(uint i) =>
+            new Pixel((byte)(i >> 0), (byte)(i >> 8), 
+                (byte)(i >> 16), (byte)(i >> 24));
 
         /// <summary>
         /// The Alpha 'Blending' Modes
@@ -170,7 +166,9 @@ namespace olc
     /// </summary>
     class Sprite
     {
-        public int width, height;
+        public int Width { get; private set; }
+        public int Height { get; private set; }        
+        
         private Pixel[] pixelData;
 
         /// <summary>
@@ -180,8 +178,8 @@ namespace olc
         /// <param name="height">Height</param>
         public Sprite(int width, int height)
         {
-            this.width = width;
-            this.height = height;
+            Width = width;
+            Height = height;
 
             pixelData = new Pixel[width * height];
             for (var i = 0; i < pixelData.Length; i++)
@@ -197,12 +195,13 @@ namespace olc
         {
             try
             {
-                System.Drawing.Image image = System.Drawing.Image.FromFile(path);
-                System.Drawing.Bitmap b = new System.Drawing.Bitmap(image);
-                width = b.Width;
-                height = b.Height;
+                var image = System.Drawing.Image.FromFile(path);
+                var b = new System.Drawing.Bitmap(image);
 
-                pixelData = new Pixel[width * height];
+                Width = b.Width;
+                Height = b.Height;
+
+                pixelData = new Pixel[Width * Height];
 
                 for (var x = 0; x < b.Width; x++)
                 {
@@ -249,8 +248,8 @@ namespace olc
         /// <returns>A Pixel</returns>
         public Pixel GetPixel(int x, int y)
         {
-            if (x >= 0 && x < width && y >= 0 && y < height)
-                return pixelData[y * width + x];
+            if (x >= 0 && x < Width && y >= 0 && y < Height)
+                return pixelData[y * Width + x];
             else
                 return new Pixel();
         }
@@ -263,21 +262,8 @@ namespace olc
         /// <param name="color">Pixel Replacement</param>
         public void SetPixel(int x, int y, Pixel p)
         {
-            if (x >= 0 && x < width && y >= 0 && y < height)
-                pixelData[y * width + x] = p;
-        }
-
-        /// <summary>
-        /// Samples a Position of the Sprite
-        /// </summary>
-        /// <param name="x">X</param>
-        /// <param name="y">Y</param>
-        /// <returns>A Pixel</returns>
-        public Pixel Sample(float x, float y)
-        {
-            int sx = (int)(x * width);
-            int sy = (int)(y * height);
-            return GetPixel(sx, sy);
+            if (x >= 0 && x < Width && y >= 0 && y < Height)
+                pixelData[y * Width + x] = p;
         }
     }
 
@@ -288,14 +274,7 @@ namespace olc
     /// </summary>
     class PixelGameEngine
     {
-        public string sAppName = "";
-        private Sprite drawTarget = null;
-        private Pixel.Mode pixelMode = 
-            Pixel.Mode.NORMAL;
-
-        private Sprite fontSprite;
-
-        private float blendFactor = 0.5f;
+        public string appName = "";
 
         private int screenWidth = 256;
         private int screenHeight = 240;
@@ -303,23 +282,27 @@ namespace olc
         private int pixelWidth = 4;
         private int pixelHeight = 4;
 
-        private int fps, fpsCheck;
-
-        private bool bHasStarted;
+        private int maxFPS, lastFPSCheck;
+        private bool hasStarted;
 
         private string title;
-
+        private float blendFactor = 0.5f;
         private int glBuffer;
 
+        private Sprite drawTarget;
+        private Pixel.Mode pixelMode;
+        private Sprite fontSprite;
+
         private GameWindow gameWindow;
-        private KeyboardState keyboardState, lastKeyboardState;
+        private KeyboardState keyboardState, 
+            lastKeyboardState;
+
+        private const string Characters = 
+            @"qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVB" + 
+            @"NM0123456789µ§½!""#¤%&/()=?^*@£€${[]}\~¨'-_.:,;<>|°©®±¥+";
 
         private System.Drawing.Bitmap[] alphabet;
-        private const string Characters = @"qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVB" + 
-            @"NM0123456789µ§½!""#¤%&/()=?^*@£€${[]}\~¨'-_.:,;<>|°©®±¥+";
-        Font font = new Font("Arial", 9);
-
-        public bool IsFocused { get; }
+        private Font font = new Font("Arial", 9);
 
         /// <summary>
         /// Creates a Window and Starts OpenGL. This needs to
@@ -329,21 +312,25 @@ namespace olc
         /// <param name="sHeight">Height of the Screen</param>
         /// <param name="pWidth">Width of Each Pixel</param>
         /// <param name="pHeight">Height of Each Pixel</param>
-        /// <param name="fps">FPS to Run At</param>
+        /// <param name="fps">Max FPS</param>
         /// <returns>If Construction of Success</returns>
         public bool Construct(int sWidth, int sHeight, int pWidth, int pHeight, int fps = -1)
         {
-            if (bHasStarted) return false;
+            if (hasStarted) return false;
+            if (sWidth <= 0 | sHeight <= 0 | pWidth < 1 | pHeight < 1 | fps == 0)
+                return false;
 
             screenWidth = sWidth;
             screenHeight = sHeight;
+
             pixelWidth = pWidth;
             pixelHeight = pHeight;
-            this.fps = fps;
+
+            maxFPS = fps;
 
             title = "OLC Pixel Game Engine (C# Edition)";
             gameWindow = new GameWindow(sWidth * pWidth, sHeight * pHeight,
-                GraphicsMode.Default, title + " - " + sAppName);
+                GraphicsMode.Default, title + " - " + appName);
 
             gameWindow.RenderFrame += Render;
             gameWindow.Load += Loaded;
@@ -355,8 +342,8 @@ namespace olc
             gameWindow.VSync = VSyncMode.Off;
 
             drawTarget = new Sprite(sWidth, sHeight);
-            for (int i = 0; i < drawTarget.width; i++)
-                for (int j = 0; j < drawTarget.height; j++)
+            for (int i = 0; i < drawTarget.Width; i++)
+                for (int j = 0; j < drawTarget.Height; j++)
                     drawTarget.SetPixel(i, j, new Pixel(0, 0, 0, 0));
 
             // Make a Texture that will contain all graphics
@@ -396,9 +383,9 @@ namespace olc
         /// </summary>
         public void Start()
         {
-            bHasStarted = true;
-            if (fps == -1) gameWindow.Run();
-            else if (fps > 0) gameWindow.Run(fps);
+            hasStarted = true;
+            if (maxFPS == -1) gameWindow.Run();
+            else if (maxFPS > 0) gameWindow.Run(maxFPS);
         }
 
         // On Window Loaded
@@ -410,15 +397,15 @@ namespace olc
         // On Window Render Frame
         private void Render(object sender, FrameEventArgs e)
         {
-            if (!bHasStarted) return;
+            if (!hasStarted) return;
 
             GL.Viewport(0, 0, screenWidth * pixelWidth, screenHeight * pixelHeight);
 
-            if (fpsCheck++ * e.Time > 1)
+            if (lastFPSCheck++ * e.Time > 1)
             {
-                gameWindow.Title = title + " - " + sAppName + 
+                gameWindow.Title = title + " - " + appName + 
                     " | FPS: " + (int)(1 / e.Time);
-                fpsCheck = 0;
+                lastFPSCheck = 0;
             }
 
             // Draw the Graphics on the Screen
@@ -462,6 +449,13 @@ namespace olc
         /// Called once on application termination, so you can be a clean coder
         /// </summary>
         protected virtual void OnUserDestroy() { }
+
+        /// <summary>
+        /// Sets the Mode for VSync
+        /// </summary>
+        /// <param name="isActive">Is On?</param>
+        public void SetVSync(VSyncMode mode) => 
+            gameWindow.VSync = mode;
 
         /// <summary>
         /// Checks if a Key is Held
@@ -523,13 +517,13 @@ namespace olc
         /// Returns the Draw Target Width
         /// </summary>
         /// <returns>Draw Target Width</returns>
-        public int GetDrawTargetWidth() => drawTarget.width;
+        public int GetDrawTargetWidth() => drawTarget.Width;
 
         /// <summary>
         /// Return the Draw Target Height
         /// </summary>
         /// <returns>Draw Target Height</returns>
-        public int GetDrawTargetHeight() => drawTarget.height;
+        public int GetDrawTargetHeight() => drawTarget.Height;
 
         /// <summary>
         /// Returns the Actual Draw Target
@@ -667,12 +661,12 @@ namespace olc
             int y2 = y + h;
 
             if (x < 0) x = 0;
-            else if (x > drawTarget.width)
-                x = drawTarget.width;
+            else if (x > drawTarget.Width)
+                x = drawTarget.Width;
 
             if (y < 0) y = 0;
-            else if (y > drawTarget.height)
-                y = drawTarget.height;
+            else if (y > drawTarget.Height)
+                y = drawTarget.Height;
 
             for (int i = x; i < x2; i++)
                 for (int j = y; j < y2; j++)
@@ -823,9 +817,9 @@ namespace olc
             if (sprite == null)
                 return;
 
-            for (int j = 0; j < sprite.width; j++)
+            for (int j = 0; j < sprite.Width; j++)
             {
-                for (int i = 0; i < sprite.height; i++)
+                for (int i = 0; i < sprite.Height; i++)
                 {
                     if (sprite.GetPixel(j, i).a == 255)
                         Draw(x + i, y + j, sprite.GetPixel(j, i));

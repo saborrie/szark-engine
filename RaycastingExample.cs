@@ -24,7 +24,7 @@ namespace Example
 
         public RaycastingExample()
         {
-            sAppName = "Example";
+            appName = "Example";
         }
 
         protected override void OnUserCreate()
