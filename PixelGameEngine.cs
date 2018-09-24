@@ -939,8 +939,11 @@ namespace olc
         /// Fills the Whole Screen with a Color
         /// </summary>
         /// <param name="p">The Color</param>
-        public void Clear(Pixel p) =>
-            FillRect(0, 0, screenWidth, screenHeight, p);
+        public void Clear(Pixel p)
+        {
+            GL.Clear(ClearBufferMask.ColorBufferBit);
+            GL.ClearColor(p.r / 255f, p.g / 255f, p.b / 255f, p.a / 255f);
+        }
 
         // Makes a Bitmap out of a char
         private System.Drawing.Bitmap GenerateCharacter(Font font, char c)

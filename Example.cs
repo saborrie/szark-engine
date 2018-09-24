@@ -17,13 +17,11 @@ namespace Example
 
         protected override void OnUserUpdate(float fElapsedTime)
         {
-            Clear(Pixel.VERY_DARK_GREY);
-            DrawLine(0, 0, 16, 16, Pixel.WHITE);
-            DrawRect(16, 0, 16, 16, Pixel.RED);
-            FillRect(32, 0, 16, 16, Pixel.GREEN);
-            DrawCircle(64, 64, 12, Pixel.YELLOW);
-            FillCircle(64, 96, 12, Pixel.MAGENTA);
-
+            Random random = new Random();
+            for (int i = 0; i < ScreenWidth(); i++)
+                for (int j = 0; j < ScreenHeight(); j++)
+                    Draw(i, j, new Pixel((byte)random.Next(255), 
+                        (byte)random.Next(255), (byte)random.Next(255)));
         }
 
         protected override void OnUserDestroy()
