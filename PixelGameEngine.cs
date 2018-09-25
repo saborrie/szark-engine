@@ -55,6 +55,7 @@ using OpenTK.Input;
 using System;
 using System.Drawing;
 using System.IO;
+using System.Collections.Generic;
 
 namespace olc
 {
@@ -62,7 +63,7 @@ namespace olc
     /// A struct containing RGBA information for a pixel.
     /// This also can be used for representing color
     /// </summary>
-    struct Pixel
+    public struct Pixel
     {
         public byte r, g, b, a;
 
@@ -164,7 +165,7 @@ namespace olc
     /// A Class that contains an Array of Pixels
     /// and may Represent an Image
     /// </summary>
-    class Sprite
+    public class Sprite
     {
         public int Width { get; private set; }
         public int Height { get; private set; }        
@@ -268,11 +269,30 @@ namespace olc
     }
 
     /// <summary>
+    /// This class is in charge of defining what a
+    /// Extension is in the engine.
+    /// </summary>
+    public class PGEX 
+    {
+        public static PixelGameEngine Engine 
+        { 
+            protected get { return engine; } 
+            set
+            {
+                if (engine == null)
+                    engine = value;
+            }
+        }
+
+        private static PixelGameEngine engine;
+    }
+
+    /// <summary>
     /// The main engine with all Open GL and Drawing
     /// Methods. Derive from this class to access the engine.
     /// Make sure to construct the Engine and Call Start
     /// </summary>
-    partial class PixelGameEngine
+    public class PixelGameEngine
     {
         public string appName = "";
 
@@ -373,6 +393,8 @@ namespace olc
 
             // Disable Window Resizing
             gameWindow.WindowBorder = WindowBorder.Fixed;
+
+            PGEX.Engine = this;
 
             return true;
         }
