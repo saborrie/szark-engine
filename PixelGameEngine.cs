@@ -272,7 +272,7 @@ namespace olc
     /// Methods. Derive from this class to access the engine.
     /// Make sure to construct the Engine and Call Start
     /// </summary>
-    class PixelGameEngine
+    partial class PixelGameEngine
     {
         public string appName = "";
 
@@ -807,9 +807,9 @@ namespace olc
         public void DrawSprite(int x, int y, Sprite sprite)
         {
             if (sprite == null) return;
-            for (int j = 0; j < sprite.Width; j++)
-                for (int i = 0; i < sprite.Height; i++)
-                    Draw(x + i, y + j, sprite.GetPixel(j, i));
+            for (int i = 0; i < sprite.Width; i++)
+                for (int j = 0; j < sprite.Height; j++)
+                    Draw(x + i, y + j, sprite.GetPixel(i, j));
         }
 
         /// <summary>
