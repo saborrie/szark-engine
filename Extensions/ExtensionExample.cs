@@ -4,6 +4,6 @@ namespace olc
 {
     partial class PixelGameEngine
     {
-        // Put code here to extend the class
+        // Put code here to extend here
     }
 }

@@ -289,6 +289,8 @@ namespace olc
         private float blendFactor = 0.5f;
         private int glBuffer;
 
+        private int renderOffsetX, renderOffsetY;
+
         private Sprite drawTarget;
         private Pixel.Mode pixelMode;
         private Sprite fontSprite;
@@ -397,7 +399,8 @@ namespace olc
         {
             if (!hasStarted) return;
 
-            GL.Viewport(0, 0, screenWidth * pixelWidth, screenHeight * pixelHeight);
+            GL.Viewport(renderOffsetX, renderOffsetY, screenWidth * pixelWidth, 
+                screenHeight * pixelHeight);
 
             if (lastFPSCheck++ * e.Time > 1)
             {
@@ -453,6 +456,21 @@ namespace olc
         /// <param name="isActive">Is On?</param>
         public void SetVSync(VSyncMode mode) => 
             gameWindow.VSync = mode;
+
+        /// <summary>
+        /// Sets the Window to be Fullscreen
+        /// </summary>
+        /// <param name="fullscreen">Is Fullscreen?</param>
+        public void SetFullscreen(bool fullscreen)
+        {
+            gameWindow.WindowState = fullscreen ? WindowState.Fullscreen :
+                WindowState.Normal;
+
+            renderOffsetX = fullscreen ? gameWindow.Width / 2 - 
+                screenWidth * pixelWidth / 2 : 0;
+            renderOffsetY = fullscreen ? gameWindow.Height / 2 - 
+                screenHeight * pixelHeight / 2 : 0;
+        }
 
         /// <summary>
         /// Checks if a Key is Held

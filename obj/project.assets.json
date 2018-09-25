@@ -3082,11 +3082,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\Jakub\\Desktop\\PixelGameEngineNETCORE\\olcPixelGameEngineCSHARP\\PixelGameEngine.csproj",
+      "projectUniqueName": "c:\\Users\\Jakub\\Documents\\Pixel Game Engine\\PixelGameEngine.csproj",
       "projectName": "PixelGameEngine",
-      "projectPath": "c:\\Users\\Jakub\\Desktop\\PixelGameEngineNETCORE\\olcPixelGameEngineCSHARP\\PixelGameEngine.csproj",
+      "projectPath": "c:\\Users\\Jakub\\Documents\\Pixel Game Engine\\PixelGameEngine.csproj",
       "packagesPath": "C:\\Users\\Jakub\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\Jakub\\Desktop\\PixelGameEngineNETCORE\\olcPixelGameEngineCSHARP\\obj\\",
+      "outputPath": "c:\\Users\\Jakub\\Documents\\Pixel Game Engine\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

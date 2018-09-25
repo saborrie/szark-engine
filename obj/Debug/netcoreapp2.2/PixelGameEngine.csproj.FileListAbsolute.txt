@@ -20,3 +20,14 @@ C:\Users\Jakub\Desktop\PixelGameEngineNETCORE\olcPixelGameEngineCSHARP\obj\Debug
 C:\Users\Jakub\Desktop\PixelGameEngineNETCORE\olcPixelGameEngineCSHARP\obj\Debug\netcoreapp2.2\PixelGameEngine.AssemblyInfo.cs
 C:\Users\Jakub\Desktop\PixelGameEngineNETCORE\olcPixelGameEngineCSHARP\obj\Debug\netcoreapp2.2\PixelGameEngine.dll
 C:\Users\Jakub\Desktop\PixelGameEngineNETCORE\olcPixelGameEngineCSHARP\obj\Debug\netcoreapp2.2\PixelGameEngine.pdb
+C:\Users\Jakub\Documents\Pixel Game Engine\bin\Debug\netcoreapp2.2\PixelGameEngine.deps.json
+C:\Users\Jakub\Documents\Pixel Game Engine\bin\Debug\netcoreapp2.2\PixelGameEngine.runtimeconfig.json
+C:\Users\Jakub\Documents\Pixel Game Engine\bin\Debug\netcoreapp2.2\PixelGameEngine.runtimeconfig.dev.json
+C:\Users\Jakub\Documents\Pixel Game Engine\bin\Debug\netcoreapp2.2\PixelGameEngine.dll
+C:\Users\Jakub\Documents\Pixel Game Engine\bin\Debug\netcoreapp2.2\PixelGameEngine.pdb
+C:\Users\Jakub\Documents\Pixel Game Engine\obj\Debug\netcoreapp2.2\PixelGameEngine.csprojAssemblyReference.cache
+C:\Users\Jakub\Documents\Pixel Game Engine\obj\Debug\netcoreapp2.2\PixelGameEngine.csproj.CoreCompileInputs.cache
+C:\Users\Jakub\Documents\Pixel Game Engine\obj\Debug\netcoreapp2.2\PixelGameEngine.AssemblyInfoInputs.cache
+C:\Users\Jakub\Documents\Pixel Game Engine\obj\Debug\netcoreapp2.2\PixelGameEngine.AssemblyInfo.cs
+C:\Users\Jakub\Documents\Pixel Game Engine\obj\Debug\netcoreapp2.2\PixelGameEngine.dll
+C:\Users\Jakub\Documents\Pixel Game Engine\obj\Debug\netcoreapp2.2\PixelGameEngine.pdb
