@@ -507,13 +507,13 @@ namespace olc
         /// Gets the Mouse Relative X Position
         /// </summary>
         /// <returns>Relative X Position</returns>
-        public int GetMouseX() => Mouse.GetState().X;
+        public int MouseX() => Mouse.GetState().X;
 
         /// <summary>
         /// Gets the Mouse Relative Y Position
         /// </summary>
         /// <returns>Relative Y Position</returns>
-        public int GetMouseY() => Mouse.GetState().Y;
+        public int MouseY() => Mouse.GetState().Y;
 
         /// <summary>
         /// Gets the Screen Width
@@ -526,18 +526,6 @@ namespace olc
         /// </summary>
         /// <returns>Screen Height</returns>
         public int ScreenHeight() => screenHeight;
-
-        /// <summary>
-        /// Returns the Draw Target Width
-        /// </summary>
-        /// <returns>Draw Target Width</returns>
-        public int GetDrawTargetWidth() => drawTarget.Width;
-
-        /// <summary>
-        /// Return the Draw Target Height
-        /// </summary>
-        /// <returns>Draw Target Height</returns>
-        public int GetDrawTargetHeight() => drawTarget.Height;
 
         /// <summary>
         /// Returns the Actual Draw Target
