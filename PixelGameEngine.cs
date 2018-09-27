@@ -524,18 +524,18 @@ namespace olc
         /// <returns>Is Up?</returns>
         public bool GetMouseUp(MouseButton button) =>
             Mouse.GetState().IsButtonUp(button);
-
+            
         /// <summary>
         /// Gets the Mouse Relative X Position
         /// </summary>
         /// <returns>Relative X Position</returns>
-        public int MouseX() => Mouse.GetState().X;
+        public int MouseX() => gameWindow.Mouse.X / pixelWidth;
 
         /// <summary>
         /// Gets the Mouse Relative Y Position
         /// </summary>
         /// <returns>Relative Y Position</returns>
-        public int MouseY() => Mouse.GetState().Y;
+        public int MouseY() => gameWindow.Mouse.Y / pixelHeight;
 
         /// <summary>
         /// Gets the Screen Width
