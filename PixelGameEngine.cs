@@ -316,8 +316,8 @@ namespace olc
         private Sprite fontSprite;
 
         private GameWindow gameWindow;
-        private KeyboardState keyboardState, 
-            lastKeyboardState;
+        private KeyboardState keyboardState, lastKeyboardState;
+        private MouseState mouseState, lastMouseState;
 
         private const string Characters = 
             @"qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVB" + 
@@ -360,6 +360,9 @@ namespace olc
             gameWindow.Disposed += Disposed;
             gameWindow.KeyDown += KeyDown;
             gameWindow.KeyUp += KeyUp;
+
+            gameWindow.MouseDown += MouseDown;
+            gameWindow.MouseUp += MouseUp;
 
             drawTarget = new Sprite(sWidth, sHeight);
             for (int i = 0; i < drawTarget.Width; i++)
@@ -444,6 +447,7 @@ namespace olc
             GL.End();
 
             lastKeyboardState = keyboardState;
+            lastMouseState = mouseState;
 
             gameWindow.SwapBuffers();
         }
@@ -509,21 +513,27 @@ namespace olc
         public bool GetKeyDown(Key key) => 
             keyboardState[key] && (keyboardState[key] != lastKeyboardState[key]);
 
+        private void MouseDown(object sender, MouseButtonEventArgs args) =>
+            mouseState = args.Mouse;
+
+        private void MouseUp(object sender, MouseButtonEventArgs args) =>
+            mouseState = args.Mouse;
+
         /// <summary>
-        /// Checks if Mouse is Down
+        /// Checks if Mouse Button is Pressed or Release
         /// </summary>
         /// <param name="button">The Button</param>
         /// <returns>Is Down?</returns>
-        public bool GetMouseDown(MouseButton button) =>
-            Mouse.GetState().IsButtonDown(button);
+        public bool GetMouseButton(MouseButton button) =>
+            mouseState[button];
 
         /// <summary>
         /// Checks if Mouse is Up
         /// </summary>
         /// <param name="button">The Button</param>
         /// <returns>Is Up?</returns>
-        public bool GetMouseUp(MouseButton button) =>
-            Mouse.GetState().IsButtonUp(button);
+        public bool GetMouseButtonDown(MouseButton button) =>
+            mouseState[button] && (mouseState[button] != mouseState[button]);
             
         /// <summary>
         /// Gets the Mouse Relative X Position
