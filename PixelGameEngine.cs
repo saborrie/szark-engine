@@ -533,7 +533,7 @@ namespace olc
         /// <param name="button">The Button</param>
         /// <returns>Is Up?</returns>
         public bool GetMouseButtonDown(MouseButton button) =>
-            mouseState[button] && (mouseState[button] != mouseState[button]);
+            mouseState[button] && (mouseState[button] != lastMouseState[button]);
             
         /// <summary>
         /// Gets the Mouse Relative X Position
