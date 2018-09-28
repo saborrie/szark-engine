@@ -310,6 +310,7 @@ namespace olc
         private int glBuffer;
 
         private int renderOffsetX, renderOffsetY;
+        private bool isFullscreen;
 
         private Sprite drawTarget;
         private Pixel.Mode pixelMode;
@@ -489,6 +490,7 @@ namespace olc
         /// <param name="fullscreen">Is Fullscreen?</param>
         public void SetFullscreen(bool fullscreen)
         {
+            isFullscreen = fullscreen;
             gameWindow.WindowState = fullscreen ? WindowState.Fullscreen :
                 WindowState.Normal;
 
@@ -520,7 +522,7 @@ namespace olc
             mouseState = args.Mouse;
 
         /// <summary>
-        /// Checks if Mouse Button is Pressed or Release
+        /// Checks if Mouse Button is Pressed
         /// </summary>
         /// <param name="button">The Button</param>
         /// <returns>Is Down?</returns>
@@ -528,7 +530,7 @@ namespace olc
             mouseState[button];
 
         /// <summary>
-        /// Checks if Mouse is Up
+        /// Checks if Mouse Button is pressed down once
         /// </summary>
         /// <param name="button">The Button</param>
         /// <returns>Is Up?</returns>
@@ -539,14 +541,18 @@ namespace olc
         /// Gets the Mouse Relative X Position
         /// </summary>
         /// <returns>Relative X Position</returns>
-        public int MouseX() => gameWindow.Mouse.X / pixelWidth;
+        public int MouseX() =>
+            isFullscreen ? (gameWindow.Mouse.X - renderOffsetX) / 
+                pixelWidth : gameWindow.Mouse.X / pixelWidth;
 
         /// <summary>
         /// Gets the Mouse Relative Y Position
         /// </summary>
         /// <returns>Relative Y Position</returns>
-        public int MouseY() => gameWindow.Mouse.Y / pixelHeight;
-
+        public int MouseY() =>
+            isFullscreen ? (gameWindow.Mouse.Y - renderOffsetY) / 
+                pixelHeight : gameWindow.Mouse.Y / pixelHeight;
+                
         /// <summary>
         /// Gets the Screen Width
         /// </summary>
