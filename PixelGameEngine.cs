@@ -693,20 +693,9 @@ namespace olc
         /// <param name="p">Color</param>
         public void FillRect(int x, int y, int w, int h, Pixel p)
         {
-            int x2 = x + w;
-            int y2 = y + h;
-
-            if (x < 0) x = 0;
-            else if (x > drawTarget.Width)
-                x = drawTarget.Width;
-
-            if (y < 0) y = 0;
-            else if (y > drawTarget.Height)
-                y = drawTarget.Height;
-
-            for (int i = x; i < x2; i++)
-                for (int j = y; j < y2; j++)
-                    Draw(i, j, p);
+            for (int i = 0; i < w; i++)
+                for (int j = 0; j < h; j++)
+                    Draw(x + i, y + j, p);
         }
 
         /// <summary>
@@ -847,13 +836,15 @@ namespace olc
         /// </summary>
         /// <param name="x">X</param>
         /// <param name="y">Y</param>
+        /// <param name="scale">Scale</param>
         /// <param name="sprite">The Sprite</param>
-        public void DrawSprite(int x, int y, Sprite sprite)
+        public void DrawSprite(int x, int y, Sprite sprite, int scale = 1)
         {
-            if (sprite == null) return;
+            if (sprite == null || scale <= 0) return;
             for (int i = 0; i < sprite.Width; i++)
                 for (int j = 0; j < sprite.Height; j++)
-                    Draw(x + i, y + j, sprite.GetPixel(i, j));
+                    FillRect((x + i) * scale, (y + j) * scale, 
+                        scale, scale, sprite.GetPixel(i, j));
         }
 
         /// <summary>
