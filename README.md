@@ -1,10 +1,7 @@
 # What is it?
-A Port of the One Lone Coder PixelGameEngine into the C# programming language. Now we use 
+This is a Pixel Rendering Engine in the C# programming language. Now we use 
 .Net Core instead of .Net Framework to maximize usability on other platforms. This also
 decreases runtime by alittle bit.
-
-# Original
-The C++ version can be found here: https://github.com/OneLoneCoder/olcPixelGameEngine
 
 # What is Required?
 You will need the Net Core version of OpenTK to allow the engine to use OpenGL functions and
