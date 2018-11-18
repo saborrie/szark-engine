@@ -1,5 +1,5 @@
 # What is it?
-This is a Game Engine focused on easy 2D drawing in the C# programming language. Now we use 
+This is a Game Engine focused on easy 2D drawing written in C#. Now uses 
 .Net Core instead of .Net Framework to maximize usability on other platforms. This also
 decreases runtime by alittle bit.
 
