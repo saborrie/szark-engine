@@ -2,9 +2,9 @@
 A Game Engine focused on easy 2D drawing written in C#. 
 
 # What does it offer?
-- Simple and easy to use.
+- Its simple and easy to use.
 - Uses .Net Core to be accessible on platforms other than windows. 
-- Under MIT License, so have fun with it!
+- Under MIT license, so have fun with it!
 
 # Dependences?
 - OpenTK.NetCore
