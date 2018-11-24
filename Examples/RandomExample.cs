@@ -8,7 +8,7 @@ namespace Example
     {
         RandomExample()
         {
-            appName = "Random Pixels Example";
+            WindowTitle = "Random Pixels Example";
         }
 
         protected override void OnUserCreate()
@@ -19,8 +19,8 @@ namespace Example
         protected override void OnUserUpdate(float fElapsedTime)
         {
             Random random = new Random();
-            for (int i = 0; i < ScreenWidth(); i++)
-                for (int j = 0; j < ScreenHeight(); j++)
+            for (int i = 0; i < ScreenWidth; i++)
+                for (int j = 0; j < ScreenHeight; j++)
                     Draw(i, j, new Pixel((byte)random.Next(255), 
                         (byte)random.Next(255), (byte)random.Next(255)));
         }

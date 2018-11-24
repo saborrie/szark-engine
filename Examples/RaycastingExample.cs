@@ -24,7 +24,7 @@ namespace Example
 
         public RaycastingExample()
         {
-            appName = "Raycating Example";
+            WindowTitle = "Raycating Example";
         }
 
         protected override void OnUserCreate()
@@ -48,13 +48,15 @@ namespace Example
 
             string path = Directory.GetCurrentDirectory();
             brickTexture = new Sprite(path + "\\Examples\\Assets\\Brick.png");
+
+            OpacityMode = OpacityMode.ALPHA;
         }
 
-        protected override void OnUserUpdate(float time)
+        protected override void OnUserUpdate(float fElapsedTime)
         {
             // Input
-            var vert = 5f * time * (GetKey(Key.W) ? 1 : GetKey(Key.S) ? -1 : 0);
-            var rot = 3 * time * (GetKey(Key.D) ? -1 : GetKey(Key.A) ? 1 : 0);
+            var vert = 5f * fElapsedTime * (GetKey(Key.W) ? 1 : GetKey(Key.S) ? -1 : 0);
+            var rot = 3 * fElapsedTime * (GetKey(Key.D) ? -1 : GetKey(Key.A) ? 1 : 0);
 
             // Movement
             playerX += dirX * vert;
@@ -76,9 +78,9 @@ namespace Example
             planeX = (float)(planeX * Math.Cos(rot) - planeY * Math.Sin(rot));
             planeY = (float)(oldPlaneX * Math.Sin(rot) + planeY * Math.Cos(rot));
 
-            for (int x = 0; x < ScreenWidth(); x++)
+            for (int x = 0; x < ScreenWidth; x++)
             {
-                double cameraX = 2 * x / (double)ScreenWidth() - 1;
+                double cameraX = 2 * x / (double)ScreenWidth - 1;
                 double rayDirX = dirX + planeX * cameraX;
                 double rayDirY = dirY + planeY * cameraX;
 
@@ -144,12 +146,12 @@ namespace Example
                 else
                     perpWallDist = (mapY - (double)playerY + (1 - stepY) / 2) / rayDirY;
 
-                int lineHeight = (int)(ScreenHeight() / perpWallDist);
+                int lineHeight = (int)(ScreenHeight / perpWallDist);
 
-                int drawStart = -lineHeight / 2 + ScreenHeight() / 2;
+                int drawStart = -lineHeight / 2 + ScreenHeight / 2;
                 if (drawStart < 0) drawStart = 0;
-                int drawEnd = lineHeight / 2 + ScreenHeight() / 2;
-                if (drawEnd >= ScreenHeight()) drawEnd = ScreenHeight() - 1;
+                int drawEnd = lineHeight / 2 + ScreenHeight / 2;
+                if (drawEnd >= ScreenHeight) drawEnd = ScreenHeight - 1;
 
                 int texNum = map[mapY * mapSize + mapX] - 1;
                 double wallX;
@@ -161,11 +163,11 @@ namespace Example
                 if (side == 0 && rayDirX > 0) texX = 64 - texX - 1;
                 if (side == 1 && rayDirY < 0) texX = 64 - texX - 1;
 
-                for (int y = 0; y < ScreenHeight(); y++)
+                for (int y = 0; y < ScreenHeight; y++)
                 {
                     if (y > drawStart && y < drawEnd)
                     {
-                        int d = y * 256 - ScreenHeight() * 128 + lineHeight * 128;
+                        int d = y * 256 - ScreenHeight * 128 + lineHeight * 128;
                         int texY = ((d * 64) / lineHeight) / 256;
                         Pixel col = brickTexture.GetPixel(texX, texY);
                         Draw(x, y, col);

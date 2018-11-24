@@ -130,7 +130,7 @@ namespace PGE
     /// Mask - Any Alpha below 255 doesn't get rendered
     /// Alpha - 'Proper' Alpha Blending
     /// </summary>
-    public enum PixelMode
+    public enum OpacityMode
     {
         NORMAL,
         MASK,
@@ -161,6 +161,19 @@ namespace PGE
             pixelData = new Pixel[width * height];
             for (var i = 0; i < pixelData.Length; i++)
                 pixelData[i] = new Pixel();
+        }
+
+        /// <summary>
+        /// Constructor to make a Hard Copy of another Sprite
+        /// </summary>
+        /// <param name="sprite"></param>
+        public Sprite(Sprite sprite)
+        {
+            if (sprite == null) return;
+
+            pixelData = new Pixel[sprite.Width * sprite.Height];
+            for (int i = 0; i < sprite.pixelData.Length; i++)
+                pixelData[i] = sprite.pixelData[i];
         }
 
         /// <summary>
@@ -245,54 +258,41 @@ namespace PGE
     }
 
     /// <summary>
-    /// This class is in charge of defining what a
-    /// Extension is in the engine.
-    /// </summary>
-    public class PGEX 
-    {
-        public static PixelGameEngine Engine 
-        { 
-            protected get { return engine; } 
-            set
-            {
-                if (engine == null)
-                    engine = value;
-            }
-        }
-
-        private static PixelGameEngine engine;
-    }
-
-    /// <summary>
     /// The main engine with all Open GL and Drawing
     /// Methods. Derive from this class to access the engine.
     /// Make sure to construct the Engine and Call Start
     /// </summary>
     public class PixelGameEngine
     {
-        public string appName = "";
-
-        private int screenWidth = 256;
-        private int screenHeight = 240;
-
-        private int pixelWidth = 4;
-        private int pixelHeight = 4;
+        public string WindowTitle = "";
 
         private int maxFPS, lastFPSCheck;
-        private bool hasStarted;
-
+        private int renderOffsetX, renderOffsetY;
         private int glBuffer;
 
-        private int renderOffsetX, renderOffsetY;
+        private bool hasStarted;
         private bool isFullscreen;
 
         private Sprite drawTarget;
-        private PixelMode pixelMode;
         private Sprite fontSprite;
 
         private GameWindow gameWindow;
         private KeyboardState keyboardState, lastKeyboardState;
         private MouseState mouseState, lastMouseState;
+
+        public OpacityMode OpacityMode { get; protected set; }
+
+        public int ScreenWidth { get; private set; } = 256;
+        public int ScreenHeight { get; private set; } = 240;
+
+        public int PixelWidth { get; private set; } = 4;
+        public int PixelHeight { get; private set; } = 4;
+
+        public int MouseX => isFullscreen ? (gameWindow.Mouse.X - renderOffsetX) / 
+            PixelWidth : gameWindow.Mouse.X / PixelWidth; 
+
+        public int MouseY => isFullscreen ? (gameWindow.Mouse.Y - renderOffsetY) / 
+            PixelHeight : gameWindow.Mouse.Y / PixelHeight;
 
         private const string Characters = 
             @"qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVB" + 
@@ -305,28 +305,28 @@ namespace PGE
         /// Creates a Window and Starts OpenGL. This needs to
         /// be called before calling start.
         /// </summary>
-        /// <param name="sWidth">Width of the Screen</param>
-        /// <param name="sHeight">Height of the Screen</param>
-        /// <param name="pWidth">Width of Each Pixel</param>
-        /// <param name="pHeight">Height of Each Pixel</param>
+        /// <param name="screenWidth">Width of the Screen</param>
+        /// <param name="screenHeight">Height of the Screen</param>
+        /// <param name="pixelWidth">Width of Each Pixel</param>
+        /// <param name="pixelHeight">Height of Each Pixel</param>
         /// <param name="fps">Max FPS</param>
         /// <returns>If Construction of Success</returns>
-        public bool Construct(int sWidth, int sHeight, int pWidth, int pHeight, int fps = -1)
+        public bool Construct(int screenWidth, int screenHeight, int pixelWidth, int pixelHeight, int fps = -1)
         {
             if (hasStarted) return false;
-            if (sWidth <= 0 | sHeight <= 0 | pWidth < 1 | pHeight < 1 | fps == 0)
+            if (screenWidth <= 0 | screenHeight <= 0 | pixelWidth < 1 | pixelHeight < 1 | fps == 0)
                 return false;
 
-            screenWidth = sWidth;
-            screenHeight = sHeight;
+            ScreenWidth = screenWidth;
+            ScreenHeight = screenHeight;
 
-            pixelWidth = pWidth;
-            pixelHeight = pHeight;
+            PixelWidth = pixelWidth;
+            PixelHeight = pixelHeight;
 
             maxFPS = fps;
 
-            gameWindow = new GameWindow(sWidth * pWidth, sHeight * pHeight,
-                GraphicsMode.Default, appName);
+            gameWindow = new GameWindow(screenWidth * pixelWidth, screenHeight * pixelHeight,
+                GraphicsMode.Default, WindowTitle);
             gameWindow.VSync = VSyncMode.Off;
 
             gameWindow.Load += Loaded;
@@ -338,7 +338,7 @@ namespace PGE
             gameWindow.MouseDown += MouseDown;
             gameWindow.MouseUp += MouseUp;
 
-            drawTarget = new Sprite(sWidth, sHeight);
+            drawTarget = new Sprite(screenWidth, screenHeight);
             for (int i = 0; i < drawTarget.Width; i++)
                 for (int j = 0; j < drawTarget.Height; j++)
                     drawTarget.SetPixel(i, j, new Pixel(0, 0, 0, 0));
@@ -349,7 +349,7 @@ namespace PGE
             GL.GenTextures(1, out glBuffer);
             GL.BindTexture(TextureTarget.Texture2D, glBuffer);
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba,
-                sWidth, sHeight, 0, PixelFormat.Rgba, PixelType.UnsignedByte,
+                screenWidth, screenHeight, 0, PixelFormat.Rgba, PixelType.UnsignedByte,
                     drawTarget.GetData());
 
             // Enable Transparency
@@ -370,8 +370,6 @@ namespace PGE
 
             // Disable Window Resizing
             gameWindow.WindowBorder = WindowBorder.Fixed;
-
-            PGEX.Engine = this;
 
             return true;
         }
@@ -398,19 +396,20 @@ namespace PGE
         {
             if (!hasStarted) return;
 
-            GL.Viewport(renderOffsetX, renderOffsetY, screenWidth * pixelWidth, 
-                screenHeight * pixelHeight);
+            GL.Viewport(renderOffsetX, renderOffsetY, ScreenWidth * PixelWidth, 
+                ScreenHeight * PixelHeight);
 
             if (lastFPSCheck++ * e.Time > 1)
             {
-                gameWindow.Title = $"{appName} | FPS: {(int)(1 / e.Time)}";
+                gameWindow.Title = $"{WindowTitle} | FPS: {(int)(1 / e.Time)}";
                 lastFPSCheck = 0;
             }
 
-            // Draw the Graphics on the Screen
+            // Draw the User-Generated Graphics on the Screen
             OnUserUpdate((float)e.Time);
 
-            GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, screenWidth, screenHeight,
+            // Use Open-GL to Draw Graphics to Screen
+            GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, ScreenWidth, ScreenHeight,
                 PixelFormat.Rgba, PixelType.UnsignedByte, drawTarget.GetData());
 
             GL.Begin(PrimitiveType.Quads);
@@ -468,9 +467,9 @@ namespace PGE
                 WindowState.Normal;
 
             renderOffsetX = fullscreen ? gameWindow.Width / 2 - 
-                screenWidth * pixelWidth / 2 : 0;
+                ScreenWidth * PixelWidth / 2 : 0;
             renderOffsetY = fullscreen ? gameWindow.Height / 2 - 
-                screenHeight * pixelHeight / 2 : 0;
+                ScreenHeight * PixelHeight / 2 : 0;
         }
 
         /// <summary>
@@ -509,40 +508,13 @@ namespace PGE
         /// <returns>Is Up?</returns>
         public bool GetMouseButtonDown(MouseButton button) =>
             mouseState[button] && (mouseState[button] != lastMouseState[button]);
-            
-        /// <summary>
-        /// Gets the Mouse Relative X Position
-        /// </summary>
-        /// <returns>Relative X Position</returns>
-        public int MouseX() =>
-            isFullscreen ? (gameWindow.Mouse.X - renderOffsetX) / 
-                pixelWidth : gameWindow.Mouse.X / pixelWidth;
 
         /// <summary>
-        /// Gets the Mouse Relative Y Position
-        /// </summary>
-        /// <returns>Relative Y Position</returns>
-        public int MouseY() =>
-            isFullscreen ? (gameWindow.Mouse.Y - renderOffsetY) / 
-                pixelHeight : gameWindow.Mouse.Y / pixelHeight;
-                
-        /// <summary>
-        /// Gets the Screen Width
-        /// </summary>
-        /// <returns>Screen Width</returns>
-        public int ScreenWidth() => screenWidth;
-
-        /// <summary>
-        /// Gets the Screen Height
-        /// </summary>
-        /// <returns>Screen Height</returns>
-        public int ScreenHeight() => screenHeight;
-
-        /// <summary>
-        /// Returns the Actual Draw Target
+        /// Returns the current Frame
         /// </summary>
         /// <returns>Draw Target</returns>
-        public Sprite GetDrawTarget() => drawTarget;
+        public Sprite GetDrawTarget(bool copy = false) =>
+            !copy ? drawTarget : new Sprite(drawTarget);
 
         /// <summary>
         /// Set the Draw Target. If Target is null
@@ -550,15 +522,8 @@ namespace PGE
         /// </summary>
         /// <param name="target">The New Target</param>
         public void SetDrawTarget(Sprite target) =>
-            drawTarget = target == null ? new Sprite(screenWidth, 
-                screenHeight) : target;
-
-        /// <summary>
-        /// Sets the Alpha Blending Mode
-        /// </summary>
-        /// <param name="mode">The Mode</param>
-        public void SetPixelMode(PixelMode mode) => 
-            pixelMode = mode;
+            drawTarget = target == null ? new Sprite(ScreenWidth, 
+                ScreenHeight) : target;
 
         /// <summary>
         /// Draws a Pixel on the Screen
@@ -568,14 +533,14 @@ namespace PGE
         /// <param name="p">Color</param>
         public virtual void Draw(int x, int y, Pixel p)
         {
-            if (pixelMode == PixelMode.ALPHA && p.a < 255)
+            if (OpacityMode == OpacityMode.ALPHA && p.a < 255)
             {
                 var l = Pixel.Lerp(drawTarget.GetPixel(x, y), p, p.a / 255f);
                 drawTarget.SetPixel(x, y, new Pixel(l.r, l.g, l.b));
                 return;
             }
 
-            if (pixelMode == PixelMode.MASK && p.a < 255)
+            if (OpacityMode == OpacityMode.MASK && p.a < 255)
                 return;
 
             drawTarget.SetPixel(x, y, p);
