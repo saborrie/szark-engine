@@ -26,11 +26,11 @@
           "lib/netstandard1.3/CoreCompat.System.Drawing.dll": {}
         }
       },
-      "Microsoft.NETCore.App/2.2.0-preview2-26905-02": {
+      "Microsoft.NETCore.App/2.2.0-preview3-27014-02": {
         "type": "package",
         "dependencies": {
-          "Microsoft.NETCore.DotNetHostPolicy": "2.2.0-preview2-26905-02",
-          "Microsoft.NETCore.Platforms": "2.2.0-preview2-26905-02",
+          "Microsoft.NETCore.DotNetHostPolicy": "2.2.0-preview3-27014-02",
+          "Microsoft.NETCore.Platforms": "2.2.0-preview3-27014-02",
           "Microsoft.NETCore.Targets": "2.0.0",
           "NETStandard.Library": "2.0.3"
         },
@@ -184,22 +184,22 @@
           "build/netcoreapp2.2/Microsoft.NETCore.App.targets": {}
         }
       },
-      "Microsoft.NETCore.DotNetAppHost/2.2.0-preview2-26905-02": {
+      "Microsoft.NETCore.DotNetAppHost/2.2.0-preview3-27014-02": {
         "type": "package"
       },
-      "Microsoft.NETCore.DotNetHostPolicy/2.2.0-preview2-26905-02": {
+      "Microsoft.NETCore.DotNetHostPolicy/2.2.0-preview3-27014-02": {
         "type": "package",
         "dependencies": {
-          "Microsoft.NETCore.DotNetHostResolver": "2.2.0-preview2-26905-02"
+          "Microsoft.NETCore.DotNetHostResolver": "2.2.0-preview3-27014-02"
         }
       },
-      "Microsoft.NETCore.DotNetHostResolver/2.2.0-preview2-26905-02": {
+      "Microsoft.NETCore.DotNetHostResolver/2.2.0-preview3-27014-02": {
         "type": "package",
         "dependencies": {
-          "Microsoft.NETCore.DotNetAppHost": "2.2.0-preview2-26905-02"
+          "Microsoft.NETCore.DotNetAppHost": "2.2.0-preview3-27014-02"
         }
       },
-      "Microsoft.NETCore.Platforms/2.2.0-preview2-26905-02": {
+      "Microsoft.NETCore.Platforms/2.2.0-preview3-27014-02": {
         "type": "package",
         "compile": {
           "lib/netstandard1.0/_._": {}
@@ -768,20 +768,21 @@
   },
   "libraries": {
     "CoreCompat.System.Drawing/1.0.0-beta006": {
-      "sha512": "KOBeVy8FHx9zkXrIZAM8OdXPrimROmvfB02fOegrYIelNN/zWhsOwzONgD7gw7wOTJgAFfdwpme5CiMraJj47Q==",
+      "sha512": "pMq2FWNVZxZ97kWp+uvjzMD4Z9SAcwTT1S523r57GW1wE6qb1S6s5B7evy2l1OREDNNeeRqFlKu69Mjz8gg1Sg==",
       "type": "package",
       "path": "corecompat.system.drawing/1.0.0-beta006",
       "files": [
+        ".signature.p7s",
         "corecompat.system.drawing.1.0.0-beta006.nupkg.sha512",
         "corecompat.system.drawing.nuspec",
         "lib/net45/CoreCompat.System.Drawing.dll",
         "lib/netstandard1.3/CoreCompat.System.Drawing.dll"
       ]
     },
-    "Microsoft.NETCore.App/2.2.0-preview2-26905-02": {
-      "sha512": "gChSBnz68z95HVKN9JetN2Z2DqVpmttJvjJwl4fE1Q/YZMi2EBby3zBIQLHxi4Od7Lsumu0BGj5aCqCTuUi2rg==",
+    "Microsoft.NETCore.App/2.2.0-preview3-27014-02": {
+      "sha512": "gfJ+hoCtgmWuGSSRmJdzcGNXn2Vy8RThAIe7Qg/TGI0ecCCA0qnle9QFX6gOOcViEfsRwBO5qHSoAkaxt1cPHQ==",
       "type": "package",
-      "path": "microsoft.netcore.app/2.2.0-preview2-26905-02",
+      "path": "microsoft.netcore.app/2.2.0-preview3-27014-02",
       "files": [
         ".signature.p7s",
         "LICENSE.TXT",
@@ -790,7 +791,7 @@
         "build/netcoreapp2.2/Microsoft.NETCore.App.PlatformManifest.txt",
         "build/netcoreapp2.2/Microsoft.NETCore.App.props",
         "build/netcoreapp2.2/Microsoft.NETCore.App.targets",
-        "microsoft.netcore.app.2.2.0-preview2-26905-02.nupkg.sha512",
+        "microsoft.netcore.app.2.2.0-preview3-27014-02.nupkg.sha512",
         "microsoft.netcore.app.nuspec",
         "ref/netcoreapp2.2/Microsoft.CSharp.dll",
         "ref/netcoreapp2.2/Microsoft.CSharp.xml",
@@ -1042,55 +1043,55 @@
         "runtime.json"
       ]
     },
-    "Microsoft.NETCore.DotNetAppHost/2.2.0-preview2-26905-02": {
-      "sha512": "CZVhG9bBEaNNReL4n6Tz1TEPHA45Wj3KL9piNp3Uig7ytKywli4RPD3cMMgoYEepITwHbFC9rgL1fWMHE9k3sg==",
+    "Microsoft.NETCore.DotNetAppHost/2.2.0-preview3-27014-02": {
+      "sha512": "GQfi+4bb7xjtu8hveT4RthQ//S0mZihNmIu5VrrShNrG6HbipizQrdAR/A3ivNLaV1NuLmfbjjyucCjpS5ghHA==",
       "type": "package",
-      "path": "microsoft.netcore.dotnetapphost/2.2.0-preview2-26905-02",
+      "path": "microsoft.netcore.dotnetapphost/2.2.0-preview3-27014-02",
       "files": [
         ".signature.p7s",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
-        "microsoft.netcore.dotnetapphost.2.2.0-preview2-26905-02.nupkg.sha512",
+        "microsoft.netcore.dotnetapphost.2.2.0-preview3-27014-02.nupkg.sha512",
         "microsoft.netcore.dotnetapphost.nuspec",
         "runtime.json"
       ]
     },
-    "Microsoft.NETCore.DotNetHostPolicy/2.2.0-preview2-26905-02": {
-      "sha512": "JjCt1kjLo/jBRk8YiJqdAwG3JMdQwhgR86RUOeAVg/RdFAYmsA5GLsmD0uwfRvnCmzXdgaDNn6iAjQyaq7bU+w==",
+    "Microsoft.NETCore.DotNetHostPolicy/2.2.0-preview3-27014-02": {
+      "sha512": "JP4Ha83NqmjZx30+4BWCOcEztYo3wQiPsBs/hGRdvV8ZAi7w4kLbHSYPExIAG7uvhuFyByCcAC2hbQMnXK8ikw==",
       "type": "package",
-      "path": "microsoft.netcore.dotnethostpolicy/2.2.0-preview2-26905-02",
+      "path": "microsoft.netcore.dotnethostpolicy/2.2.0-preview3-27014-02",
       "files": [
         ".signature.p7s",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
-        "microsoft.netcore.dotnethostpolicy.2.2.0-preview2-26905-02.nupkg.sha512",
+        "microsoft.netcore.dotnethostpolicy.2.2.0-preview3-27014-02.nupkg.sha512",
         "microsoft.netcore.dotnethostpolicy.nuspec",
         "runtime.json"
       ]
     },
-    "Microsoft.NETCore.DotNetHostResolver/2.2.0-preview2-26905-02": {
-      "sha512": "TMDuiZaWEZHHzJMCE2wLg97oZNZSBC9tVE/dMptUlpFdlfa60+XrEpNdiesGMEFtZ3uU+Rmmw5/pkjMmHd8GVg==",
+    "Microsoft.NETCore.DotNetHostResolver/2.2.0-preview3-27014-02": {
+      "sha512": "mXta9BkAb6n6P+NDhG4UVtz1w2WXZmwBHAyTjaSEvS9RXd2Oq3yIk3WOb0r8fdIVvL5u1cumypUi69/SRd2xAw==",
       "type": "package",
-      "path": "microsoft.netcore.dotnethostresolver/2.2.0-preview2-26905-02",
+      "path": "microsoft.netcore.dotnethostresolver/2.2.0-preview3-27014-02",
       "files": [
         ".signature.p7s",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
-        "microsoft.netcore.dotnethostresolver.2.2.0-preview2-26905-02.nupkg.sha512",
+        "microsoft.netcore.dotnethostresolver.2.2.0-preview3-27014-02.nupkg.sha512",
         "microsoft.netcore.dotnethostresolver.nuspec",
         "runtime.json"
       ]
     },
-    "Microsoft.NETCore.Platforms/2.2.0-preview2-26905-02": {
-      "sha512": "uo3E4hCRGKQknnWeGcRMvlL+7wEjaYgpXnjGgd8Sbjw76X9chIwQ/MMtiBe/WYvBzR0Iy+sA5ItwyAdrBbnmUg==",
+    "Microsoft.NETCore.Platforms/2.2.0-preview3-27014-02": {
+      "sha512": "W9vw9Myri9p+gd6XVTsMDnSa0pKhHngUilZqozbvTEIGdCM2J9NLIMrYyx2QCdHKIqGFfyBog6q1LnLH9khrFg==",
       "type": "package",
-      "path": "microsoft.netcore.platforms/2.2.0-preview2-26905-02",
+      "path": "microsoft.netcore.platforms/2.2.0-preview3-27014-02",
       "files": [
         ".signature.p7s",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
         "lib/netstandard1.0/_._",
-        "microsoft.netcore.platforms.2.2.0-preview2-26905-02.nupkg.sha512",
+        "microsoft.netcore.platforms.2.2.0-preview3-27014-02.nupkg.sha512",
         "microsoft.netcore.platforms.nuspec",
         "runtime.json",
         "useSharedDesignerContext.txt",
@@ -1365,10 +1366,11 @@
       ]
     },
     "System.Collections.NonGeneric/4.0.1": {
-      "sha512": "hMxFT2RhhlffyCdKLDXjx8WEC5JfCvNozAZxCablAuFRH74SCV4AgzE8yJCh/73bFnEoZgJ9MJmkjQ0dJmnKqA==",
+      "sha512": "00tOaRBr5u4JsckEJfBw1eI4Frc5pOFM5gSdqr6oMYjXwQLLhV/LAl2Ty0BgELDvSuqBRBETTgNCMwRuUShk9Q==",
       "type": "package",
       "path": "system.collections.nongeneric/4.0.1",
       "files": [
+        ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
         "lib/MonoAndroid10/_._",
@@ -1402,10 +1404,11 @@
       ]
     },
     "System.Collections.Specialized/4.0.1": {
-      "sha512": "/HKQyVP0yH1I0YtK7KJL/28snxHNH/bi+0lgk/+MbURF6ULhAE31MDI+NZDerNWu264YbxklXCCygISgm+HMug==",
+      "sha512": "2lTt/6eh+HGLg495oLQoFDvLLy9Wk1FTnCw87CywP+Yq0ITi1PD+p5wgxcyw1Zksu/1dLsQmo3ezO2BGRk67tg==",
       "type": "package",
       "path": "system.collections.specialized/4.0.1",
       "files": [
+        ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
         "lib/MonoAndroid10/_._",
@@ -1439,10 +1442,11 @@
       ]
     },
     "System.ComponentModel/4.0.1": {
-      "sha512": "oBZFnm7seFiVfugsIyOvQCWobNZs7FzqDV/B7tx20Ep/l3UUFCPDkdTnCNaJZTU27zjeODmy2C/cP60u3D4c9w==",
+      "sha512": "3AOvy/bB7s8yAkolZOlqGeLDrPySuYsgkk7hKIBWn5a/Le7V16PDYQIzj7w7hi4UUXXmEmN/ZehNlAi5eD9r5w==",
       "type": "package",
       "path": "system.componentmodel/4.0.1",
       "files": [
+        ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
         "lib/MonoAndroid10/_._",
@@ -1496,10 +1500,11 @@
       ]
     },
     "System.ComponentModel.Primitives/4.1.0": {
-      "sha512": "sc/7eVCdxPrp3ljpgTKVaQGUXiW05phNWvtv/m2kocXqrUQvTVWKou1Edas2aDjTThLPZOxPYIGNb/HN0QjURg==",
+      "sha512": "mAaj8PXxM7hUSIJYm9chhSe90HaIVyl8vb4JJO0M7fRaeBqSaaveHdRAmOL0LcOxp7kf9Vb8HujCe02DUqG5HQ==",
       "type": "package",
       "path": "system.componentmodel.primitives/4.1.0",
       "files": [
+        ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
         "lib/MonoAndroid10/_._",
@@ -1533,10 +1538,11 @@
       ]
     },
     "System.ComponentModel.TypeConverter/4.1.0": {
-      "sha512": "MnDAlaeJZy9pdB5ZdOlwdxfpI+LJQ6e0hmH7d2+y2LkiD8DRJynyDYl4Xxf3fWFm7SbEwBZh4elcfzONQLOoQw==",
+      "sha512": "jcj79VC96yxc/rgLB59+g4675iVts1XrfC97dniMEvmJhRl8cG7qRO3EsJQwNw8cFL6RenFxn/CGfUhgj32SdQ==",
       "type": "package",
       "path": "system.componentmodel.typeconverter/4.1.0",
       "files": [
+        ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
         "lib/MonoAndroid10/_._",
@@ -1650,10 +1656,11 @@
       ]
     },
     "System.Drawing.Primitives/4.0.0": {
-      "sha512": "9lVRG1voBwzLGZkf1XFJrobdZDZ5ZHMU4FVTbXAbzehpN90yYgkUeo9GoEYdvkt/EXaaHZJAeuffXP4JBbY+Ig==",
+      "sha512": "dkRqm4Q3fbCoYFI8oPphtwkDfzNB4Y55O/ND78Bzi7Z+ElQwU28CY3hsw/zU+WYwT0I58cGRZAIJJEIia9xWeA==",
       "type": "package",
       "path": "system.drawing.primitives/4.0.0",
       "files": [
+        ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
         "lib/net45/System.Drawing.Primitives.dll",
@@ -1922,10 +1929,11 @@
       ]
     },
     "System.IO.FileSystem.Watcher/4.0.0": {
-      "sha512": "qM4Wr3La+RYb/03B0mZZjbA7tHsGzDffnuXP8Sl48HW2JwCjn3kfD5qdw0sqyNNowUipcJMi9/q6sMUrOIJ6UQ==",
+      "sha512": "b3KVTcliK4JBOowkcHvwpufp9Mgxku9HKUyNH+x/JgWcciB/TPPFubcV2c9R1ZKFlZw+MNj5xoXf3qLIlVPNow==",
       "type": "package",
       "path": "system.io.filesystem.watcher/4.0.0",
       "files": [
+        ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
         "lib/MonoAndroid10/_._",
@@ -2936,10 +2944,11 @@
       ]
     },
     "System.Threading.Overlapped/4.0.1": {
-      "sha512": "f7aLuLkBoCQM2kng7zqLFBXz9Gk48gDK8lk1ih9rH/1arJJzZK9gJwNvPDhL6Ps/l6rwOr8jw+4FCHL0KKWiEg==",
+      "sha512": "UeBx2TvawhzKeyUOMZbfpsBgofJ1gypHqfTIhJNS+lxhpO3dw2yUPPri2uBMnxsXOZqYj+rnBC4XvmkSYmyqSw==",
       "type": "package",
       "path": "system.threading.overlapped/4.0.1",
       "files": [
+        ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
         "lib/net46/System.Threading.Overlapped.dll",
@@ -3030,10 +3039,11 @@
       ]
     },
     "System.Threading.Thread/4.0.0": {
-      "sha512": "gIdJqDXlOr5W9zeqFErLw3dsOsiShSCYtF9SEHitACycmvNvY8odf9kiKvp6V7aibc8C4HzzNBkWXjyfn7plbQ==",
+      "sha512": "Tlo/QJ5w4UhgO7Abxz3k9LL/nfQ9/2ioc88cQIMOjNhzK1QGJvvH+A6w5Sx+u99D6lgR+1Nj1YZ9/lknR963kQ==",
       "type": "package",
       "path": "system.threading.thread/4.0.0",
       "files": [
+        ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
         "lib/MonoAndroid10/_._",
@@ -3071,7 +3081,7 @@
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.2": [
       "CoreCompat.System.Drawing >= 1.0.0-beta006",
-      "Microsoft.NETCore.App >= 2.2.0-preview2-26905-02",
+      "Microsoft.NETCore.App >= 2.2.0-preview3-27014-02",
       "OpenTK.NETCore >= 1.1.2749.6433"
     ]
   },
@@ -3082,11 +3092,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\Jakub\\Documents\\Pixel Game Engine\\PixelGameEngine.csproj",
+      "projectUniqueName": "C:\\Users\\Jakub\\Documents\\GitHub\\PixelGameEngine\\PixelGameEngine.csproj",
       "projectName": "PixelGameEngine",
-      "projectPath": "c:\\Users\\Jakub\\Documents\\Pixel Game Engine\\PixelGameEngine.csproj",
+      "projectPath": "C:\\Users\\Jakub\\Documents\\GitHub\\PixelGameEngine\\PixelGameEngine.csproj",
       "packagesPath": "C:\\Users\\Jakub\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\Jakub\\Documents\\Pixel Game Engine\\obj\\",
+      "outputPath": "C:\\Users\\Jakub\\Documents\\GitHub\\PixelGameEngine\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -3123,7 +3133,7 @@
           "Microsoft.NETCore.App": {
             "suppressParent": "All",
             "target": "Package",
-            "version": "[2.2.0-preview2-26905-02, )",
+            "version": "[2.2.0-preview3-27014-02, )",
             "autoReferenced": true
           },
           "OpenTK.NETCore": {

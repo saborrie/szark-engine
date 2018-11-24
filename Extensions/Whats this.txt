@@ -1,2 +1,0 @@
-In this folder there will be extensions for the pixel game engine. Please contact me on the One Lone Coder discord @JakubSzark if
-you would like me to add your contributions to this folder.

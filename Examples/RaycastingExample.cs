@@ -1,7 +1,7 @@
-﻿using olc;
+﻿using System;
 using OpenTK.Input;
-using System;
 using System.IO;
+using PGE;
 
 namespace Example
 {
@@ -24,7 +24,7 @@ namespace Example
 
         public RaycastingExample()
         {
-            appName = "Example";
+            appName = "Raycating Example";
         }
 
         protected override void OnUserCreate()

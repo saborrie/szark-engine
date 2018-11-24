@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using olc;
+using PGE;
 
 namespace Example
 {
@@ -8,7 +8,7 @@ namespace Example
     {
         RandomExample()
         {
-            appName = "Example";
+            appName = "Random Pixels Example";
         }
 
         protected override void OnUserCreate()

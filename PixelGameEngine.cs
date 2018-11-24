@@ -16,7 +16,7 @@ using System.Drawing;
 using System.IO;
 using System.Collections.Generic;
 
-namespace olc
+namespace PGE
 {
     /// <summary>
     /// A struct containing RGBA information for a pixel.
@@ -106,18 +106,35 @@ namespace olc
             new Pixel((byte)(i >> 0), (byte)(i >> 8), 
                 (byte)(i >> 16), (byte)(i >> 24));
 
+        public static Pixel operator+(Pixel f, Pixel p) =>
+            new Pixel((byte)(f.r + p.r), (byte)(f.g + p.g), (byte)(f.b + p.b), (byte)(f.a + p.a));
+
+        public static Pixel operator-(Pixel f, Pixel p) =>
+            new Pixel((byte)(f.r - p.r), (byte)(f.g - p.g), (byte)(f.b - p.b), (byte)(f.a - p.a));
+
+        public static Pixel operator*(Pixel f, float t) =>
+            new Pixel((byte)(f.r * t), (byte)(f.g * t), (byte)(f.b * t), (byte)(f.a * t));
+
         /// <summary>
-        /// The Alpha 'Blending' Modes
-        /// Normal - Alpha has no Affect
-        /// Mask - Any Alpha below 255 doesn't get rendered
-        /// Alpha - 'Proper' Alpha Blending
+        /// Compares this pixel's color to another
         /// </summary>
-        public enum Mode
-        {
-            NORMAL,
-            MASK,
-            ALPHA
-        }
+        /// <param name="other">The other pixel</param>
+        /// <returns>If both colors are the same</returns>
+        public bool Compare(Pixel other) =>
+            other.r == r && other.g == g && other.b == b && other.a == a;
+    }
+
+    /// <summary>
+    /// The Alpha 'Blending' Modes
+    /// Normal - Alpha has no Affect
+    /// Mask - Any Alpha below 255 doesn't get rendered
+    /// Alpha - 'Proper' Alpha Blending
+    /// </summary>
+    public enum PixelMode
+    {
+        NORMAL,
+        MASK,
+        ALPHA
     }
 
     /// <summary>
@@ -264,15 +281,13 @@ namespace olc
         private int maxFPS, lastFPSCheck;
         private bool hasStarted;
 
-        private string title;
-        private float blendFactor = 0.5f;
         private int glBuffer;
 
         private int renderOffsetX, renderOffsetY;
         private bool isFullscreen;
 
         private Sprite drawTarget;
-        private Pixel.Mode pixelMode;
+        private PixelMode pixelMode;
         private Sprite fontSprite;
 
         private GameWindow gameWindow;
@@ -310,9 +325,8 @@ namespace olc
 
             maxFPS = fps;
 
-            title = "Pixel Game Engine (C# Edition)";
             gameWindow = new GameWindow(sWidth * pWidth, sHeight * pHeight,
-                GraphicsMode.Default, title + " - " + appName);
+                GraphicsMode.Default, appName);
             gameWindow.VSync = VSyncMode.Off;
 
             gameWindow.Load += Loaded;
@@ -389,7 +403,7 @@ namespace olc
 
             if (lastFPSCheck++ * e.Time > 1)
             {
-                gameWindow.Title = $"{title} - {appName} | FPS: {(int)(1 / e.Time)}";
+                gameWindow.Title = $"{appName} | FPS: {(int)(1 / e.Time)}";
                 lastFPSCheck = 0;
             }
 
@@ -543,15 +557,8 @@ namespace olc
         /// Sets the Alpha Blending Mode
         /// </summary>
         /// <param name="mode">The Mode</param>
-        public void SetPixelMode(Pixel.Mode mode) => 
+        public void SetPixelMode(PixelMode mode) => 
             pixelMode = mode;
-
-        /// <summary>
-        /// Sets the Alpha Blend Factor
-        /// </summary>
-        /// <param name="fBlend">The Factor</param>
-        public void SetPixelBlend(float fBlend) =>
-            blendFactor = fBlend < 0 ? 0 : fBlend > 1 ? 1 : fBlend;
 
         /// <summary>
         /// Draws a Pixel on the Screen
@@ -561,16 +568,14 @@ namespace olc
         /// <param name="p">Color</param>
         public virtual void Draw(int x, int y, Pixel p)
         {
-            if (pixelMode == Pixel.Mode.ALPHA && p.a < 255)
+            if (pixelMode == PixelMode.ALPHA && p.a < 255)
             {
-                var d = drawTarget.GetPixel(x, y);
-                var n = Pixel.Lerp(p, d, blendFactor * 1 - (p.a / 255f));
-                drawTarget.SetPixel(x, y, new Pixel(n.r, n.g, n.b, 
-                    (byte)((d.a + p.a) / 2f)));
+                var l = Pixel.Lerp(drawTarget.GetPixel(x, y), p, p.a / 255f);
+                drawTarget.SetPixel(x, y, new Pixel(l.r, l.g, l.b));
                 return;
             }
 
-            if (pixelMode == Pixel.Mode.MASK && p.a < 255)
+            if (pixelMode == PixelMode.MASK && p.a < 255)
                 return;
 
             drawTarget.SetPixel(x, y, p);
@@ -702,32 +707,13 @@ namespace olc
         /// <param name="p">Color</param>
         public void FillCircle(int x, int y, int r, Pixel p)
         {
-            if (r == 0) return;
-
-            if (r < 0)
+            for (int i = x; i < x + r * 2; i++)
             {
-                r *= -1;
-                x -= r;
-            }
-
-            int x0 = 0;
-            int d = 3 - 2 * r;
-            int y0 = r / 2;
-
-            Action<int, int, int> drawStraight;
-            drawStraight = (int sx, int ex, int ny) => {
-                for (int i = sx; i <= ex; i++) Draw(i, ny, p);
-            };
-
-            while (y0 >= x0)
-            {
-                // Modified to draw scan-lines instead of edges
-                drawStraight(x - x0, x + x0, y - y0);
-                drawStraight(x - y0, x + y0, y - x0);
-                drawStraight(x - x0, x + x0, y + y0);
-                drawStraight(x - y0, x + y0, y + x0);
-                if (d < 0) d += 4 * x0++ + 6;
-                else d += 4 * (x0++ - y0--) + 10;
+                for (int j = y; j < y + r * 2; j++)
+                {
+                    var dist = Math.Sqrt((x + r - i) * (x + r - i) + (y + r - j) * (y + r - j));
+                    if (dist < r) Draw(x - 1 + i, y - 1 + j, p);
+                }
             }
         }
 
@@ -760,24 +746,36 @@ namespace olc
         /// <param name="p">Color</param>
         public void FillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Pixel p)
         {
-            DrawTriangle(x1, y1, x2, y2, x3, y3, p);
+            var minX = Math.Min(Math.Min(x1, x2), x3);
+            var maxX = Math.Max(Math.Max(x1, x2), x3);
 
-            float xL, yL, xS, yS;
-            float sideLength = Distance(x2, y2, x3, y3);
+            var minY = Math.Min(Math.Min(y1, y2), y3);
+            var maxY = Math.Max(Math.Max(y1, y2), y3);
 
-            for (int i = 0; i < (int)sideLength; i++)
+            for (int x = minX; x < maxX; x++)
             {
-                float d = i / sideLength;
+                for (int y = minY; y < maxY; y++)
+                {
+                    float d1, d2, d3;
+                    bool hasNeg, hasPos;
 
-                xS = (1 - d) * x1 + d * x3;
-                yS = (1 - d) * y1 + d * y3;
+                    d1 = Sign(x, y, x1, y1, x2, y2);
+                    d2 = Sign(x, y, x2, y2, x3, y3);
+                    d3 = Sign(x, y, x3, y3, x1, y1);
 
-                xL = (1 - d) * x2 + d * x3;
-                yL = (1 - d) * y2 + d * y3;
+                    hasNeg = (d1 < 0) || (d2 < 0) || (d3 < 0);
+                    hasPos = (d1 > 0) || (d2 > 0) || (d3 > 0);
 
-                DrawLine((int)xS, (int)yS, (int)xL, (int)yL, p, 2);
+                    if (!(hasNeg && hasPos))
+                    {
+                        Draw(x, y, p);
+                    }
+                }
             }
         }
+
+        private float Sign(int x1, int y1, int x2, int y2, int x3, int y3) =>
+            (x1 - x3) * (y2 - y3) - (x2 - x3) * (y1 - y3);
 
         /// <summary>
         /// Gives you the Distance Between to Points
