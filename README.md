@@ -3,6 +3,8 @@ This is a Game Engine focused on easy 2D drawing written in C#. I want to keep t
 simple and easy to use. This project uses .net core to be accessible on platforms other than
 windows.
 
+# MIT License
+
 # What is Required?
 You will need the Net Core version of OpenTK to allow the engine to use OpenGL functions and
 you will also need the Net Core version of the System.Drawing library. Both of these can be retrieved straight
