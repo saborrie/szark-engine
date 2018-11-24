@@ -1,5 +1,5 @@
 # What is it?
-A Game Engine focused on easy 2D drawing written in C#. 
+A game engine focused on a easy and streamlined workflow written in C#. 
 
 # What does it offer?
 - Its simple and easy to use.
