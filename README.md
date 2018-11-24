@@ -12,5 +12,5 @@ A Game Engine focused on easy 2D drawing written in C#.
 
 Please use NUGET PACKAGE MANAGER
 
-# Examples
+# Raycasting Example
 ![alt text](https://i.imgur.com/OPpvQep.gif)
