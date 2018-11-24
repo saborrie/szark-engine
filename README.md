@@ -8,13 +8,11 @@ A Game Engine focused on easy 2D drawing written in C#.
 
 # Dependences?
 - OpenTK.NetCore
+![alt text](https://i.imgur.com/RtYa9AR.gif)
 - CoreCompact.System.Drawing
+![alt text](https://i.imgur.com/rRDdgQi.gif)
 
 Please use NUGET PACKAGE MANAGER
-
-# Gifs acquiring OpenTK and System.Drawing
-![alt text](https://i.imgur.com/RtYa9AR.gif)
-![alt text](https://i.imgur.com/rRDdgQi.gif)
 
 # Examples
 ![alt text](https://i.imgur.com/OPpvQep.gif)
