@@ -1,15 +1,16 @@
 # What is it?
-This is a Game Engine focused on easy 2D drawing written in C#. I want to keep this engine
-simple and easy to use. This project uses .net core to be accessible on platforms other than
-windows. This project is under MIT License, so have fun with it!
+A Game Engine focused on easy 2D drawing written in C#. 
 
-# What is Required?
-You will need the Net Core version of OpenTK to allow the engine to use OpenGL functions and
-you will also need the Net Core version of the System.Drawing library. Both of these can be retrieved straight
-from your IDE if you are using visual studio or visual studio code. (USE NUGET PACKAGE MANAGER)
+# What does it offer?
+- Simple and easy to use.
+- Uses .Net Core to be accessible on platforms other than windows. 
+- Under MIT License, so have fun with it!
 
+# Dependences?
 - OpenTK.NetCore
 - CoreCompact.System.Drawing
+
+Please use NUGET PACKAGE MANAGER
 
 # Gifs acquiring OpenTK and System.Drawing
 ![alt text](https://i.imgur.com/RtYa9AR.gif)
