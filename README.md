@@ -3,7 +3,6 @@ This is a Game Engine focused on easy 2D drawing written in C#. I want to keep t
 simple and easy to use. This project uses .net core to be accessible on platforms other than
 windows.
 
-# Example
 ![alt text](https://i.imgur.com/OPpvQep.gif)
 
 # What is Required?
