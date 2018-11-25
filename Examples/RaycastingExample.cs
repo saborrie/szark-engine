@@ -52,7 +52,7 @@ namespace Example
             OpacityMode = OpacityMode.ALPHA;
         }
 
-        protected override void OnUserUpdate(float fElapsedTime)
+        protected override void OnUserRender(float fElapsedTime)
         {
             // Input
             var vert = 5f * fElapsedTime * (GetKey(Key.W) ? 1 : GetKey(Key.S) ? -1 : 0);

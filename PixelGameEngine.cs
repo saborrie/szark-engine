@@ -331,6 +331,7 @@ namespace PGE
 
             gameWindow.Load += Loaded;
             gameWindow.RenderFrame += Render;
+            gameWindow.UpdateFrame += Update;
             gameWindow.Disposed += Disposed;
             gameWindow.KeyDown += KeyDown;
             gameWindow.KeyUp += KeyUp;
@@ -374,6 +375,13 @@ namespace PGE
             return true;
         }
 
+        // On Window Update
+        private void Update(object sender, FrameEventArgs e)
+        {
+            if (!hasStarted) return;
+            OnUserUpdate((float)e.Time);
+        }
+
         /// <summary>
         /// Starts the Engine. Requires Construct to be
         /// called before hand.
@@ -405,8 +413,7 @@ namespace PGE
                 lastFPSCheck = 0;
             }
 
-            // Draw the User-Generated Graphics on the Screen
-            OnUserUpdate((float)e.Time);
+            OnUserRender((float)e.Time);
 
             // Use Open-GL to Draw Graphics to Screen
             GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, ScreenWidth, ScreenHeight,
@@ -439,10 +446,16 @@ namespace PGE
         protected virtual void OnUserCreate() { }
 
         /// <summary>
-        /// Called every frame, and provides you with a time per frame value
+        /// Runs on a seperate Thread for game logic
         /// </summary>
-        /// <param name="fElapsedTime">Engine Time</param>
+        /// <param name="fElapsedTime">Update Time</param>
         protected virtual void OnUserUpdate(float fElapsedTime) { }
+
+        /// <summary>
+        /// Runs every frame, put graphics rendering here    
+        /// </summary>
+        /// <param name="fElapsedTime">Render Time</param>
+        protected virtual void OnUserRender(float fElapsedTime) { }
 
         /// <summary>
         /// Called once on application termination, so you can be a clean coder
