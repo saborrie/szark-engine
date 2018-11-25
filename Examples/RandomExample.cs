@@ -2,10 +2,15 @@
 using System.IO;
 using PGE;
 
+using PGEX.Affine;
+
 namespace Example
 {
     class RandomExample : PixelGameEngine
     {
+        private Sprite brick;
+        private int rot;
+
         RandomExample()
         {
             WindowTitle = "Random Pixels Example";
@@ -13,7 +18,7 @@ namespace Example
 
         protected override void OnUserCreate()
         {
-
+            brick = new Sprite("Examples/Assets/Brick.png");
         }
 
         protected override void OnUserUpdate(float fElapsedTime)

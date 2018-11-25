@@ -66,7 +66,7 @@ namespace PGE
         public static Pixel VERY_DARK_GREEN = new Pixel(0, 64, 0);
         public static Pixel VERY_DARK_BLUE = new Pixel(0, 0, 64);
 
-        // YMK Colors
+        // CYM Colors
         public static Pixel YELLOW = new Pixel(255, 255, 0);
         public static Pixel MAGENTA = new Pixel(255, 0, 255);
         public static Pixel CYAN = new Pixel(0, 255, 255);
