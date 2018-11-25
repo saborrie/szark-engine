@@ -1,10 +1,5 @@
 ﻿using System;
-using System.IO;
 using PGE;
-
-using OpenTK.Input;
-
-using PGEX.Affine;
 
 namespace Example
 {
