@@ -1,5 +1,5 @@
 # What is it
-A game engine focused on a easy and streamlined workflow, written in C#. 
+A game engine written in c#
 
 # What does it offer
 - Its simple and easy to use.
