@@ -18,8 +18,9 @@ Please use NUGET PACKAGE MANAGER
 2. Clone or download this project
 3. Open the project in your favorite IDE like
 VS Code
-4. Make sure to restore or retrieve the
-dependencies
+4. Make sure to restore the project or 
+download the dependencies with Nuget Package
+Manager
 5. Your good to go!
 
 # Examples
