@@ -16,6 +16,11 @@ using System.Drawing;
 using System.IO;
 using System.Collections.Generic;
 
+using NAudio;
+using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
+using System.Linq;
+
 namespace PGE
 {
     /// <summary>
@@ -257,6 +262,77 @@ namespace PGE
         }
     }
 
+    public class AudioClip
+    {
+        public float[] AudioData { get; private set; }
+        public WaveFormat WaveFormat { get; private set; }
+
+        public AudioClip(string audioFileName)
+        {
+            using (var audioFileReader = new AudioFileReader(audioFileName))
+            {
+                WaveFormat = audioFileReader.WaveFormat;
+
+                var wholeFile = new List<float>((int)(audioFileReader.Length / 4));
+                var readBuffer = new float[audioFileReader.WaveFormat.SampleRate * audioFileReader.WaveFormat.Channels];
+                int samplesRead;
+
+                while((samplesRead = audioFileReader.Read(readBuffer,0,readBuffer.Length)) > 0)
+                    wholeFile.AddRange(readBuffer.Take(samplesRead));
+
+                AudioData = wholeFile.ToArray();
+            }
+        }
+    }
+
+    class SoundSample : ISampleProvider
+    {
+        private readonly AudioClip cachedSound;
+        private long position;
+
+        public SoundSample(AudioClip cachedSound) {
+            this.cachedSound = cachedSound;
+        }
+
+        public int Read(float[] buffer, int offset, int count)
+        {
+            var availableSamples = cachedSound.AudioData.Length - position;
+            var samplesToCopy = Math.Min(availableSamples, count);
+            Array.Copy(cachedSound.AudioData, position, buffer, offset, samplesToCopy);
+            position += samplesToCopy;
+            return (int)samplesToCopy;
+        }
+
+        public WaveFormat WaveFormat { get { return cachedSound.WaveFormat; } }
+    }
+
+    class AudioReader : ISampleProvider
+    {
+        private readonly AudioFileReader reader;
+        private bool isDisposed;
+
+        public AudioReader(AudioFileReader reader)
+        {
+            this.reader = reader;
+            this.WaveFormat = reader.WaveFormat;
+        }
+
+        public int Read(float[] buffer, int offset, int count)
+        {
+            if (isDisposed)
+                return 0;
+            int read = reader.Read(buffer, offset, count);
+            if (read == 0)
+            {
+                reader.Dispose();
+                isDisposed = true;
+            }
+            return read;
+        }
+
+        public WaveFormat WaveFormat { get; private set; }
+    }
+
     /// <summary>
     /// The main engine with all Open GL and Drawing
     /// Methods. Derive from this class to access the engine.
@@ -279,6 +355,9 @@ namespace PGE
         private GameWindow gameWindow;
         private KeyboardState keyboardState, lastKeyboardState;
         private MouseState mouseState, lastMouseState;
+
+        private IWavePlayer outputDevice;
+        private MixingSampleProvider mixer;
 
         public OpacityMode OpacityMode { get; protected set; }
 
@@ -339,6 +418,12 @@ namespace PGE
             gameWindow.MouseDown += MouseDown;
             gameWindow.MouseUp += MouseUp;
 
+            outputDevice = new WaveOutEvent();
+            mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(44100, 2));
+            mixer.ReadFully = true;
+
+            outputDevice.Init(mixer);
+
             drawTarget = new Sprite(screenWidth, screenHeight);
             for (int i = 0; i < drawTarget.Width; i++)
                 for (int j = 0; j < drawTarget.Height; j++)
@@ -397,7 +482,8 @@ namespace PGE
         private void Loaded(object sender, EventArgs e) => OnUserCreate();
 
         // On Window Disposed
-        private void Disposed(object sender, EventArgs e) => OnUserDestroy();
+        private void Disposed(object sender, EventArgs e) =>
+            OnUserDestroy();
 
         // On Window Render Frame
         private void Render(object sender, FrameEventArgs e)
@@ -430,6 +516,41 @@ namespace PGE
             lastMouseState = mouseState;
 
             gameWindow.SwapBuffers();
+        }
+
+        private void AddMixerInput(ISampleProvider input) =>
+            mixer.AddMixerInput(ConvertToRightChannelCount(input));
+
+        private ISampleProvider ConvertToRightChannelCount(ISampleProvider input)
+        {
+            if (input.WaveFormat.Channels == mixer.WaveFormat.Channels)
+                return input;
+            else
+                return new MonoToStereoSampleProvider(input);
+        }
+
+        /// <summary>
+        /// Play Sound from File
+        /// </summary>
+        /// <param name="fileName">File Path / Name</param>
+        /// <param name="volume">Audio Volume</param>
+        public void PlaySound(string fileName, float volume = 1)
+        {
+            outputDevice.Volume = volume;
+            AddMixerInput(new AudioReader(new AudioFileReader(fileName)));
+            outputDevice.Play();
+        }
+
+        /// <summary>
+        /// Play Sound from Cached Sound Object
+        /// </summary>
+        /// <param name="sound">Sound</param>
+        /// <param name="volume">Volume</param>
+        public void PlaySound(AudioClip sound, float volume = 1)
+        {
+            outputDevice.Volume = volume;
+            AddMixerInput(new SoundSample(sound));
+            outputDevice.Play();
         }
 
         // On Key Pressed Down

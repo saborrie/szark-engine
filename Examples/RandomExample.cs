@@ -27,7 +27,7 @@ namespace Example
         [STAThread]
         static void Main()
         {
-            var game = new RaycastingExample();
+            var game = new RandomExample();
             if (game.Construct(128, 128, 8, 8))
                 game.Start();
         }

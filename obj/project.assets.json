@@ -228,6 +228,15 @@
           "ref/netstandard1.3/Microsoft.Win32.Primitives.dll": {}
         }
       },
+      "NAudio/1.9.0-preview2": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/NAudio.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/NAudio.dll": {}
+        }
+      },
       "NETStandard.Library/2.0.3": {
         "type": "package",
         "dependencies": {
@@ -1147,6 +1156,23 @@
         "ref/xamarinmac20/_._",
         "ref/xamarintvos10/_._",
         "ref/xamarinwatchos10/_._"
+      ]
+    },
+    "NAudio/1.9.0-preview2": {
+      "sha512": "U2IiFAqMFvA+Ecf/oY82tqHL5H6COvksz8rQaW1c2nJZJ17A2uEzOudrZGeY/619HiSpSHXLpJOzRoXDoFUrSQ==",
+      "type": "package",
+      "path": "naudio/1.9.0-preview2",
+      "files": [
+        ".signature.p7s",
+        "lib/net35/NAudio.dll",
+        "lib/net35/NAudio.xml",
+        "lib/netstandard2.0/NAudio.dll",
+        "lib/netstandard2.0/NAudio.xml",
+        "lib/uap10.0.10240/NAudio.dll",
+        "lib/uap10.0.10240/NAudio.pri",
+        "lib/uap10.0.10240/NAudio.xml",
+        "naudio.1.9.0-preview2.nupkg.sha512",
+        "naudio.nuspec"
       ]
     },
     "NETStandard.Library/2.0.3": {
@@ -3082,6 +3108,7 @@
     ".NETCoreApp,Version=v2.2": [
       "CoreCompat.System.Drawing >= 1.0.0-beta006",
       "Microsoft.NETCore.App >= 2.2.0-preview3-27014-02",
+      "NAudio >= 1.9.0-preview2",
       "OpenTK.NETCore >= 1.1.2749.6433"
     ]
   },
@@ -3092,11 +3119,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Jakub\\Documents\\GitHub\\PixelGameEngine\\PixelGameEngine.csproj",
+      "projectUniqueName": "c:\\Users\\Jakub\\Documents\\GitHub\\PixelGameEngine\\PixelGameEngine.csproj",
       "projectName": "PixelGameEngine",
-      "projectPath": "C:\\Users\\Jakub\\Documents\\GitHub\\PixelGameEngine\\PixelGameEngine.csproj",
+      "projectPath": "c:\\Users\\Jakub\\Documents\\GitHub\\PixelGameEngine\\PixelGameEngine.csproj",
       "packagesPath": "C:\\Users\\Jakub\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Jakub\\Documents\\GitHub\\PixelGameEngine\\obj\\",
+      "outputPath": "c:\\Users\\Jakub\\Documents\\GitHub\\PixelGameEngine\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -3135,6 +3162,10 @@
             "target": "Package",
             "version": "[2.2.0-preview3-27014-02, )",
             "autoReferenced": true
+          },
+          "NAudio": {
+            "target": "Package",
+            "version": "[1.9.0-preview2, )"
           },
           "OpenTK.NETCore": {
             "target": "Package",

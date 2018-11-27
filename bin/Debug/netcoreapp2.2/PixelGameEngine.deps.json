@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.2",
-    "signature": "b1d3cc2a93e6800dfac31f0976e6c464c51b921a"
+    "signature": "3712820c6e8d068a277e6990a2ca295d3150b166"
   },
   "compilationOptions": {},
   "targets": {
@@ -9,6 +9,7 @@
       "PixelGameEngine/1.0.0": {
         "dependencies": {
           "CoreCompat.System.Drawing": "1.0.0-beta006",
+          "NAudio": "1.9.0-preview2",
           "OpenTK.NETCore": "1.1.2749.6433"
         },
         "runtime": {
@@ -41,6 +42,14 @@
       "Microsoft.Win32.Primitives/4.0.1": {
         "dependencies": {
           "System.Runtime": "4.1.0"
+        }
+      },
+      "NAudio/1.9.0-preview2": {
+        "runtime": {
+          "lib/netstandard2.0/NAudio.dll": {
+            "assemblyVersion": "1.9.0.0",
+            "fileVersion": "1.9.0.0"
+          }
         }
       },
       "OpenTK.NETCore/1.1.2749.6433": {
@@ -369,6 +378,13 @@
       "sha512": "sha512-fQnBHO9DgcmkC9dYSJoBqo6sH1VJwJprUHh8F3hbcRlxiQiBUuTntdk8tUwV490OqC2kQUrinGwZyQHTieuXRA==",
       "path": "microsoft.win32.primitives/4.0.1",
       "hashPath": "microsoft.win32.primitives.4.0.1.nupkg.sha512"
+    },
+    "NAudio/1.9.0-preview2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-U2IiFAqMFvA+Ecf/oY82tqHL5H6COvksz8rQaW1c2nJZJ17A2uEzOudrZGeY/619HiSpSHXLpJOzRoXDoFUrSQ==",
+      "path": "naudio/1.9.0-preview2",
+      "hashPath": "naudio.1.9.0-preview2.nupkg.sha512"
     },
     "OpenTK.NETCore/1.1.2749.6433": {
       "type": "package",
