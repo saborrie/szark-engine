@@ -9,6 +9,7 @@ A game engine focused on a easy and streamlined workflow, written in C#.
 # Dependences?
 - OpenTK.NetCore
 - CoreCompact.System.Drawing
+- NAudio
 
 Please use NUGET PACKAGE MANAGER
 
