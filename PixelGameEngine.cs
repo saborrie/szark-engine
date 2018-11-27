@@ -269,6 +269,12 @@ namespace PGE
 
         public AudioClip(string audioFileName)
         {
+            if (Path.GetExtension(audioFileName) != "wav")
+            {
+                Console.WriteLine("[ERROR]: Sound File Extension not supported!");
+                return;
+            }
+
             using (var audioFileReader = new AudioFileReader(audioFileName))
             {
                 WaveFormat = audioFileReader.WaveFormat;
@@ -536,6 +542,12 @@ namespace PGE
         /// <param name="volume">Audio Volume</param>
         public void PlaySound(string fileName, float volume = 1)
         {
+            if (Path.GetExtension(fileName) != ".wav")
+            {
+                Console.WriteLine("[ERROR]: Sound File Extension not supported!");
+                return;
+            }
+
             outputDevice.Volume = volume;
             AddMixerInput(new AudioReader(new AudioFileReader(fileName)));
             outputDevice.Play();
@@ -548,6 +560,8 @@ namespace PGE
         /// <param name="volume">Volume</param>
         public void PlaySound(AudioClip sound, float volume = 1)
         {
+            if (sound == null) return;
+
             outputDevice.Volume = volume;
             AddMixerInput(new SoundSample(sound));
             outputDevice.Play();

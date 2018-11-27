@@ -1,6 +1,8 @@
 ﻿using System;
 using PGE;
 
+using OpenTK.Input;
+
 namespace Example
 {
     class RandomExample : PixelGameEngine
