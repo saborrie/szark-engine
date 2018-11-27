@@ -499,13 +499,13 @@ namespace PGE
             GL.Viewport(renderOffsetX, renderOffsetY, ScreenWidth * PixelWidth, 
                 ScreenHeight * PixelHeight);
 
-            if (lastFPSCheck++ * e.Time > 1)
+            OnUserRender((float)e.Time);
+
+            if (lastFPSCheck++ > 120)
             {
                 gameWindow.Title = $"{WindowTitle} | FPS: {(int)(1 / e.Time)}";
                 lastFPSCheck = 0;
             }
-
-            OnUserRender((float)e.Time);
 
             // Use Open-GL to Draw Graphics to Screen
             GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, ScreenWidth, ScreenHeight,

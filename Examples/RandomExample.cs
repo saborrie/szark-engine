@@ -30,7 +30,7 @@ namespace Example
         static void Main()
         {
             var game = new RandomExample();
-            if (game.Construct(128, 128, 8, 8))
+            if (game.Construct(256, 256, 4, 4))
                 game.Start();
         }
     }
