@@ -29,6 +29,9 @@ Manager
 
 5. Your good to go!
 
+# Documention
+Please goto the WIKI tab
+
 # Examples
 ![alt text](https://i.imgur.com/23w2cji.gif)
 ![alt text](https://i.imgur.com/sgPtLmT.gif)
