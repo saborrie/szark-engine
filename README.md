@@ -30,7 +30,8 @@ Manager
 5. Your good to go!
 
 # Documention
-Please goto the WIKI tab
+You can find documentation either by going to the wiki tab or
+by looking through the PixelGameEngine.cs file.
 
 # Examples
 ![alt text](https://i.imgur.com/23w2cji.gif)
