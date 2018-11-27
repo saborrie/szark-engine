@@ -13,6 +13,15 @@ A game engine focused on a easy and streamlined workflow, written in C#.
 
 Please use NUGET PACKAGE MANAGER
 
+# How to get started?
+1. Download .Net Core 2.2 or Higher
+2. Clone or download this project
+3. Open the project in your favorite IDE like
+VS Code
+4. Make sure to restore or retrieve the
+dependencies
+5. Your good to go!
+
 # Examples
 ![alt text](https://i.imgur.com/23w2cji.gif)
 ![alt text](https://i.imgur.com/sgPtLmT.gif)
