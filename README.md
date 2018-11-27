@@ -15,8 +15,6 @@ A game engine written in c#
 
 * NAudio
 
-Please use NUGET PACKAGE MANAGER
-
 # How to get started
 1. Download .Net Core 2.2 or Higher
 
