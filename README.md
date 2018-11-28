@@ -8,13 +8,6 @@ A game engine written in c#
 
 * Under MIT license, so have fun with it!
 
-# Dependences
-* OpenTK.NetCore
-
-* CoreCompact.System.Drawing
-
-* NAudio
-
 # Documention / Getting Started
 You can find documentation either by going to the wiki tab or
 by looking through the PixelGameEngine.cs file.
