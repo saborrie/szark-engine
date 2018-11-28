@@ -269,7 +269,7 @@ namespace PGE
 
         public AudioClip(string audioFileName)
         {
-            if (Path.GetExtension(audioFileName) != "wav")
+            if (Path.GetExtension(audioFileName) != ".wav")
             {
                 Console.WriteLine("[ERROR]: Sound File Extension not supported!");
                 return;
