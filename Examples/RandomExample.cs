@@ -23,6 +23,6 @@ namespace Example
         protected override void Destroyed() {}
 
         static void Main() => 
-            new RaycastingExample().Construct(800, 800, 8);
+            new RandomExample().Construct(800, 800, 8);
     }
 }
