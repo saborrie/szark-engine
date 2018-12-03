@@ -52,8 +52,11 @@ namespace Example
         protected override void Draw(float deltaTime)
         {
             // Input
-            var vert = 5f * deltaTime * (GetKey(Key.W) ? 1 : GetKey(Key.S) ? -1 : 0);
-            var rot = 3f * deltaTime * (GetKey(Key.D) ? -1 : GetKey(Key.A) ? 1 : 0);
+            var vert = 5f * deltaTime * (Input.GetKey(Key.W) ? 1 : Input.GetKey(Key.S) ? -1 : 0);
+            var rot = 3f * deltaTime * (Input.GetKey(Key.D) ? -1 : Input.GetKey(Key.A) ? 1 : 0);
+
+            if (Input.GetKeyDown(Key.Space))
+                Console.WriteLine("Oof");
 
             // Movement
             playerX += dirX * vert;

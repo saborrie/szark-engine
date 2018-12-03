@@ -16,7 +16,11 @@ namespace PGE
 
         public OpacityMode OpacityMode { get; set; }
 
-        public Graphics2D(Sprite target) {
+        public Graphics2D(Sprite target) 
+        {
+            if (target == null)
+                throw new NullReferenceException();
+
             this.drawTarget = target;
         }
 
@@ -24,15 +28,25 @@ namespace PGE
         /// Returns the current Frame
         /// </summary>
         /// <returns>Draw Target</returns>
-        public Sprite GetDrawTarget(bool copy = false) =>
-            !copy ? drawTarget : new Sprite(drawTarget);
+        public Sprite GetDrawTarget(bool copy = false)
+        {
+            if (drawTarget == null)
+                throw new NullReferenceException();
+
+            return !copy ? drawTarget : new Sprite(drawTarget);
+        }
 
         /// <summary>
         /// Set the Draw Target.
         /// </summary>
         /// <param name="target">The New Target</param>
-        public void SetDrawTarget(Sprite target) =>
+        public void SetDrawTarget(Sprite target)
+        {
+            if (target == null)
+                throw new NullReferenceException();
+
             drawTarget = target;
+        }
 
         /// <summary>
         /// Draws a Pixel on the Screen

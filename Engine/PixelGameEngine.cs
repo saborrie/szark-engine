@@ -36,20 +36,19 @@ namespace PGE
 
         public int PixelSize { get; private set; }
 
+        public bool IsFullscreen { get; private set; }
+
+        public Audio Audio { get; private set; }
         public Graphics2D Graphics { get; private set; }
+        public Input Input { get; private set; }
+
+        public int RenderOffsetX { get; private set; }
+        public int RenderOffsetY { get; private set; }
 
         private int lastFPSCheck;
-        private int renderOffsetX, renderOffsetY;
         private int glBuffer;
 
-        private bool isFullscreen;
-
         private GameWindow gameWindow;
-        private KeyboardState keyboardState, lastKeyboardState;
-        private MouseState mouseState, lastMouseState;
-
-        private IWavePlayer outputDevice;
-        private MixingSampleProvider mixer;
 
         /// <summary>
         /// Creates a Window and Starts OpenGL.
@@ -65,8 +64,9 @@ namespace PGE
 
             InitializeWindow();
             SetupGL();
-            InitializeAudio();
 
+            Audio = new Audio();
+            Input = new Input(this, gameWindow);
             gameWindow.WindowBorder = WindowBorder.Fixed;
             gameWindow.Run();
         }
@@ -81,11 +81,6 @@ namespace PGE
             gameWindow.RenderFrame += Render;
             gameWindow.UpdateFrame += Update;
             gameWindow.Disposed += Disposed;
-
-            gameWindow.KeyUp += KeyUp;
-            gameWindow.KeyDown += KeyDown;
-            gameWindow.MouseDown += MouseDown;
-            gameWindow.MouseUp += MouseUp;
         }
 
         private void SetupGL()
@@ -129,7 +124,7 @@ namespace PGE
         // On Window Render Frame
         private void Render(object sender, FrameEventArgs e)
         {
-            GL.Viewport(renderOffsetX, renderOffsetY, WindowWidth, WindowHeight);
+            GL.Viewport(RenderOffsetX, RenderOffsetY, WindowWidth, WindowHeight);
 
             Draw((float)e.Time);
 
@@ -150,17 +145,10 @@ namespace PGE
             GL.TexCoord2(1, 1); GL.Vertex2(1, -1);
             GL.End();
 
-            lastKeyboardState = keyboardState;
-            lastMouseState = mouseState;
+            Input.Update();
 
             gameWindow.SwapBuffers();
         }
-
-        private void MouseDown(object sender, MouseButtonEventArgs args) =>
-            mouseState = args.Mouse;
-
-        private void MouseUp(object sender, MouseButtonEventArgs args) =>
-            mouseState = args.Mouse;
 
         #endregion
 
@@ -179,12 +167,12 @@ namespace PGE
         /// <param name="fullscreen">Is Fullscreen?</param>
         public void SetFullscreen(bool fullscreen)
         {
-            isFullscreen = fullscreen;
+            IsFullscreen = fullscreen;
             gameWindow.WindowState = fullscreen ? WindowState.Fullscreen :
                 WindowState.Normal;
 
-            renderOffsetX = fullscreen ? (gameWindow.Width - WindowWidth) / 2 : 0;
-            renderOffsetY = fullscreen ? (gameWindow.Height - WindowHeight) / 2 : 0;
+            RenderOffsetX = fullscreen ? (gameWindow.Width - WindowWidth) / 2 : 0;
+            RenderOffsetY = fullscreen ? (gameWindow.Height - WindowHeight) / 2 : 0;
         }
 
         #endregion
@@ -212,120 +200,6 @@ namespace PGE
         /// Called when Window is Closed, use for Cleanup
         /// </summary>
         protected abstract void Destroyed();
-
-        #endregion
-
-        #region Audio
-
-        private void InitializeAudio()
-        {
-            outputDevice = new WaveOutEvent();
-            mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(44100, 2));
-            mixer.ReadFully = true;
-            outputDevice.Init(mixer);
-        }
-
-        private void AddMixerInput(ISampleProvider input) =>
-            mixer.AddMixerInput(ConvertToRightChannelCount(input));
-
-        private ISampleProvider ConvertToRightChannelCount(ISampleProvider input)
-        {
-            if (input.WaveFormat.Channels == mixer.WaveFormat.Channels)
-                return input;
-            else
-                return new MonoToStereoSampleProvider(input);
-        }
-
-        /// <summary>
-        /// Play Sound from File
-        /// </summary>
-        /// <param name="fileName">File Path / Name</param>
-        /// <param name="volume">Audio Volume</param>
-        public void PlaySound(string fileName, float volume = 1)
-        {
-            if (Path.GetExtension(fileName) != ".wav")
-            {
-                Console.WriteLine("[ERROR]: Sound File Extension not supported!");
-                return;
-            }
-
-            outputDevice.Volume = volume;
-            AddMixerInput(new AudioReader(new AudioFileReader(fileName)));
-            outputDevice.Play();
-        }
-
-        /// <summary>
-        /// Play Sound from Cached Sound Object
-        /// </summary>
-        /// <param name="sound">Sound</param>
-        /// <param name="volume">Volume</param>
-        public void PlaySound(AudioClip sound, float volume = 1)
-        {
-            if (sound == null) return;
-
-            outputDevice.Volume = volume;
-            AddMixerInput(new SoundSample(sound));
-            outputDevice.Play();
-        }
-        
-        #endregion
-
-        #region Keyboard
-
-        // On Key Pressed Down
-        private void KeyDown(object sender, KeyboardKeyEventArgs e) =>
-            keyboardState = e.Keyboard;
-
-        // On Key Lifted Up
-        private void KeyUp(object sender, KeyboardKeyEventArgs e) =>
-            keyboardState = e.Keyboard;
-
-        /// <summary>
-        /// Checks if a Key is Held
-        /// </summary>
-        /// <param name="key">The Key</param>
-        /// <returns>Is Held?</returns>
-        public bool GetKey(Key key) => keyboardState[key];
-
-        /// <summary>
-        /// Check if a Key is Pressed Once
-        /// </summary>
-        /// <param name="key">The Key</param>
-        /// <returns>Was Pressed?</returns>
-        public bool GetKeyDown(Key key) => 
-            keyboardState[key] && (keyboardState[key] != lastKeyboardState[key]);
-
-        #endregion
-
-        #region Mouse
-
-        /// <summary>
-        /// Returns the Mouse's X Position
-        /// </summary>
-        public int GetMouseX() => isFullscreen ? (gameWindow.Mouse.X - 
-            renderOffsetX) / PixelSize : gameWindow.Mouse.X / PixelSize; 
-
-        /// <summary>
-        /// Returns the Mouse's Y Position
-        /// </summary>
-        public int GetMouseY() => isFullscreen ? (gameWindow.Mouse.Y - 
-            renderOffsetY) / PixelSize : gameWindow.Mouse.Y / PixelSize;
-
-        /// <summary>
-        /// Checks if Mouse Button is Pressed
-        /// </summary>
-        /// <param name="button">The Button</param>
-        /// <returns>Is Down?</returns>
-        public bool GetMouseButton(MouseButton button) =>
-            mouseState[button];
-
-        /// <summary>
-        /// Checks if Mouse Button is pressed down once
-        /// </summary>
-        /// <param name="button">The Button</param>
-        /// <returns>Is Up?</returns>
-        public bool GetMouseButtonDown(MouseButton button) =>
-            mouseState[button] && (mouseState[button] != lastMouseState[button]);
 
         #endregion
     }
