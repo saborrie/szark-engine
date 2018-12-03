@@ -22,13 +22,10 @@ namespace Example
 
         private Sprite brickTexture;
 
-        public RaycastingExample()
+        protected override void Start()
         {
             WindowTitle = "Raycating Example";
-        }
 
-        protected override void OnUserCreate()
-        {
             map += "################";
             map += "#--------------#";
             map += "#--------------#";
@@ -49,14 +46,14 @@ namespace Example
             string path = Directory.GetCurrentDirectory();
             brickTexture = new Sprite(path + "\\Examples\\Assets\\Brick.png");
 
-            OpacityMode = OpacityMode.ALPHA;
+            Graphics.OpacityMode = OpacityMode.ALPHA;
         }
 
-        protected override void OnUserRender(float fElapsedTime)
+        protected override void Draw(float deltaTime)
         {
             // Input
-            var vert = 5f * fElapsedTime * (GetKey(Key.W) ? 1 : GetKey(Key.S) ? -1 : 0);
-            var rot = 3 * fElapsedTime * (GetKey(Key.D) ? -1 : GetKey(Key.A) ? 1 : 0);
+            var vert = 5f * deltaTime * (GetKey(Key.W) ? 1 : GetKey(Key.S) ? -1 : 0);
+            var rot = 3f * deltaTime * (GetKey(Key.D) ? -1 : GetKey(Key.A) ? 1 : 0);
 
             // Movement
             playerX += dirX * vert;
@@ -170,18 +167,22 @@ namespace Example
                         int d = y * 256 - ScreenHeight * 128 + lineHeight * 128;
                         int texY = ((d * 64) / lineHeight) / 256;
                         Pixel col = brickTexture.GetPixel(texX, texY);
-                        Draw(x, y, col);
+                        Graphics.Draw(x, y, col);
                     }
                     else if (y < drawEnd)
                     {
-                        Draw(x, y, new Pixel(135, 206, 235));
+                        Graphics.Draw(x, y, new Pixel(135, 206, 235));
                     }
                     else
                     {
-                        Draw(x, y, new Pixel(96, 128, 56));
+                        Graphics.Draw(x, y, new Pixel(96, 128, 56));
                     }
                 }
             }
         }
+
+        protected override void Update(float deltaTime) {}
+
+        protected override void Destroyed() {}
     }
 }

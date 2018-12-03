@@ -5,31 +5,24 @@ namespace Example
 {
     class RandomExample : PixelGameEngine
     {
-        RandomExample() {
+        protected override void Start() {
             WindowTitle = "Random Pixels Example";
         }
 
-        protected override void OnUserCreate() {}
+        protected override void Update(float deltaTime) {}
 
-        protected override void OnUserUpdate(float fElapsedTime) {}
-
-        protected override void OnUserRender(float fElapsedTime)
+        protected override void Draw(float deltaTime)
         {
-            Random random = new Random();
+            var random = new Random();
             for (int i = 0; i < ScreenWidth; i++)
                 for (int j = 0; j < ScreenHeight; j++)
-                    Draw(i, j, new Pixel((byte)random.Next(255), 
+                    Graphics.Draw(i, j, new Pixel((byte)random.Next(255), 
                         (byte)random.Next(255), (byte)random.Next(255)));
         }
 
-        protected override void OnUserDestroy() {}
+        protected override void Destroyed() {}
 
-        [STAThread]
-        static void Main()
-        {
-            var game = new RandomExample();
-            if (game.Construct(256, 256, 4, 4))
-                game.Start();
-        }
+        static void Main() => 
+            new RandomExample().Construct(800, 800, 8);
     }
 }

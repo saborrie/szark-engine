@@ -3119,11 +3119,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\Jakub\\Documents\\GitHub\\PixelGameEngine\\PixelGameEngine.csproj",
+      "projectUniqueName": "C:\\Users\\Jakub\\Documents\\GitHub\\PixelGameEngine\\PixelGameEngine.csproj",
       "projectName": "PixelGameEngine",
-      "projectPath": "c:\\Users\\Jakub\\Documents\\GitHub\\PixelGameEngine\\PixelGameEngine.csproj",
+      "projectPath": "C:\\Users\\Jakub\\Documents\\GitHub\\PixelGameEngine\\PixelGameEngine.csproj",
       "packagesPath": "C:\\Users\\Jakub\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\Jakub\\Documents\\GitHub\\PixelGameEngine\\obj\\",
+      "outputPath": "C:\\Users\\Jakub\\Documents\\GitHub\\PixelGameEngine\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
