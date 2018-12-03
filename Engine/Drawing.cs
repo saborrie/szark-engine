@@ -31,9 +31,8 @@ namespace PGE
         /// Set the Draw Target.
         /// </summary>
         /// <param name="target">The New Target</param>
-        public void SetDrawTarget(Sprite target) {
-            if (target != null) drawTarget = target;
-        }
+        public void SetDrawTarget(Sprite target) =>
+            drawTarget = target;
 
         /// <summary>
         /// Draws a Pixel on the Screen
