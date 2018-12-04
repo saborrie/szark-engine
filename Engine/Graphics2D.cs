@@ -22,6 +22,7 @@ namespace PGE
                 throw new NullReferenceException();
 
             this.drawTarget = target;
+            ConstructFontSheet();
         }
 
         /// <summary>
