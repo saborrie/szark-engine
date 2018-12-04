@@ -196,11 +196,11 @@ namespace PGE
         /// <param name="p">Color</param>
         public void FillCircle(int x, int y, int r, Pixel p)
         {
-            for (int i = x; i < x + r * 2; i++)
+            for (int i = 0; i < r * 2; i++)
             {
-                for (int j = y; j < y + r * 2; j++)
+                for (int j = 0; j < r * 2; j++)
                 {
-                    var dist = Math.Sqrt((x + r - i) * (x + r - i) + (y + r - j) * (y + r - j));
+                    var dist = Math.Sqrt((r - i) * (r - i) + (r - j) * (r - j));
                     if (dist < r) Draw(x - 1 + i, y - 1 + j, p);
                 }
             }
