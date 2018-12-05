@@ -49,6 +49,7 @@ namespace PGE
         private int glBuffer;
 
         private GameWindow gameWindow;
+        private Sprite background;
 
         /// <summary>
         /// Creates a Window and Starts OpenGL.
@@ -64,6 +65,9 @@ namespace PGE
 
             InitializeWindow();
             SetupGL();
+
+            background = new Sprite(ScreenWidth, ScreenHeight);
+            background.Clear(Pixel.BLACK);
 
             Audio = new Audio();
             Input = new Input(this, gameWindow);
@@ -125,7 +129,7 @@ namespace PGE
         private void Render(object sender, FrameEventArgs e)
         {
             GL.Viewport(RenderOffsetX, RenderOffsetY, WindowWidth, WindowHeight);
-
+            background.Pixels.CopyTo(Graphics.GetDrawTarget().Pixels, 0);
             Draw((float)e.Time);
 
             if (lastFPSCheck++ > 120)
@@ -136,7 +140,7 @@ namespace PGE
 
             // Use Open-GL to Draw Graphics to Screen
             GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, ScreenWidth, ScreenHeight,
-                PixelFormat.Rgba, PixelType.UnsignedByte, Graphics.GetDrawTarget().GetPixels());
+                PixelFormat.Rgba, PixelType.UnsignedByte, Graphics.GetDrawTarget().Pixels);
 
             GL.Begin(PrimitiveType.Quads);
             GL.TexCoord2(0, 1); GL.Vertex2(-1, -1);
@@ -174,6 +178,13 @@ namespace PGE
             RenderOffsetX = fullscreen ? (gameWindow.Width - WindowWidth) / 2 : 0;
             RenderOffsetY = fullscreen ? (gameWindow.Height - WindowHeight) / 2 : 0;
         }
+
+        /// <summary>
+        /// Sets the Background Color
+        /// </summary>
+        /// <param name="p">The Color</param>
+        public void SetBackgroundColor(Pixel p) =>
+            background.Clear(p);
 
         #endregion
 

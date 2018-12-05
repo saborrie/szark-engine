@@ -16,8 +16,7 @@ namespace PGE
     {
         public int Width { get; private set; }
         public int Height { get; private set; }        
-        
-        private Pixel[] pixelData;
+        public Pixel[] Pixels { get; set; }
 
         /// <summary>
         /// Constructor for a Blank Sprite
@@ -29,9 +28,9 @@ namespace PGE
             Width = width;
             Height = height;
 
-            pixelData = new Pixel[width * height];
-            for (var i = 0; i < pixelData.Length; i++)
-                pixelData[i] = new Pixel();
+            Pixels = new Pixel[width * height];
+            for (var i = 0; i < Pixels.Length; i++)
+                Pixels[i] = new Pixel();
         }
 
         /// <summary>
@@ -42,9 +41,9 @@ namespace PGE
         {
             if (sprite == null) return;
 
-            pixelData = new Pixel[sprite.Width * sprite.Height];
-            for (int i = 0; i < sprite.pixelData.Length; i++)
-                pixelData[i] = sprite.pixelData[i];
+            Pixels = new Pixel[sprite.Width * sprite.Height];
+            for (int i = 0; i < sprite.Pixels.Length; i++)
+                Pixels[i] = sprite.Pixels[i];
         }
 
         /// <summary>
@@ -62,7 +61,7 @@ namespace PGE
                 Width = b.Width;
                 Height = b.Height;
 
-                pixelData = new Pixel[Width * Height];
+                Pixels = new Pixel[Width * Height];
 
                 for (var x = 0; x < b.Width; x++)
                 {
@@ -83,21 +82,15 @@ namespace PGE
         }
 
         /// <summary>
-        /// The Whole Array of Pixels
-        /// </summary>
-        /// <returns>A Pixel Array</returns>
-        public Pixel[] GetPixels() => pixelData;
-
-        /// <summary>
         /// The Whole Array of Pixels each converted
         /// to UInts
         /// </summary>
         /// <returns>A UInt Array</returns>
         public uint[] GetData()
         {
-            uint[] data = new uint[pixelData.Length];
+            uint[] data = new uint[Pixels.Length];
             for (int i = 0; i < data.Length; i++)
-                data[i] = pixelData[i].ToInt();
+                data[i] = Pixels[i].ToInt();
             return data;
         }
 
@@ -110,7 +103,7 @@ namespace PGE
         public Pixel GetPixel(int x, int y)
         {
             if (x >= 0 && x < Width && y >= 0 && y < Height)
-                return pixelData[y * Width + x];
+                return Pixels[y * Width + x];
             else
                 return new Pixel();
         }
@@ -124,7 +117,7 @@ namespace PGE
         public void SetPixel(int x, int y, Pixel p)
         {
             if (x >= 0 && x < Width && y >= 0 && y < Height)
-                pixelData[y * Width + x] = p;
+                Pixels[y * Width + x] = p;
         }
 
         /// <summary>
@@ -133,8 +126,8 @@ namespace PGE
         /// <param name="p">Pixel / Color</param>
         public void Clear(Pixel p)
         {
-            for(int i = 0; i < pixelData.Length; i++)
-                pixelData[i] = p;
+            for(int i = 0; i < Pixels.Length; i++)
+                Pixels[i] = p;
         }
     }
 }
