@@ -46,10 +46,20 @@ namespace PGE
         public int RenderOffsetY { get; private set; }
 
         private int lastFPSCheck;
-        private int glBuffer;
-
         private GameWindow gameWindow;
         private Sprite background;
+
+        private float[] quadVerts = 
+        {
+            -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+            -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+             1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+             1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+        };
+
+        private int quadVAO;
+        private int textureID;
+        private int shaderID;
 
         /// <summary>
         /// Creates a Window and Starts OpenGL.
@@ -65,9 +75,6 @@ namespace PGE
 
             InitializeWindow();
             SetupGL();
-
-            background = new Sprite(ScreenWidth, ScreenHeight);
-            background.Clear(Pixel.BLACK);
 
             Audio = new Audio();
             Input = new Input(this, gameWindow);
@@ -94,23 +101,49 @@ namespace PGE
 
             Graphics = new Graphics2D(new Sprite(ScreenWidth, ScreenHeight));
 
-            GL.Enable(EnableCap.Texture2D);
-            GL.GenTextures(1, out glBuffer);
-            GL.BindTexture(TextureTarget.Texture2D, glBuffer);
+            background = new Sprite(ScreenWidth, ScreenHeight);
+            background.Clear(Pixel.BLACK);
 
+            GL.Enable(EnableCap.Texture2D);
+
+            // Setup quad VAO
+            quadVAO = GL.GenVertexArray();
+            int quadVBO = GL.GenBuffer();
+            GL.BindVertexArray(quadVAO);
+            
+            // Bind Data
+            GL.BindBuffer(BufferTarget.ArrayBuffer, quadVBO);
+            GL.BufferData(BufferTarget.ArrayBuffer, quadVerts.Length * 4, 
+                quadVerts, BufferUsageHint.StaticDraw);
+
+            // Setup Vertex Array Pointer
+            GL.EnableVertexAttribArray(0);
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 20, 0);
+            GL.EnableVertexAttribArray(1);
+            GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 20, 12);
+
+            // Create Texture ID
+            textureID = GL.GenTexture();
+            GL.BindTexture(TextureTarget.Texture2D, textureID);
+
+            // Create Texture
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba,
                 ScreenWidth, ScreenHeight, 0, PixelFormat.Rgba, PixelType.UnsignedByte,
                     Graphics.GetDrawTarget().GetData());
 
-            GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            // Configure Texture
+            GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, 
+                (float)TextureEnvMode.Modulate);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, 
+                (int)TextureMinFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, 
+                (int)TextureMagFilter.Nearest);
 
-            GL.TexEnv(TextureEnvTarget.TextureEnv,
-                TextureEnvParameter.TextureEnvMode, (float)TextureEnvMode.Modulate);
-            GL.TexParameter(TextureTarget.Texture2D,
-                TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
-            GL.TexParameter(TextureTarget.Texture2D,
-                TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+            GL.BindTexture(TextureTarget.Texture2D, 0);
+
+            // Load Base Shader
+            shaderID = ShaderLoader.LoadShader("Engine/Shaders/base.vert", 
+                "Engine/Shaders/base.frag");
         }
 
         #region Events
@@ -142,12 +175,18 @@ namespace PGE
             GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, ScreenWidth, ScreenHeight,
                 PixelFormat.Rgba, PixelType.UnsignedByte, Graphics.GetDrawTarget().Pixels);
 
-            GL.Begin(PrimitiveType.Quads);
-            GL.TexCoord2(0, 1); GL.Vertex2(-1, -1);
-            GL.TexCoord2(0, 0); GL.Vertex2(-1, 1);
-            GL.TexCoord2(1, 0); GL.Vertex2(1, 1);
-            GL.TexCoord2(1, 1); GL.Vertex2(1, -1);
-            GL.End();
+            GL.ClearColor(Color.Black);
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+            // Load Shader
+            GL.UseProgram(shaderID);
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture2D, textureID);
+
+            // Draw Quad to Screen
+            GL.BindVertexArray(quadVAO);
+            GL.DrawArrays(PrimitiveType.TriangleStrip, 0, 4);
+            GL.BindVertexArray(0);
 
             Input.Update();
 

@@ -5,8 +5,10 @@ namespace Example
 {
     class RandomExample : PixelGameEngine
     {
-        protected override void Start() {
+        protected override void Start() 
+        {
             WindowTitle = "Random Pixels Example";
+            SetFullscreen(true);
         }
 
         protected override void Update(float deltaTime) {}
