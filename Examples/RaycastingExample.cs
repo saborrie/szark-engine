@@ -162,7 +162,7 @@ namespace Example
 
                 for (int y = 0; y < ScreenHeight; y++)
                 {
-                    if (y > drawStart && y < drawEnd)
+                    if (y >= drawStart && y <= drawEnd)
                     {
                         int d = y * 256 - ScreenHeight * 128 + lineHeight * 128;
                         int texY = ((d * 64) / lineHeight) / 256;
