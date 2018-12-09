@@ -129,5 +129,22 @@ namespace PGE
             for(int i = 0; i < Pixels.Length; i++)
                 Pixels[i] = p;
         }
+
+        /// <summary>
+        /// Copies all Pixels into another Sprite
+        /// (Both sprites must be the same size!)
+        /// </summary>
+        /// <param name="destination">The Sprite to Copy To</param>
+        public void CopyTo(Sprite destination)
+        {
+            if (destination == null) 
+                throw new NullReferenceException();
+
+            if (destination.Width != Width || destination.Height != Height)
+                throw new Exception("Destination sprite size is not the same" +
+                    "as the source sprite!");
+
+            Pixels.CopyTo(destination.Pixels, 0);
+        }
     }
 }

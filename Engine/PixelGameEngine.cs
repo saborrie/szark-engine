@@ -117,24 +117,18 @@ namespace PGE
             GL.EnableVertexAttribArray(1);
             GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 16, 8);
 
-            // Create Texture ID
+            // Create Texture
             textureID = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, textureID);
-
-            // Create Texture
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba,
                 ScreenWidth, ScreenHeight, 0, PixelFormat.Rgba, PixelType.UnsignedByte,
                     Graphics.GetDrawTarget().GetData());
 
             // Configure Texture
-            GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, 
-                (float)TextureEnvMode.Modulate);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, 
                 (int)TextureMinFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, 
                 (int)TextureMagFilter.Nearest);
-
-            GL.BindTexture(TextureTarget.Texture2D, 0);
 
             // Load Base Shader
             shaderID = ShaderLoader.LoadShader("Engine/Shaders/base.vert", 
@@ -156,8 +150,13 @@ namespace PGE
         // On Window Render Frame
         private void Render(object sender, FrameEventArgs e)
         {
+            // Offsets the rendered frame to the center of the screen
             GL.Viewport(RenderOffsetX, RenderOffsetY, WindowWidth, WindowHeight);
-            background.Pixels.CopyTo(Graphics.GetDrawTarget().Pixels, 0);
+
+            // Replaces current frame with a single-color background
+            background.CopyTo(Graphics.GetDrawTarget());
+
+            // Where user generated graphics will be drawn
             Draw((float)e.Time);
 
             if (lastFPSCheck++ > 120)
@@ -172,13 +171,11 @@ namespace PGE
 
             // Load Shader
             GL.UseProgram(shaderID);
-            GL.ActiveTexture(TextureUnit.Texture0);
             GL.BindTexture(TextureTarget.Texture2D, textureID);
 
             // Draw Quad to Screen
             GL.BindVertexArray(quadVAO);
             GL.DrawArrays(PrimitiveType.TriangleStrip, 0, 4);
-            GL.BindVertexArray(0);
 
             Input.Update();
 
@@ -214,9 +211,9 @@ namespace PGE
         /// Sets the Background Color
         /// </summary>
         /// <param name="p">The Color</param>
-        public void SetBackgroundColor(Pixel p) =>
+        public void SetBackground(Pixel p) =>
             background.Clear(p);
-
+            
         #endregion
 
         #region Abstractions
