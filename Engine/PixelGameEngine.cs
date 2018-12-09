@@ -9,13 +9,8 @@
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Graphics;
-using OpenTK.Input;
 
 using System;
-using System.IO;
-
-using NAudio.Wave;
-using NAudio.Wave.SampleProviders;
 
 namespace PGE
 {
@@ -51,10 +46,10 @@ namespace PGE
 
         private float[] quadVerts = 
         {
-            -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-            -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-             1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
-             1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+             1.0f,  1.0f, 1.0f, 0.0f,
+             1.0f, -1.0f, 1.0f, 1.0f,
+            -1.0f,  1.0f, 0.0f, 0.0f,
+            -1.0f, -1.0f, 0.0f, 1.0f,
         };
 
         private int quadVAO;
@@ -118,9 +113,9 @@ namespace PGE
 
             // Setup Vertex Array Pointer
             GL.EnableVertexAttribArray(0);
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 20, 0);
+            GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 16, 0);
             GL.EnableVertexAttribArray(1);
-            GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 20, 12);
+            GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 16, 8);
 
             // Create Texture ID
             textureID = GL.GenTexture();
@@ -174,9 +169,6 @@ namespace PGE
             // Use Open-GL to Draw Graphics to Screen
             GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, ScreenWidth, ScreenHeight,
                 PixelFormat.Rgba, PixelType.UnsignedByte, Graphics.GetDrawTarget().Pixels);
-
-            GL.ClearColor(Color.Black);
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             // Load Shader
             GL.UseProgram(shaderID);
