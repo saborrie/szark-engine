@@ -1,7 +1,6 @@
 ﻿/*
 	PixelGameEngine.cs
         By: Jakub P. Szarkowicz / JakubSzark
-	Credit: One Lone Coder
 	
 	Please Check Github Page for Liscense
 */
