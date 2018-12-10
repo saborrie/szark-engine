@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.2",
-    "signature": "b1d3cc2a93e6800dfac31f0976e6c464c51b921a"
+    "signature": "3712820c6e8d068a277e6990a2ca295d3150b166"
   },
   "compilationOptions": {},
   "targets": {
@@ -9,6 +9,7 @@
       "PixelGameEngine/1.0.0": {
         "dependencies": {
           "CoreCompat.System.Drawing": "1.0.0-beta006",
+          "NAudio": "1.9.0-preview2",
           "OpenTK.NETCore": "1.1.2749.6433"
         },
         "runtime": {
@@ -41,6 +42,14 @@
       "Microsoft.Win32.Primitives/4.0.1": {
         "dependencies": {
           "System.Runtime": "4.1.0"
+        }
+      },
+      "NAudio/1.9.0-preview2": {
+        "runtime": {
+          "lib/netstandard2.0/NAudio.dll": {
+            "assemblyVersion": "1.9.0.0",
+            "fileVersion": "1.9.0.0"
+          }
         }
       },
       "OpenTK.NETCore/1.1.2749.6433": {
@@ -359,7 +368,7 @@
     "CoreCompat.System.Drawing/1.0.0-beta006": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-KOBeVy8FHx9zkXrIZAM8OdXPrimROmvfB02fOegrYIelNN/zWhsOwzONgD7gw7wOTJgAFfdwpme5CiMraJj47Q==",
+      "sha512": "sha512-pMq2FWNVZxZ97kWp+uvjzMD4Z9SAcwTT1S523r57GW1wE6qb1S6s5B7evy2l1OREDNNeeRqFlKu69Mjz8gg1Sg==",
       "path": "corecompat.system.drawing/1.0.0-beta006",
       "hashPath": "corecompat.system.drawing.1.0.0-beta006.nupkg.sha512"
     },
@@ -369,6 +378,13 @@
       "sha512": "sha512-fQnBHO9DgcmkC9dYSJoBqo6sH1VJwJprUHh8F3hbcRlxiQiBUuTntdk8tUwV490OqC2kQUrinGwZyQHTieuXRA==",
       "path": "microsoft.win32.primitives/4.0.1",
       "hashPath": "microsoft.win32.primitives.4.0.1.nupkg.sha512"
+    },
+    "NAudio/1.9.0-preview2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-U2IiFAqMFvA+Ecf/oY82tqHL5H6COvksz8rQaW1c2nJZJ17A2uEzOudrZGeY/619HiSpSHXLpJOzRoXDoFUrSQ==",
+      "path": "naudio/1.9.0-preview2",
+      "hashPath": "naudio.1.9.0-preview2.nupkg.sha512"
     },
     "OpenTK.NETCore/1.1.2749.6433": {
       "type": "package",
@@ -394,35 +410,35 @@
     "System.Collections.NonGeneric/4.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-hMxFT2RhhlffyCdKLDXjx8WEC5JfCvNozAZxCablAuFRH74SCV4AgzE8yJCh/73bFnEoZgJ9MJmkjQ0dJmnKqA==",
+      "sha512": "sha512-00tOaRBr5u4JsckEJfBw1eI4Frc5pOFM5gSdqr6oMYjXwQLLhV/LAl2Ty0BgELDvSuqBRBETTgNCMwRuUShk9Q==",
       "path": "system.collections.nongeneric/4.0.1",
       "hashPath": "system.collections.nongeneric.4.0.1.nupkg.sha512"
     },
     "System.Collections.Specialized/4.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-/HKQyVP0yH1I0YtK7KJL/28snxHNH/bi+0lgk/+MbURF6ULhAE31MDI+NZDerNWu264YbxklXCCygISgm+HMug==",
+      "sha512": "sha512-2lTt/6eh+HGLg495oLQoFDvLLy9Wk1FTnCw87CywP+Yq0ITi1PD+p5wgxcyw1Zksu/1dLsQmo3ezO2BGRk67tg==",
       "path": "system.collections.specialized/4.0.1",
       "hashPath": "system.collections.specialized.4.0.1.nupkg.sha512"
     },
     "System.ComponentModel/4.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-oBZFnm7seFiVfugsIyOvQCWobNZs7FzqDV/B7tx20Ep/l3UUFCPDkdTnCNaJZTU27zjeODmy2C/cP60u3D4c9w==",
+      "sha512": "sha512-3AOvy/bB7s8yAkolZOlqGeLDrPySuYsgkk7hKIBWn5a/Le7V16PDYQIzj7w7hi4UUXXmEmN/ZehNlAi5eD9r5w==",
       "path": "system.componentmodel/4.0.1",
       "hashPath": "system.componentmodel.4.0.1.nupkg.sha512"
     },
     "System.ComponentModel.Primitives/4.1.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-sc/7eVCdxPrp3ljpgTKVaQGUXiW05phNWvtv/m2kocXqrUQvTVWKou1Edas2aDjTThLPZOxPYIGNb/HN0QjURg==",
+      "sha512": "sha512-mAaj8PXxM7hUSIJYm9chhSe90HaIVyl8vb4JJO0M7fRaeBqSaaveHdRAmOL0LcOxp7kf9Vb8HujCe02DUqG5HQ==",
       "path": "system.componentmodel.primitives/4.1.0",
       "hashPath": "system.componentmodel.primitives.4.1.0.nupkg.sha512"
     },
     "System.ComponentModel.TypeConverter/4.1.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-MnDAlaeJZy9pdB5ZdOlwdxfpI+LJQ6e0hmH7d2+y2LkiD8DRJynyDYl4Xxf3fWFm7SbEwBZh4elcfzONQLOoQw==",
+      "sha512": "sha512-jcj79VC96yxc/rgLB59+g4675iVts1XrfC97dniMEvmJhRl8cG7qRO3EsJQwNw8cFL6RenFxn/CGfUhgj32SdQ==",
       "path": "system.componentmodel.typeconverter/4.1.0",
       "hashPath": "system.componentmodel.typeconverter.4.1.0.nupkg.sha512"
     },
@@ -436,7 +452,7 @@
     "System.Drawing.Primitives/4.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-9lVRG1voBwzLGZkf1XFJrobdZDZ5ZHMU4FVTbXAbzehpN90yYgkUeo9GoEYdvkt/EXaaHZJAeuffXP4JBbY+Ig==",
+      "sha512": "sha512-dkRqm4Q3fbCoYFI8oPphtwkDfzNB4Y55O/ND78Bzi7Z+ElQwU28CY3hsw/zU+WYwT0I58cGRZAIJJEIia9xWeA==",
       "path": "system.drawing.primitives/4.0.0",
       "hashPath": "system.drawing.primitives.4.0.0.nupkg.sha512"
     },
@@ -478,7 +494,7 @@
     "System.IO.FileSystem.Watcher/4.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-qM4Wr3La+RYb/03B0mZZjbA7tHsGzDffnuXP8Sl48HW2JwCjn3kfD5qdw0sqyNNowUipcJMi9/q6sMUrOIJ6UQ==",
+      "sha512": "sha512-b3KVTcliK4JBOowkcHvwpufp9Mgxku9HKUyNH+x/JgWcciB/TPPFubcV2c9R1ZKFlZw+MNj5xoXf3qLIlVPNow==",
       "path": "system.io.filesystem.watcher/4.0.0",
       "hashPath": "system.io.filesystem.watcher.4.0.0.nupkg.sha512"
     },
@@ -590,7 +606,7 @@
     "System.Threading.Overlapped/4.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-f7aLuLkBoCQM2kng7zqLFBXz9Gk48gDK8lk1ih9rH/1arJJzZK9gJwNvPDhL6Ps/l6rwOr8jw+4FCHL0KKWiEg==",
+      "sha512": "sha512-UeBx2TvawhzKeyUOMZbfpsBgofJ1gypHqfTIhJNS+lxhpO3dw2yUPPri2uBMnxsXOZqYj+rnBC4XvmkSYmyqSw==",
       "path": "system.threading.overlapped/4.0.1",
       "hashPath": "system.threading.overlapped.4.0.1.nupkg.sha512"
     },
@@ -604,7 +620,7 @@
     "System.Threading.Thread/4.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-gIdJqDXlOr5W9zeqFErLw3dsOsiShSCYtF9SEHitACycmvNvY8odf9kiKvp6V7aibc8C4HzzNBkWXjyfn7plbQ==",
+      "sha512": "sha512-Tlo/QJ5w4UhgO7Abxz3k9LL/nfQ9/2ioc88cQIMOjNhzK1QGJvvH+A6w5Sx+u99D6lgR+1Nj1YZ9/lknR963kQ==",
       "path": "system.threading.thread/4.0.0",
       "hashPath": "system.threading.thread.4.0.0.nupkg.sha512"
     }
