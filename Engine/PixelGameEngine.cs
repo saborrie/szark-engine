@@ -40,6 +40,8 @@ namespace PGE
         public int RenderOffsetX { get; private set; }
         public int RenderOffsetY { get; private set; }
 
+        public bool ShowFPS { get; set; } = true;
+
         private int lastFPSCheck;
         private GameWindow gameWindow;
         private Sprite background;
@@ -161,7 +163,8 @@ namespace PGE
 
             if (lastFPSCheck++ > 120)
             {
-                gameWindow.Title = $"{WindowTitle} | FPS: {(int)(1 / e.Time)}";
+                gameWindow.Title = $"{WindowTitle} " + (ShowFPS ? 
+                    $"| FPS: {(int)(1 / e.Time)}" : "");
                 lastFPSCheck = 0;
             }
 
@@ -213,7 +216,7 @@ namespace PGE
         /// <param name="p">The Color</param>
         public void SetBackground(Pixel p) =>
             background.Clear(p);
-            
+
         #endregion
 
         #region Abstractions
