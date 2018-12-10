@@ -181,7 +181,6 @@ namespace PGE
             GL.DrawArrays(PrimitiveType.TriangleStrip, 0, 4);
 
             Input.Update();
-
             gameWindow.SwapBuffers();
         }
 
