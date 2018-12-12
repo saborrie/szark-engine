@@ -42,9 +42,11 @@ namespace PGE
         public bool ShowFPS { get; set; } = true;
         public int CurrentFPS { get; private set; }
 
-        private int lastFPSCheck;
+        private double lastFPSCheck;
         private GameWindow gameWindow;
         private Sprite background;
+
+        private int quadVAO, textureID, shaderID;
 
         private float[] quadVerts = 
         {
@@ -53,10 +55,6 @@ namespace PGE
             -1.0f,  1.0f, 0.0f, 0.0f,
             -1.0f, -1.0f, 0.0f, 1.0f,
         };
-
-        private int quadVAO;
-        private int textureID;
-        private int shaderID;
 
         /// <summary>
         /// Creates a Window and Starts OpenGL.
@@ -161,7 +159,7 @@ namespace PGE
             // Where user generated graphics will be drawn
             Draw((float)e.Time);
 
-            if (lastFPSCheck++ > 120)
+            if ((lastFPSCheck += e.Time) > 1)
             {
                 CurrentFPS = (int)(1 / e.Time);
                 gameWindow.Title = $"{WindowTitle} " + (ShowFPS ? 
