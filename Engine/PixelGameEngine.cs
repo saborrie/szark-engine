@@ -40,6 +40,7 @@ namespace PGE
         public int RenderOffsetY { get; private set; }
 
         public bool ShowFPS { get; set; } = true;
+        public int CurrentFPS { get; private set; }
 
         private int lastFPSCheck;
         private GameWindow gameWindow;
@@ -162,8 +163,9 @@ namespace PGE
 
             if (lastFPSCheck++ > 120)
             {
+                CurrentFPS = (int)(1 / e.Time);
                 gameWindow.Title = $"{WindowTitle} " + (ShowFPS ? 
-                    $"| FPS: {(int)(1 / e.Time)}" : "");
+                    $"| FPS: {CurrentFPS}" : "");
                 lastFPSCheck = 0;
             }
 
