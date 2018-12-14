@@ -389,7 +389,7 @@
     "OpenTK.NETCore/1.1.2749.6433": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-6BKtR8G02nx/+tMUnzSLMd4XWabSJyet6zrLcaccEw1LHvByrBA5uMsf9qHNU7Sptvz0T/Xt4X+M1I82cFqygA==",
+      "sha512": "sha512-0zqlI4VDMsvFq58NTg7AjVem1XLOfmbI3s9LIQWwqUyCLTfUuoAvpeWxzJFo5NvKh6kt9TmEAXJrT/8g5TEbSA==",
       "path": "opentk.netcore/1.1.2749.6433",
       "hashPath": "opentk.netcore.1.1.2749.6433.nupkg.sha512"
     },

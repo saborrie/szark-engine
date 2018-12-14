@@ -26,11 +26,11 @@
           "lib/netstandard1.3/CoreCompat.System.Drawing.dll": {}
         }
       },
-      "Microsoft.NETCore.App/2.2.0-preview3-27014-02": {
+      "Microsoft.NETCore.App/2.2.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.NETCore.DotNetHostPolicy": "2.2.0-preview3-27014-02",
-          "Microsoft.NETCore.Platforms": "2.2.0-preview3-27014-02",
+          "Microsoft.NETCore.DotNetHostPolicy": "2.2.0",
+          "Microsoft.NETCore.Platforms": "2.2.0",
           "Microsoft.NETCore.Targets": "2.0.0",
           "NETStandard.Library": "2.0.3"
         },
@@ -184,22 +184,22 @@
           "build/netcoreapp2.2/Microsoft.NETCore.App.targets": {}
         }
       },
-      "Microsoft.NETCore.DotNetAppHost/2.2.0-preview3-27014-02": {
+      "Microsoft.NETCore.DotNetAppHost/2.2.0": {
         "type": "package"
       },
-      "Microsoft.NETCore.DotNetHostPolicy/2.2.0-preview3-27014-02": {
+      "Microsoft.NETCore.DotNetHostPolicy/2.2.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.NETCore.DotNetHostResolver": "2.2.0-preview3-27014-02"
+          "Microsoft.NETCore.DotNetHostResolver": "2.2.0"
         }
       },
-      "Microsoft.NETCore.DotNetHostResolver/2.2.0-preview3-27014-02": {
+      "Microsoft.NETCore.DotNetHostResolver/2.2.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.NETCore.DotNetAppHost": "2.2.0-preview3-27014-02"
+          "Microsoft.NETCore.DotNetAppHost": "2.2.0"
         }
       },
-      "Microsoft.NETCore.Platforms/2.2.0-preview3-27014-02": {
+      "Microsoft.NETCore.Platforms/2.2.0": {
         "type": "package",
         "compile": {
           "lib/netstandard1.0/_._": {}
@@ -788,11 +788,12 @@
         "lib/netstandard1.3/CoreCompat.System.Drawing.dll"
       ]
     },
-    "Microsoft.NETCore.App/2.2.0-preview3-27014-02": {
-      "sha512": "gfJ+hoCtgmWuGSSRmJdzcGNXn2Vy8RThAIe7Qg/TGI0ecCCA0qnle9QFX6gOOcViEfsRwBO5qHSoAkaxt1cPHQ==",
+    "Microsoft.NETCore.App/2.2.0": {
+      "sha512": "QU8taCyeyePwatrj+h+750lMnsPCq3YPaGmsdtSHXPCjDyjto2KT7QDNVet0oRliX4PjaINpyg0Yzd9DnQ/Wkw==",
       "type": "package",
-      "path": "microsoft.netcore.app/2.2.0-preview3-27014-02",
+      "path": "microsoft.netcore.app/2.2.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.TXT",
         "Microsoft.NETCore.App.versions.txt",
@@ -800,7 +801,7 @@
         "build/netcoreapp2.2/Microsoft.NETCore.App.PlatformManifest.txt",
         "build/netcoreapp2.2/Microsoft.NETCore.App.props",
         "build/netcoreapp2.2/Microsoft.NETCore.App.targets",
-        "microsoft.netcore.app.2.2.0-preview3-27014-02.nupkg.sha512",
+        "microsoft.netcore.app.2.2.0.nupkg.sha512",
         "microsoft.netcore.app.nuspec",
         "ref/netcoreapp2.2/Microsoft.CSharp.dll",
         "ref/netcoreapp2.2/Microsoft.CSharp.xml",
@@ -1052,55 +1053,59 @@
         "runtime.json"
       ]
     },
-    "Microsoft.NETCore.DotNetAppHost/2.2.0-preview3-27014-02": {
-      "sha512": "GQfi+4bb7xjtu8hveT4RthQ//S0mZihNmIu5VrrShNrG6HbipizQrdAR/A3ivNLaV1NuLmfbjjyucCjpS5ghHA==",
+    "Microsoft.NETCore.DotNetAppHost/2.2.0": {
+      "sha512": "qIrVLupwT2NYTrf7KM7Nh+mJr36V5MITVRjyGOByVVCwGmQgQmI/6bjZYQv+QdExi4Cm87eCKJX9FdT6nc00Xg==",
       "type": "package",
-      "path": "microsoft.netcore.dotnetapphost/2.2.0-preview3-27014-02",
+      "path": "microsoft.netcore.dotnetapphost/2.2.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
-        "microsoft.netcore.dotnetapphost.2.2.0-preview3-27014-02.nupkg.sha512",
+        "microsoft.netcore.dotnetapphost.2.2.0.nupkg.sha512",
         "microsoft.netcore.dotnetapphost.nuspec",
         "runtime.json"
       ]
     },
-    "Microsoft.NETCore.DotNetHostPolicy/2.2.0-preview3-27014-02": {
-      "sha512": "JP4Ha83NqmjZx30+4BWCOcEztYo3wQiPsBs/hGRdvV8ZAi7w4kLbHSYPExIAG7uvhuFyByCcAC2hbQMnXK8ikw==",
+    "Microsoft.NETCore.DotNetHostPolicy/2.2.0": {
+      "sha512": "5Xvh/3bDr6YAl6TKfeONvRDZ9QOmvVmzFzA0M6g8uubWdf5/o6qdVOqByFBT/fhjVb6okP0E5+v1oxh1Pk+c+w==",
       "type": "package",
-      "path": "microsoft.netcore.dotnethostpolicy/2.2.0-preview3-27014-02",
+      "path": "microsoft.netcore.dotnethostpolicy/2.2.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
-        "microsoft.netcore.dotnethostpolicy.2.2.0-preview3-27014-02.nupkg.sha512",
+        "microsoft.netcore.dotnethostpolicy.2.2.0.nupkg.sha512",
         "microsoft.netcore.dotnethostpolicy.nuspec",
         "runtime.json"
       ]
     },
-    "Microsoft.NETCore.DotNetHostResolver/2.2.0-preview3-27014-02": {
-      "sha512": "mXta9BkAb6n6P+NDhG4UVtz1w2WXZmwBHAyTjaSEvS9RXd2Oq3yIk3WOb0r8fdIVvL5u1cumypUi69/SRd2xAw==",
+    "Microsoft.NETCore.DotNetHostResolver/2.2.0": {
+      "sha512": "Q3j3KC2ugqIVasf7pO4NRDEn7GysZX3ZH6fAHfbjrP8cYXY9cmHeFcbaniw36q8kFhsPt2EnRHzSsLBpbG6l2Q==",
       "type": "package",
-      "path": "microsoft.netcore.dotnethostresolver/2.2.0-preview3-27014-02",
+      "path": "microsoft.netcore.dotnethostresolver/2.2.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
-        "microsoft.netcore.dotnethostresolver.2.2.0-preview3-27014-02.nupkg.sha512",
+        "microsoft.netcore.dotnethostresolver.2.2.0.nupkg.sha512",
         "microsoft.netcore.dotnethostresolver.nuspec",
         "runtime.json"
       ]
     },
-    "Microsoft.NETCore.Platforms/2.2.0-preview3-27014-02": {
-      "sha512": "W9vw9Myri9p+gd6XVTsMDnSa0pKhHngUilZqozbvTEIGdCM2J9NLIMrYyx2QCdHKIqGFfyBog6q1LnLH9khrFg==",
+    "Microsoft.NETCore.Platforms/2.2.0": {
+      "sha512": "39+GVHdbm+cmoOjdvm+fhiMbddnuVyUlBdYS8Yhn5xsNaBoTXpgBsxQQlI2Sv9EjIP0F+itG6yrDaOM2OEGupQ==",
       "type": "package",
-      "path": "microsoft.netcore.platforms/2.2.0-preview3-27014-02",
+      "path": "microsoft.netcore.platforms/2.2.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
         "lib/netstandard1.0/_._",
-        "microsoft.netcore.platforms.2.2.0-preview3-27014-02.nupkg.sha512",
+        "microsoft.netcore.platforms.2.2.0.nupkg.sha512",
         "microsoft.netcore.platforms.nuspec",
         "runtime.json",
         "useSharedDesignerContext.txt",
@@ -1303,10 +1308,12 @@
       ]
     },
     "OpenTK.NETCore/1.1.2749.6433": {
-      "sha512": "6BKtR8G02nx/+tMUnzSLMd4XWabSJyet6zrLcaccEw1LHvByrBA5uMsf9qHNU7Sptvz0T/Xt4X+M1I82cFqygA==",
+      "sha512": "0zqlI4VDMsvFq58NTg7AjVem1XLOfmbI3s9LIQWwqUyCLTfUuoAvpeWxzJFo5NvKh6kt9TmEAXJrT/8g5TEbSA==",
       "type": "package",
       "path": "opentk.netcore/1.1.2749.6433",
       "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
         "lib/netstandard1.3/OpenTK.dll",
         "lib/netstandard1.3/OpenTK.xml",
         "opentk.netcore.1.1.2749.6433.nupkg.sha512",
@@ -3107,7 +3114,7 @@
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.2": [
       "CoreCompat.System.Drawing >= 1.0.0-beta006",
-      "Microsoft.NETCore.App >= 2.2.0-preview3-27014-02",
+      "Microsoft.NETCore.App >= 2.2.0",
       "NAudio >= 1.9.0-preview2",
       "OpenTK.NETCore >= 1.1.2749.6433"
     ]
@@ -3129,14 +3136,12 @@
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\Jakub\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\Jakub\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.2"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -3160,7 +3165,7 @@
           "Microsoft.NETCore.App": {
             "suppressParent": "All",
             "target": "Package",
-            "version": "[2.2.0-preview3-27014-02, )",
+            "version": "[2.2.0, )",
             "autoReferenced": true
           },
           "NAudio": {
