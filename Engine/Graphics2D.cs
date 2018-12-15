@@ -5,16 +5,28 @@
 */
 
 using System;
-using System.Threading;
 
 namespace PGE
 {
+    public enum OpacityMode
+    {
+        NORMAL,
+        MASK,
+        ALPHA
+    }
+
     public class Graphics2D
     {
+        /// <summary>
+        /// The Alpha 'Blending' Modes
+        /// Normal - Alpha has no Affect
+        /// Mask - Any Alpha below 255 doesn't get rendered
+        /// Alpha - 'Proper' Alpha Blending
+        /// </summary>
+        public OpacityMode OpacityMode { get; set; } = OpacityMode.ALPHA;
+
         private Sprite drawTarget;
         private Sprite fontSprite;
-
-        public OpacityMode OpacityMode { get; set; }
 
         public Graphics2D(Sprite target) 
         {
