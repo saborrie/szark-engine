@@ -42,11 +42,13 @@ namespace PGE
         public bool ShowFPS { get; set; } = true;
         public int CurrentFPS { get; private set; }
 
+        public int BaseShaderID { get; private set; }
+
         private double lastFPSCheck;
         private GameWindow gameWindow;
         private Sprite background;
 
-        private int quadVAO, textureID, shaderID;
+        private int quadVAO, textureID;
 
         private float[] quadVerts = 
         {
@@ -131,7 +133,7 @@ namespace PGE
                 (int)TextureMagFilter.Nearest);
 
             // Load Base Shader
-            shaderID = ShaderLoader.LoadShader("Engine/Shaders/base.vert", 
+            BaseShaderID = ShaderLoader.LoadShader("Engine/Shaders/base.vert", 
                 "Engine/Shaders/base.frag");
         }
 
@@ -172,7 +174,7 @@ namespace PGE
                 PixelFormat.Rgba, PixelType.UnsignedByte, Graphics.GetDrawTarget().Pixels);
 
             // Load Shader
-            GL.UseProgram(shaderID);
+            GL.UseProgram(BaseShaderID);
             GL.BindTexture(TextureTarget.Texture2D, textureID);
 
             // Draw Quad to Screen
