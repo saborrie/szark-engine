@@ -46,17 +46,8 @@ namespace PGE
 
         private double lastFPSCheck;
         private GameWindow gameWindow;
+        private SpriteRenderer pixelGraphics;
         private Sprite background;
-
-        private int quadVAO, textureID;
-
-        private float[] quadVerts = 
-        {
-             1.0f,  1.0f, 1.0f, 0.0f,
-             1.0f, -1.0f, 1.0f, 1.0f,
-            -1.0f,  1.0f, 0.0f, 0.0f,
-            -1.0f, -1.0f, 0.0f, 1.0f,
-        };
 
         /// <summary>
         /// Creates a Window and Starts OpenGL.
@@ -97,44 +88,21 @@ namespace PGE
             ScreenHeight = WindowHeight / PixelSize;
 
             Graphics = new Graphics2D(new Sprite(ScreenWidth, ScreenHeight));
+            Graphics.GetDrawTarget().Clear(Pixel.RED);
 
             background = new Sprite(ScreenWidth, ScreenHeight);
             background.Clear(Pixel.BLACK);
 
+            GL.Enable(EnableCap.Blend);
+            GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.Texture2D);
 
-            // Setup quad VAO
-            quadVAO = GL.GenVertexArray();
-            int quadVBO = GL.GenBuffer();
-            GL.BindVertexArray(quadVAO);
-            
-            // Bind Data
-            GL.BindBuffer(BufferTarget.ArrayBuffer, quadVBO);
-            GL.BufferData(BufferTarget.ArrayBuffer, quadVerts.Length * 4, 
-                quadVerts, BufferUsageHint.StaticDraw);
-
-            // Setup Vertex Array Pointer
-            GL.EnableVertexAttribArray(0);
-            GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 16, 0);
-            GL.EnableVertexAttribArray(1);
-            GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 16, 8);
-
-            // Create Texture
-            textureID = GL.GenTexture();
-            GL.BindTexture(TextureTarget.Texture2D, textureID);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba,
-                ScreenWidth, ScreenHeight, 0, PixelFormat.Rgba, PixelType.UnsignedByte,
-                    Graphics.GetDrawTarget().GetData());
-
-            // Configure Texture
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, 
-                (int)TextureMinFilter.Nearest);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, 
-                (int)TextureMagFilter.Nearest);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 
             // Load Base Shader
-            BaseShaderID = ShaderLoader.LoadShader("Engine/Shaders/base.vert", 
-                "Engine/Shaders/base.frag");
+            BaseShaderID = ShaderLoader.LoadShader("Engine/Shaders/sprite.vert", 
+                "Engine/Shaders/sprite.frag");
+            pixelGraphics = new SpriteRenderer(this, Graphics.GetDrawTarget(), BaseShaderID);
         }
 
         #region Events
@@ -152,14 +120,25 @@ namespace PGE
         // On Window Render Frame
         private void Render(object sender, FrameEventArgs e)
         {
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            GL.ClearColor(0, 0, 0, 1);
+
             // Offsets the rendered frame to the center of the screen
             GL.Viewport(RenderOffsetX, RenderOffsetY, WindowWidth, WindowHeight);
 
             // Replaces current frame with a single-color background
             background.CopyTo(Graphics.GetDrawTarget());
 
+            // Drawing the Pixel Background
+            pixelGraphics.Render(0, 0, 0, 1, -99, true);
+
             // Where user generated graphics will be drawn
             Draw((float)e.Time);
+
+            pixelGraphics.Refresh();
+
+            // Draws GPU based Graphics
+            GPUDraw((float)e.Time);
 
             if ((lastFPSCheck += e.Time) > 1)
             {
@@ -168,18 +147,6 @@ namespace PGE
                     $"| FPS: {CurrentFPS}" : "");
                 lastFPSCheck = 0;
             }
-
-            // Use Open-GL to Draw Graphics to Screen
-            GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, ScreenWidth, ScreenHeight,
-                PixelFormat.Rgba, PixelType.UnsignedByte, Graphics.GetDrawTarget().Pixels);
-
-            // Load Shader
-            GL.UseProgram(BaseShaderID);
-            GL.BindTexture(TextureTarget.Texture2D, textureID);
-
-            // Draw Quad to Screen
-            GL.BindVertexArray(quadVAO);
-            GL.DrawArrays(PrimitiveType.TriangleStrip, 0, 4);
 
             Input.Update();
             gameWindow.SwapBuffers();
@@ -224,24 +191,30 @@ namespace PGE
         /// <summary>
         /// Called when Window is Opened, use for Initialization
         /// </summary>
-        protected abstract void Start();
+        protected virtual void Start() {}
 
         /// <summary>
         /// Called every Tick, use for Logic
         /// </summary>
-        /// <param name="deltaTime">Update Time</param>
-        protected abstract void Update(float deltaTime);
+        /// <param name="deltaTime">Delta Time</param>
+        protected virtual void Update(float deltaTime) {}
 
         /// <summary>
         /// Called every Frame, use for Drawing
         /// </summary>
-        /// <param name="deltaTime">Render Time</param>
-        protected abstract void Draw(float deltaTime);
+        /// <param name="deltaTime">Delta Time</param>
+        protected virtual void Draw(float deltaTime) {}
+
+        /// <summary>
+        /// Called every Frame, used for drawing GPU Sprites, Shapes, etc.
+        /// </summary>
+        /// <param name="deltaTime">Delta Time</param>
+        protected virtual void GPUDraw(float deltaTime) {}
 
         /// <summary>
         /// Called when Window is Closed, use for Cleanup
         /// </summary>
-        protected abstract void Destroyed();
+        protected virtual void Destroyed() {}
 
         #endregion
     }

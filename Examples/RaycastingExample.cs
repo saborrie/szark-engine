@@ -184,5 +184,7 @@ namespace Example
         protected override void Update(float deltaTime) {}
 
         protected override void Destroyed() {}
+
+        protected override void GPUDraw(float deltaTime) {}
     }
 }

@@ -25,7 +25,7 @@ namespace PGE
         /// </summary>
         public OpacityMode OpacityMode { get; set; } = OpacityMode.ALPHA;
 
-        private Sprite drawTarget;
+        public Sprite drawTarget;
         private Sprite fontSprite;
 
         public Graphics2D(Sprite target) 
@@ -57,7 +57,6 @@ namespace PGE
         {
             if (target == null)
                 throw new NullReferenceException();
-
             drawTarget = target;
         }
 
