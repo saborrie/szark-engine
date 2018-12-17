@@ -7,9 +7,7 @@
 
 ## Dependencies
 * OpenTK.NetCore
-
 * CoreCompact.System.Drawing
-
 * NAudio
 
 ## Getting Starting Example
