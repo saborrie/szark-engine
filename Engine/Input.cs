@@ -5,16 +5,16 @@ namespace PGE
 {
     public class Input
     {
-        private GameWindow gameWindow;
-        private PixelGameEngine engine;
+        private static GameWindow gameWindow;
+        private static PixelGameEngine engine;
 
-        private KeyboardState keyboardState, lastKeyboardState;
-        private MouseState mouseState, lastMouseState;
+        private static KeyboardState keyboardState, lastKeyboardState;
+        private static MouseState mouseState, lastMouseState;
 
         /// <summary>
         /// Mouse X position on screen
         /// </summary>
-        public int MouseX
+        public static int MouseX
         {
             get => engine.IsFullscreen ? (gameWindow.Mouse.X -
                 engine.RenderOffsetX) / engine.PixelSize :
@@ -24,17 +24,30 @@ namespace PGE
         /// <summary>
         /// Mouse Y position on screen
         /// </summary>
-        public int MouseY
+        public static int MouseY
         {
             get => engine.IsFullscreen ? (gameWindow.Mouse.Y -
                 engine.RenderOffsetY) / engine.PixelSize :
                     gameWindow.Mouse.Y / engine.PixelSize;
         }
 
-        public Input(PixelGameEngine engine, GameWindow window) 
+        public static void SetContext(PixelGameEngine engine, GameWindow window) 
         {
-            this.engine = engine;
+            if (gameWindow != null)
+            {
+                gameWindow.KeyUp -= KeyUp;
+                gameWindow.KeyDown -= KeyDown;
+                gameWindow.MouseDown -= MouseDown;
+                gameWindow.MouseUp -= MouseUp;
+            }
+
+            if (engine != null)
+                engine.AdditionalUpdates -= Update;
+
+            Input.engine = engine;
             gameWindow = window;
+
+            engine.AdditionalUpdates += Update;
 
             gameWindow.KeyUp += KeyUp;
             gameWindow.KeyDown += KeyDown;
@@ -42,7 +55,7 @@ namespace PGE
             gameWindow.MouseUp += MouseUp;
         }
 
-        public void Update()
+        public static void Update()
         {
             lastKeyboardState = keyboardState;
             lastMouseState = mouseState;
@@ -50,16 +63,16 @@ namespace PGE
 
         #region Events
 
-        private void KeyDown(object sender, KeyboardKeyEventArgs e) =>
+        private static void KeyDown(object sender, KeyboardKeyEventArgs e) =>
             keyboardState = e.Keyboard;
 
-        private void KeyUp(object sender, KeyboardKeyEventArgs e) =>
+        private static void KeyUp(object sender, KeyboardKeyEventArgs e) =>
             keyboardState = e.Keyboard;
 
-        private void MouseDown(object sender, MouseButtonEventArgs args) =>
+        private static void MouseDown(object sender, MouseButtonEventArgs args) =>
             mouseState = args.Mouse;
 
-        private void MouseUp(object sender, MouseButtonEventArgs args) =>
+        private static void MouseUp(object sender, MouseButtonEventArgs args) =>
             mouseState = args.Mouse;
 
         #endregion
@@ -69,14 +82,14 @@ namespace PGE
         /// </summary>
         /// <param name="key">The Key</param>
         /// <returns>Is Held?</returns>
-        public bool GetKey(Key key) => keyboardState[key];
+        public static bool GetKey(Key key) => keyboardState[key];
 
         /// <summary>
         /// Check if a key is pressed once
         /// </summary>
         /// <param name="key">The Key</param>
         /// <returns>Was Pressed?</returns>
-        public bool GetKeyDown(Key key) => 
+        public static bool GetKeyDown(Key key) => 
             keyboardState[key] && (keyboardState[key] != lastKeyboardState[key]);
 
         /// <summary>
@@ -84,7 +97,7 @@ namespace PGE
         /// </summary>
         /// <param name="button">The Button</param>
         /// <returns>Is Down?</returns>
-        public bool GetMouseButton(MouseButton button) =>
+        public static bool GetMouseButton(MouseButton button) =>
             mouseState[button];
 
         /// <summary>
@@ -92,7 +105,7 @@ namespace PGE
         /// </summary>
         /// <param name="button">The Button</param>
         /// <returns>Is Up?</returns>
-        public bool GetMouseButtonDown(MouseButton button) =>
+        public static bool GetMouseButtonDown(MouseButton button) =>
             mouseState[button] && (mouseState[button] != lastMouseState[button]);
     }
 }

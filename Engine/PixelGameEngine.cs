@@ -54,8 +54,7 @@ namespace PGE
         public bool ShowFPS { get; set; } = true;
         public bool IsFullscreen { get; private set; }
 
-        public Audio Audio { get; private set; }
-        public Input Input { get; private set; }
+        public Action AdditionalUpdates { get; set; }
 
         private double lastFPSCheck;
         private GameWindow gameWindow;
@@ -137,8 +136,9 @@ namespace PGE
             BaseShaderID = ShaderLoader.CreateProgram(vertexShader, fragmentShader);
             pixelGraphics = new SpriteRenderer(this, graphics.DrawTarget, BaseShaderID);
 
-            Audio = new Audio();
-            Input = new Input(this, gameWindow);
+            Audio.Init();
+            Input.SetContext(this, gameWindow);
+
             gameWindow.WindowBorder = WindowBorder.Fixed;
             gameWindow.Run();
         }
@@ -177,7 +177,7 @@ namespace PGE
                 lastFPSCheck = 0;
             }
 
-            Input.Update();
+            AdditionalUpdates?.Invoke();
             gameWindow.SwapBuffers();
         }
 

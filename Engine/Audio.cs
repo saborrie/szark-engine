@@ -14,18 +14,22 @@ namespace PGE
 {
     public class Audio
     {
-        private IWavePlayer outputDevice;
-        private MixingSampleProvider mixer;
+        private static IWavePlayer outputDevice;
+        private static MixingSampleProvider mixer;
+        private static bool initialized;
 
-        public Audio()
+        public static void Init()
         {
+            if (initialized) return;
+
+            initialized = true;
             outputDevice = new WaveOutEvent();
             mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(44100, 2));
             mixer.ReadFully = true;
             outputDevice.Init(mixer);
         }
 
-        private void AddMixerInput(ISampleProvider input)
+        private static void AddMixerInput(ISampleProvider input)
         {
             if (input.WaveFormat.Channels != mixer.WaveFormat.Channels)
                 input = new MonoToStereoSampleProvider(input);
@@ -37,7 +41,7 @@ namespace PGE
         /// </summary>
         /// <param name="filePath">File Path / Name</param>
         /// <param name="volume">Audio Volume</param>
-        public void PlaySound(string filePath, float volume = 1)
+        public static void PlaySound(string filePath, float volume = 1)
         {
             if (!IsSupportedAudio(filePath))
                 return;
@@ -52,7 +56,7 @@ namespace PGE
         /// </summary>
         /// <param name="sound">Sound</param>
         /// <param name="volume">Volume</param>
-        public void PlaySound(AudioClip sound, float volume = 1)
+        public static void PlaySound(AudioClip sound, float volume = 1)
         {
             if (sound == null) return;
 
