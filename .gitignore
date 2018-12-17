@@ -2,4 +2,5 @@ bin/
 obj/
 v15/
 .vscode/
+.vs/
 *.sln
