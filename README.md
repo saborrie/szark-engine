@@ -51,7 +51,7 @@ namespace Example
 
 * Lastly if you want to draw something, in the Draw function you can use the plethora of draw functions given in the PixelGameEngine class.
 
-# Documention / Getting Started
+# Documention
 You can find documentation either by going to the wiki tab or
 by looking through the Engine folder.
 
