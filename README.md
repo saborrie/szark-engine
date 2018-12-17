@@ -25,9 +25,10 @@ namespace Example
 {
     class RandomExample : PixelGameEngine
     {
-        protected override void Start() {
+        RandomExample() =>
             WindowTitle = "Random Pixels Example";
-        }
+    
+        protected override void Start() {}
 
         protected override void Update(float deltaTime) {}
 
