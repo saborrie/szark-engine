@@ -5,6 +5,8 @@ namespace PGE
 {
     public class Input
     {
+        private static int offsetX, offsetY;
+
         private static GameWindow gameWindow;
         private static PixelGameEngine engine;
 
@@ -16,9 +18,8 @@ namespace PGE
         /// </summary>
         public static int MouseX
         {
-            get => engine.IsFullscreen ? (gameWindow.Mouse.X -
-                engine.RenderOffsetX) / engine.PixelSize :
-                    gameWindow.Mouse.X / engine.PixelSize;
+            get => engine.IsFullscreen ? (gameWindow.Mouse.X - offsetX) / 
+                engine.PixelSize : gameWindow.Mouse.X / engine.PixelSize;
         }
 
         /// <summary>
@@ -26,11 +27,15 @@ namespace PGE
         /// </summary>
         public static int MouseY
         {
-            get => engine.IsFullscreen ? (gameWindow.Mouse.Y -
-                engine.RenderOffsetY) / engine.PixelSize :
-                    gameWindow.Mouse.Y / engine.PixelSize;
+            get => engine.IsFullscreen ? (gameWindow.Mouse.Y - offsetY) / 
+                engine.PixelSize : gameWindow.Mouse.Y / engine.PixelSize;
         }
 
+        /// <summary>
+        /// Sets the current active window and engine for input
+        /// </summary>
+        /// <param name="engine">The Engine</param>
+        /// <param name="window">The Window</param>
         public static void SetContext(PixelGameEngine engine, GameWindow window) 
         {
             if (gameWindow != null)
@@ -55,7 +60,19 @@ namespace PGE
             gameWindow.MouseUp += MouseUp;
         }
 
-        public static void Update()
+        /// <summary>
+        /// Used internally to update mouse position based
+        /// on if the window is in fullscreen
+        /// </summary>
+        public static void UpdateOffsets()
+        {
+            offsetX = engine.IsFullscreen ? (gameWindow.Width - 
+                engine.WindowWidth) / 2 : 0;
+            offsetY = engine.IsFullscreen ? (gameWindow.Height - 
+                engine.WindowHeight) / 2 : 0;
+        }
+
+        private static void Update()
         {
             lastKeyboardState = keyboardState;
             lastMouseState = mouseState;

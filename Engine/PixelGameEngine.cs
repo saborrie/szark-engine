@@ -45,9 +45,6 @@ namespace PGE
         public int ScreenHeight { get; private set; }
         public int PixelSize { get; private set; }
 
-        public int RenderOffsetX { get; private set; }
-        public int RenderOffsetY { get; private set; }
-
         public int CurrentFPS { get; private set; }
         public int BaseShaderID { get; private set; }
 
@@ -57,6 +54,8 @@ namespace PGE
         public Action AdditionalUpdates { get; set; }
 
         private double lastFPSCheck;
+        private int renderOffsetX, renderOffsetY;
+
         private GameWindow gameWindow;
         private SpriteRenderer pixelGraphics;
         private Graphics2D graphics;
@@ -158,7 +157,7 @@ namespace PGE
         // On Window Render Frame
         private void Render(object sender, FrameEventArgs e)
         {
-            GL.Viewport(RenderOffsetX, RenderOffsetY, WindowWidth, WindowHeight);
+            GL.Viewport(renderOffsetX, renderOffsetY, WindowWidth, WindowHeight);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.ClearColor(0, 0, 0, 1);
 
@@ -202,8 +201,9 @@ namespace PGE
             gameWindow.WindowState = fullscreen ? WindowState.Fullscreen :
                 WindowState.Normal;
 
-            RenderOffsetX = fullscreen ? (gameWindow.Width - WindowWidth) / 2 : 0;
-            RenderOffsetY = fullscreen ? (gameWindow.Height - WindowHeight) / 2 : 0;
+            renderOffsetX = fullscreen ? (gameWindow.Width - WindowWidth) / 2 : 0;
+            renderOffsetY = fullscreen ? (gameWindow.Height - WindowHeight) / 2 : 0;
+            Input.UpdateOffsets();
         }
 
         /// <summary>
