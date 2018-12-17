@@ -1,7 +1,7 @@
 ## How to get started:
 1. Download .Net Core 2.2 SDK or Higher
 2. Clone or download this project
-3. Open the project in your favorite IDE e.g. (Visual Studio Code)
+3. Open the project in your favorite IDE
 4. Restore the project if necessary
 5. Your good to go!
 
