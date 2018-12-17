@@ -55,12 +55,12 @@ namespace PGE
         public bool IsFullscreen { get; private set; }
 
         public Audio Audio { get; private set; }
-        public Graphics2D Graphics { get; private set; }
         public Input Input { get; private set; }
 
         private double lastFPSCheck;
         private GameWindow gameWindow;
         private SpriteRenderer pixelGraphics;
+        private Graphics2D graphics;
         private Sprite background;
 
         private const string vertexShader = 
@@ -124,7 +124,7 @@ namespace PGE
             ScreenHeight = WindowHeight / PixelSize;
 
             background = new Sprite(ScreenWidth, ScreenHeight);
-            Graphics = new Graphics2D(ScreenWidth, ScreenHeight);
+            graphics = new Graphics2D(ScreenWidth, ScreenHeight);
             background.Clear(Pixel.BLACK);
 
             GL.Enable(EnableCap.Blend);
@@ -135,7 +135,7 @@ namespace PGE
                 BlendingFactorDest.OneMinusSrcAlpha);
 
             BaseShaderID = ShaderLoader.CreateProgram(vertexShader, fragmentShader);
-            pixelGraphics = new SpriteRenderer(this, Graphics.DrawTarget, BaseShaderID);
+            pixelGraphics = new SpriteRenderer(this, graphics.DrawTarget, BaseShaderID);
 
             Audio = new Audio();
             Input = new Input(this, gameWindow);
@@ -162,10 +162,10 @@ namespace PGE
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.ClearColor(0, 0, 0, 1);
 
-            background.CopyTo(Graphics.DrawTarget);
+            background.CopyTo(graphics.DrawTarget);
             pixelGraphics.Render(0, 0, 0, 1, -99, true);
 
-            Draw((float)e.Time);
+            Draw(graphics, (float)e.Time);
             pixelGraphics.Refresh();
             GPUDraw((float)e.Time);
 
@@ -232,7 +232,7 @@ namespace PGE
         /// Called every frame, use for drawing
         /// </summary>
         /// <param name="deltaTime">Delta Time</param>
-        protected virtual void Draw(float deltaTime) {}
+        protected virtual void Draw(Graphics2D graphics, float deltaTime) {}
 
         /// <summary>
         /// Called every frame, used for drawing GPU Sprites, Shapes, etc.
