@@ -11,7 +11,7 @@
 * NAudio
 
 ## Getting Starting Example
-```
+```c#
 using System;
 using PGE;
 
