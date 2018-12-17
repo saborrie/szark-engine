@@ -231,6 +231,7 @@ namespace PGE
         /// <summary>
         /// Called every frame, use for drawing
         /// </summary>
+        /// <param name="graphics">The Graphics</param>
         /// <param name="deltaTime">Delta Time</param>
         protected virtual void Draw(Graphics2D graphics, float deltaTime) {}
 
