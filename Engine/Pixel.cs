@@ -11,24 +11,26 @@ namespace PGE
     /// </summary>
     public struct Pixel
     {
-        public byte r, g, b, a;
+        public byte red, green, blue, alpha;
 
         /// <summary>
-        /// The Constructor for a Pixel in RGBA Form.
+        /// The Constructor for a pixel in RGBA form.
         /// Alpha is not required and will just render
         /// completely opaque.
         /// </summary>
-        /// <param name="r">Red</param>
-        /// <param name="g">Green</param>
-        /// <param name="b">Blue</param>
-        /// <param name="a">Alpha</param>
-        public Pixel(byte r, byte g, byte b, byte a = 255)
+        /// <param name="red">Red</param>
+        /// <param name="green">Green</param>
+        /// <param name="blue">Blue</param>
+        /// <param name="alpha">Alpha</param>
+        public Pixel(byte red, byte green, byte blue, byte alpha = 255)
         {
-            this.r = r;
-            this.g = g;
-            this.b = b;
-            this.a = a;
+            this.red = red;
+            this.green = green;
+            this.blue = blue;
+            this.alpha = alpha;
         }
+
+        #region Constants
 
         // Greyscale Colors
         public static Pixel BLANK = new Pixel(0, 0, 0, 0);
@@ -66,41 +68,24 @@ namespace PGE
         public static Pixel VERY_DARK_MAGENTA = new Pixel(64, 0, 64);
         public static Pixel VERY_DARK_CYAN = new Pixel(0, 64, 64);
 
+        #endregion
+
         /// <summary>
-        /// Interpolates Two Pixels based on T between 0 to 1
+        /// Interpolates two pixels
         /// </summary>
-        /// <param name="a">First Pixel</param>
-        /// <param name="b">Second Pixel</param>
-        /// <param name="t">Alpha</param>
+        /// <param name="first">First Pixel</param>
+        /// <param name="second">Second Pixel</param>
+        /// <param name="value">Mix Value (0-1)</param>
         /// <returns>The Blended Pixel</returns>
-        public static Pixel Lerp(Pixel a, Pixel b, float t) =>
-            new Pixel((byte)((1 - t) * a.r + t * b.r), (byte)((1 - t) * a.g + t * b.g),
-                (byte)((1 - t) * a.b + t * b.b), (byte)((1 - t) * a.a + t * b.a));
+        public static Pixel Lerp(Pixel first, Pixel second, float value)
+        {
+            var red = (byte)((1 - value) * first.red + value * second.red);
+            var green = (byte)((1 - value) * first.green + value * second.green);
+            var blue = (byte)((1 - value) * first.blue + value * second.blue);
+            var alpha = (byte)((1 - value) * first.alpha + value * second.alpha);
 
-        /// <summary>
-        /// Converts a Pixel in a UInt
-        /// </summary>
-        /// <returns>A UInt that represents a Pixel</returns>
-        public uint ToInt() =>
-            (uint)((r << 0) | (g << 8) | (b << 16) | (a << 24));
-
-        /// <summary>
-        /// Converts a UInt to a Pixel
-        /// </summary>
-        /// <param name="i">UInt</param>
-        /// <returns>Pixel</returns>
-        public static Pixel ToPixel(uint i) =>
-            new Pixel((byte)(i >> 0), (byte)(i >> 8), 
-                (byte)(i >> 16), (byte)(i >> 24));
-
-        public static Pixel operator+(Pixel f, Pixel p) =>
-            new Pixel((byte)(f.r + p.r), (byte)(f.g + p.g), (byte)(f.b + p.b), (byte)(f.a + p.a));
-
-        public static Pixel operator-(Pixel f, Pixel p) =>
-            new Pixel((byte)(f.r - p.r), (byte)(f.g - p.g), (byte)(f.b - p.b), (byte)(f.a - p.a));
-
-        public static Pixel operator*(Pixel f, float t) =>
-            new Pixel((byte)(f.r * t), (byte)(f.g * t), (byte)(f.b * t), (byte)(f.a * t));
+            return new Pixel(red, green, blue, alpha);
+        }
 
         /// <summary>
         /// Compares this pixel's color to another
@@ -108,6 +93,21 @@ namespace PGE
         /// <param name="other">The other pixel</param>
         /// <returns>If both colors are the same</returns>
         public bool Compare(Pixel other) =>
-            other.r == r && other.g == g && other.b == b && other.a == a;
+            other.red == red && other.green == green && 
+                other.blue == blue && other.alpha == alpha;
+
+        // -- Operators --
+
+        public static Pixel operator +(Pixel f, Pixel p) =>
+            new Pixel((byte)(f.red + p.red), (byte)(f.green + p.green),
+                (byte)(f.blue + p.blue), (byte)(f.alpha + p.alpha));
+
+        public static Pixel operator -(Pixel f, Pixel p) =>
+            new Pixel((byte)(f.red - p.red), (byte)(f.green - p.green),
+                (byte)(f.blue - p.blue), (byte)(f.alpha - p.alpha));
+
+        public static Pixel operator *(Pixel f, float t) =>
+            new Pixel((byte)(f.red * t), (byte)(f.green * t),
+                (byte)(f.blue * t), (byte)(f.alpha * t));
     }
 }

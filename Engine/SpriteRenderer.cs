@@ -13,8 +13,8 @@ namespace PGE
         public Sprite Sprite { get; private set; }
         public int Shader { get; private set; }
 
-        private int VAO, EBO, textureID;
-        private int projLocation, modelLocation, 
+        private readonly int VAO, EBO, textureID;
+        private readonly int projLocation, modelLocation, 
             scaleLocation, rotLocation;
 
         private PixelGameEngine engine;
@@ -23,7 +23,7 @@ namespace PGE
 
         private float[] vertices =
         {
-            // Vertices    // Tex
+            // Vertices    // Texture Coords
              1.0f,  1.0f,  1.0f, 1.0f,
              1.0f, -1.0f,  1.0f, 0.0f,
             -1.0f, -1.0f,  0.0f, 0.0f,
@@ -39,8 +39,9 @@ namespace PGE
         public SpriteRenderer(PixelGameEngine engine, Sprite sprite, int shaderID)
         {
             this.engine = engine;
-            this.Shader = shaderID;
-            this.Sprite = sprite;
+
+            Shader = shaderID;
+            Sprite = sprite;
 
             VAO = GL.GenVertexArray();
             GL.BindVertexArray(VAO);
@@ -64,7 +65,7 @@ namespace PGE
             GL.BindTexture(TextureTarget.Texture2D, textureID);
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba,
                 sprite.Width, sprite.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte,
-                    sprite.GetData());
+                    sprite.Pixels);
 
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, 
                 (int)TextureMinFilter.Nearest);
@@ -87,20 +88,19 @@ namespace PGE
         /// <param name="scale">Scale</param>
         /// <param name="layer">Layer</param>
         /// <param name="fillScreen">Stretch to Screen?</param>
-        public void Render(float x, float y, float rotation = 0, float scale = 1, float layer = -1, bool fillScreen = false)
+        public void Render(float x, float y, float rotation = 0, float scale = 1, 
+            float layer = -1, bool fillScreen = false)
         {
-            Matrix4 projection, model, rot, sc;
-
             GL.UseProgram(Shader);
 
             float left = 0, right = fillScreen ? 2 : engine.ScreenWidth * orthoFactor;
             float bottom = 0, top = fillScreen ? 2 : engine.ScreenHeight * orthoFactor;
             float posX = x * orthoFactor / scale, posY = y * orthoFactor / scale;
 
-            Matrix4.CreateTranslation(posX + 1, posY + 1, layer, out model);
-            Matrix4.CreateOrthographicOffCenter(left, right, top, bottom, 0.1f, 100f, out projection);
-            Matrix4.CreateRotationZ(rotation, out rot);
-            Matrix4.CreateScale(scale, out sc);
+            Matrix4.CreateTranslation(posX + 1, posY + 1, layer, out var model);
+            Matrix4.CreateOrthographicOffCenter(left, right, top, bottom, 0.1f, 100f, out var projection);
+            Matrix4.CreateRotationZ(rotation, out var rot);
+            Matrix4.CreateScale(scale, out var sc);
 
             GL.BindTexture(TextureTarget.Texture2D, textureID);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, EBO);
@@ -115,11 +115,10 @@ namespace PGE
         }
 
         /// <summary>
-        /// Will refresh the Texture if Edited by the CPU
+        /// Will refresh the texture if edited by the CPU
         /// </summary>
         public void Refresh()
         {
-            // Use Open-GL to Draw Graphics to Screen
             GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, Sprite.Width, Sprite.Height,
                 PixelFormat.Rgba, PixelType.UnsignedByte, Sprite.Pixels);
         }

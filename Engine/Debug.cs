@@ -10,7 +10,7 @@ namespace PGE
     public class Debug
     {
         /// <summary>
-        /// Logs a Message to the Console
+        /// Logs a message to the console
         /// </summary>
         /// <param name="text">The Message</param>
         /// <param name="level">Level of Importance</param>

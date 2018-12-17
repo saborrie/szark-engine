@@ -14,24 +14,21 @@ namespace PGE
         /// <summary>
         /// Creates a Shader Program from a Vertex Shader and a Fragment Shader
         /// </summary>
-        /// <param name="vertPath">Vertex Shader Path</param>
-        /// <param name="fragPath">Fragment Shader Path</param>
+        /// <param name="vertexShader">Vertex Shader Path</param>
+        /// <param name="fragmentShader">Fragment Shader Path</param>
         /// <returns>Shader Program ID</returns>
-        public static int LoadShader(string vertPath, string fragPath)
+        public static int CreateProgram(string vertexShader, string fragmentShader)
         {
             int vertexShaderID = GL.CreateShader(ShaderType.VertexShader);
             int fragmentShaderID = GL.CreateShader(ShaderType.FragmentShader);
 
-            string vertexCode = File.ReadAllText(vertPath);
-            string fragmentCode = File.ReadAllText(fragPath);
-
-            GL.ShaderSource(vertexShaderID, vertexCode);
+            GL.ShaderSource(vertexShaderID, vertexShader);
             GL.CompileShader(vertexShaderID);
 
             string vertexInfo = GL.GetShaderInfoLog(vertexShaderID);
             if (vertexInfo != "") Console.WriteLine(vertexInfo);
 
-            GL.ShaderSource(fragmentShaderID, fragmentCode);
+            GL.ShaderSource(fragmentShaderID, fragmentShader);
             GL.CompileShader(fragmentShaderID);
 
             string fragmentInfo = GL.GetShaderInfoLog(fragmentShaderID);

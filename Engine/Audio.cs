@@ -33,7 +33,7 @@ namespace PGE
         }
 
         /// <summary>
-        /// Play Sound from File
+        /// Play audio from File
         /// </summary>
         /// <param name="filePath">File Path / Name</param>
         /// <param name="volume">Audio Volume</param>
@@ -48,7 +48,7 @@ namespace PGE
         }
 
         /// <summary>
-        /// Play Sound from Cached Sound Object
+        /// Play audio from cached sound object
         /// </summary>
         /// <param name="sound">Sound</param>
         /// <param name="volume">Volume</param>
@@ -116,7 +116,7 @@ namespace PGE
         public AudioReader(AudioFileReader reader)
         {
             this.reader = reader;
-            this.WaveFormat = reader.WaveFormat;
+            WaveFormat = reader.WaveFormat;
         }
 
         public int Read(float[] buffer, int offset, int count)

@@ -4,13 +4,14 @@
 */
 
 using System;
+using System.Drawing;
 using System.IO;
 
 namespace PGE
 {
     /// <summary>
-    /// A Class that contains an Array of Pixels
-    /// and may Represent an Image
+    /// A Class that contains an array of pixels
+    /// and may represent an image
     /// </summary>
     public class Sprite
     {
@@ -19,7 +20,7 @@ namespace PGE
         public Pixel[] Pixels { get; set; }
 
         /// <summary>
-        /// Constructor for a Blank Sprite
+        /// Constructor for a blank sprite
         /// </summary>
         /// <param name="width">Width</param>
         /// <param name="height">Height</param>
@@ -27,27 +28,23 @@ namespace PGE
         {
             Width = width;
             Height = height;
-
             Pixels = new Pixel[width * height];
-            for (var i = 0; i < Pixels.Length; i++)
-                Pixels[i] = new Pixel();
         }
 
         /// <summary>
-        /// Constructor to make a Hard Copy of another Sprite
+        /// Constructor to make a hard copy of another sprite
         /// </summary>
-        /// <param name="sprite"></param>
-        public Sprite(Sprite sprite)
+        /// <param name="other"></param>
+        public Sprite(Sprite other)
         {
-            if (sprite == null) return;
-
-            Pixels = new Pixel[sprite.Width * sprite.Height];
-            for (int i = 0; i < sprite.Pixels.Length; i++)
-                Pixels[i] = sprite.Pixels[i];
+            if (other == null) return;
+            Pixels = new Pixel[other.Width * other.Height];
+            for (int i = 0; i < other.Pixels.Length; i++)
+                Pixels[i] = other.Pixels[i];
         }
 
         /// <summary>
-        /// Constructor for a Sprite that will
+        /// Constructor for a sprite that will
         /// be retrieved from a file on the computer
         /// </summary>
         /// <param name="path">The Path on the Computer</param>
@@ -55,47 +52,34 @@ namespace PGE
         {
             try
             {
-                var image = System.Drawing.Image.FromFile(path);
-                var b = new System.Drawing.Bitmap(image);
+                var image = Image.FromFile(path);
+                var bitmap = new Bitmap(image);
 
-                Width = b.Width;
-                Height = b.Height;
+                Width = bitmap.Width;
+                Height = bitmap.Height;
 
                 Pixels = new Pixel[Width * Height];
 
-                for (var x = 0; x < b.Width; x++)
+                for (var x = 0; x < bitmap.Width; x++)
                 {
-                    for (var y = 0; y < b.Height; y++)
+                    for (var y = 0; y < bitmap.Height; y++)
                     {
-                        var p = b.GetPixel(x, y);
+                        var p = bitmap.GetPixel(x, y);
                         var col = new Pixel(p.R, p.G, p.B, p.A);
                         SetPixel(x, y, col);
                     }
                 }
 
                 image.Dispose();
-                b.Dispose();
+                bitmap.Dispose();
             }
             catch(FileNotFoundException) {
-                Console.WriteLine($"[ERROR]: Image / File not found at\n \"{path}\"");
+                Debug.Log($"Image / File not found at\n \"{path}\"", LogLevel.ERROR);
             }
         }
 
         /// <summary>
-        /// The Whole Array of Pixels each converted
-        /// to UInts
-        /// </summary>
-        /// <returns>A UInt Array</returns>
-        public uint[] GetData()
-        {
-            uint[] data = new uint[Pixels.Length];
-            for (int i = 0; i < data.Length; i++)
-                data[i] = Pixels[i].ToInt();
-            return data;
-        }
-
-        /// <summary>
-        /// Retrieves a Pixel from the Sprite
+        /// Retrieves a pixel from the sprite
         /// </summary>
         /// <param name="x">X</param>
         /// <param name="y">Y</param>
@@ -104,12 +88,11 @@ namespace PGE
         {
             if (x >= 0 && x < Width && y >= 0 && y < Height)
                 return Pixels[y * Width + x];
-            else
-                return new Pixel();
+            else return new Pixel();
         }
 
         /// <summary>
-        /// Sets a Pixel in the Sprite
+        /// Sets a pixel in the sprite
         /// </summary>
         /// <param name="x">X</param>
         /// <param name="y">Y</param>
@@ -121,7 +104,7 @@ namespace PGE
         }
 
         /// <summary>
-        /// Clears the Sprite to a Specific Color
+        /// Clears the sprite to a specific color
         /// </summary>
         /// <param name="p">Pixel / Color</param>
         public void Clear(Pixel p)
@@ -131,7 +114,7 @@ namespace PGE
         }
 
         /// <summary>
-        /// Copies all Pixels into another Sprite
+        /// Copies all pixels into another sprite
         /// (Both sprites must be the same size!)
         /// </summary>
         /// <param name="destination">The Sprite to Copy To</param>

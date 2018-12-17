@@ -6,14 +6,35 @@ namespace PGE
     public class Input
     {
         private GameWindow gameWindow;
-        private PixelGameEngine gameEngine;
+        private PixelGameEngine engine;
+
         private KeyboardState keyboardState, lastKeyboardState;
         private MouseState mouseState, lastMouseState;
 
-        public Input(PixelGameEngine p, GameWindow e) 
+        /// <summary>
+        /// Mouse X position on screen
+        /// </summary>
+        public int MouseX
         {
-            gameEngine = p;
-            gameWindow = e;
+            get => engine.IsFullscreen ? (gameWindow.Mouse.X -
+                engine.RenderOffsetX) / engine.PixelSize :
+                    gameWindow.Mouse.X / engine.PixelSize;
+        }
+
+        /// <summary>
+        /// Mouse Y position on screen
+        /// </summary>
+        public int MouseY
+        {
+            get => engine.IsFullscreen ? (gameWindow.Mouse.Y -
+                engine.RenderOffsetY) / engine.PixelSize :
+                    gameWindow.Mouse.Y / engine.PixelSize;
+        }
+
+        public Input(PixelGameEngine engine, GameWindow window) 
+        {
+            this.engine = engine;
+            gameWindow = window;
 
             gameWindow.KeyUp += KeyUp;
             gameWindow.KeyDown += KeyDown;
@@ -27,28 +48,13 @@ namespace PGE
             lastMouseState = mouseState;
         }
 
-        // On Key Pressed Down
+        #region Events
+
         private void KeyDown(object sender, KeyboardKeyEventArgs e) =>
             keyboardState = e.Keyboard;
 
-        // On Key Lifted Up
         private void KeyUp(object sender, KeyboardKeyEventArgs e) =>
             keyboardState = e.Keyboard;
-
-        /// <summary>
-        /// Checks if a Key is Held
-        /// </summary>
-        /// <param name="key">The Key</param>
-        /// <returns>Is Held?</returns>
-        public bool GetKey(Key key) => keyboardState[key];
-
-        /// <summary>
-        /// Check if a Key is Pressed Once
-        /// </summary>
-        /// <param name="key">The Key</param>
-        /// <returns>Was Pressed?</returns>
-        public bool GetKeyDown(Key key) => 
-            keyboardState[key] && (keyboardState[key] != lastKeyboardState[key]);
 
         private void MouseDown(object sender, MouseButtonEventArgs args) =>
             mouseState = args.Mouse;
@@ -56,22 +62,25 @@ namespace PGE
         private void MouseUp(object sender, MouseButtonEventArgs args) =>
             mouseState = args.Mouse;
 
-        /// <summary>
-        /// Returns the Mouse's X Position
-        /// </summary>
-        public int GetMouseX() => gameEngine.IsFullscreen ? (gameWindow.Mouse.X - 
-            gameEngine.RenderOffsetX) / gameEngine.PixelSize : 
-                gameWindow.Mouse.X / gameEngine.PixelSize; 
+        #endregion
 
         /// <summary>
-        /// Returns the Mouse's Y Position
+        /// Checks if a key is held
         /// </summary>
-        public int GetMouseY() => gameEngine.IsFullscreen ? (gameWindow.Mouse.Y - 
-            gameEngine.RenderOffsetY) / gameEngine.PixelSize : 
-                gameWindow.Mouse.Y / gameEngine.PixelSize;
+        /// <param name="key">The Key</param>
+        /// <returns>Is Held?</returns>
+        public bool GetKey(Key key) => keyboardState[key];
 
         /// <summary>
-        /// Checks if Mouse Button is Pressed
+        /// Check if a key is pressed once
+        /// </summary>
+        /// <param name="key">The Key</param>
+        /// <returns>Was Pressed?</returns>
+        public bool GetKeyDown(Key key) => 
+            keyboardState[key] && (keyboardState[key] != lastKeyboardState[key]);
+
+        /// <summary>
+        /// Checks if mouse button is pressed
         /// </summary>
         /// <param name="button">The Button</param>
         /// <returns>Is Down?</returns>
@@ -79,7 +88,7 @@ namespace PGE
             mouseState[button];
 
         /// <summary>
-        /// Checks if Mouse Button is pressed down once
+        /// Checks if mouse button is pressed down once
         /// </summary>
         /// <param name="button">The Button</param>
         /// <returns>Is Up?</returns>

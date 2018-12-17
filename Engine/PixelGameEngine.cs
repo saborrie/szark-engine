@@ -1,22 +1,38 @@
 ﻿/*
 	PixelGameEngine.cs
-        By: Jakub P. Szarkowicz / JakubSzark
 	
-	Please Check Github Page for Liscense
+	License (MIT):
+
+    Copyright (c) 2018 Jakub Szarkowicz
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
 */
 
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
-using OpenTK.Graphics;
-
 using System;
 
 namespace PGE
 {
     /// <summary>
-    /// The main engine with all Open GL and Drawing
-    /// Methods. Derive from this class to access the engine.
-    /// Make sure to construct the Engine and Call Start
+    /// The main engine with all Open GL and drawing
+    /// methods. Derive from this class to access the engine.
     /// </summary>
     public abstract class PixelGameEngine
     {
@@ -27,82 +43,104 @@ namespace PGE
 
         public int ScreenWidth { get; private set; }
         public int ScreenHeight { get; private set; }
-
         public int PixelSize { get; private set; }
 
+        public int RenderOffsetX { get; private set; }
+        public int RenderOffsetY { get; private set; }
+
+        public int CurrentFPS { get; private set; }
+        public int BaseShaderID { get; private set; }
+
+        public bool ShowFPS { get; set; } = true;
         public bool IsFullscreen { get; private set; }
 
         public Audio Audio { get; private set; }
         public Graphics2D Graphics { get; private set; }
         public Input Input { get; private set; }
 
-        public int RenderOffsetX { get; private set; }
-        public int RenderOffsetY { get; private set; }
-
-        public bool ShowFPS { get; set; } = true;
-        public int CurrentFPS { get; private set; }
-
-        public int BaseShaderID { get; private set; }
-
         private double lastFPSCheck;
         private GameWindow gameWindow;
         private SpriteRenderer pixelGraphics;
         private Sprite background;
 
+        private const string vertexShader = 
+        @"
+            #version 400 
+
+            layout(location = 0) in vec2 pos;
+            layout(location = 1) in vec2 tex;
+
+            out vec2 texCoord;
+
+            uniform mat4 projection;
+            uniform mat4 model;
+            uniform mat4 rotation;
+            uniform mat4 scale;
+
+            void main() 
+            {
+                texCoord = tex;
+                gl_Position = projection * scale * model * rotation * vec4(pos.x, pos.y, 0, 1.0);
+            }
+        ";
+
+        private const string fragmentShader = 
+        @"
+            #version 400
+
+            out vec4 FragColor;
+            in vec2 texCoord;
+            uniform sampler2D tex;
+
+            void main() {
+                FragColor = texture(tex, texCoord);
+            } 
+        ";
+
         /// <summary>
-        /// Creates a Window and Starts OpenGL.
+        /// Creates a window and starts OpenGL.
         /// </summary>
-        /// <param name="width">Width of the Screen</param>
-        /// <param name="height">Height of the Screen</param>
+        /// <param name="width">Width of the Window</param>
+        /// <param name="height">Height of the Window</param>
         /// <param name="pixelSize">Size of Each Pixel</param>
-        public void Construct(int width = 512, int height = 512, int pixelSize = 8)
+        public void Construct(int width = 800, int height = 800, int pixelSize = 8)
         {
             WindowWidth = width;
             WindowHeight = height;
             PixelSize = pixelSize;
 
-            InitializeWindow();
-            SetupGL();
-
-            Audio = new Audio();
-            Input = new Input(this, gameWindow);
-            gameWindow.WindowBorder = WindowBorder.Fixed;
-            gameWindow.Run();
-        }
-
-        private void InitializeWindow()
-        {
-            gameWindow = new GameWindow(WindowWidth, 
-                WindowHeight, GraphicsMode.Default, WindowTitle);
-            gameWindow.VSync = VSyncMode.Off;
+            gameWindow = new GameWindow(WindowWidth, WindowHeight)
+            {
+                VSync = VSyncMode.Off,
+                Title = WindowTitle
+            };
 
             gameWindow.Load += Loaded;
             gameWindow.RenderFrame += Render;
             gameWindow.UpdateFrame += Update;
             gameWindow.Disposed += Disposed;
-        }
 
-        private void SetupGL()
-        {
             ScreenWidth = WindowWidth / PixelSize;
             ScreenHeight = WindowHeight / PixelSize;
 
-            Graphics = new Graphics2D(new Sprite(ScreenWidth, ScreenHeight));
-            Graphics.GetDrawTarget().Clear(Pixel.RED);
-
             background = new Sprite(ScreenWidth, ScreenHeight);
+            Graphics = new Graphics2D(ScreenWidth, ScreenHeight);
             background.Clear(Pixel.BLACK);
 
             GL.Enable(EnableCap.Blend);
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.Texture2D);
 
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, 
+                BlendingFactorDest.OneMinusSrcAlpha);
 
-            // Load Base Shader
-            BaseShaderID = ShaderLoader.LoadShader("Engine/Shaders/sprite.vert", 
-                "Engine/Shaders/sprite.frag");
-            pixelGraphics = new SpriteRenderer(this, Graphics.GetDrawTarget(), BaseShaderID);
+            BaseShaderID = ShaderLoader.CreateProgram(vertexShader, fragmentShader);
+            pixelGraphics = new SpriteRenderer(this, Graphics.DrawTarget, BaseShaderID);
+
+            Audio = new Audio();
+            Input = new Input(this, gameWindow);
+            gameWindow.WindowBorder = WindowBorder.Fixed;
+            gameWindow.Run();
         }
 
         #region Events
@@ -120,24 +158,15 @@ namespace PGE
         // On Window Render Frame
         private void Render(object sender, FrameEventArgs e)
         {
+            GL.Viewport(RenderOffsetX, RenderOffsetY, WindowWidth, WindowHeight);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.ClearColor(0, 0, 0, 1);
 
-            // Offsets the rendered frame to the center of the screen
-            GL.Viewport(RenderOffsetX, RenderOffsetY, WindowWidth, WindowHeight);
-
-            // Replaces current frame with a single-color background
-            background.CopyTo(Graphics.GetDrawTarget());
-
-            // Drawing the Pixel Background
+            background.CopyTo(Graphics.DrawTarget);
             pixelGraphics.Render(0, 0, 0, 1, -99, true);
 
-            // Where user generated graphics will be drawn
             Draw((float)e.Time);
-
             pixelGraphics.Refresh();
-
-            // Draws GPU based Graphics
             GPUDraw((float)e.Time);
 
             if ((lastFPSCheck += e.Time) > 1)
@@ -157,14 +186,14 @@ namespace PGE
         #region Extra
 
         /// <summary>
-        /// Sets the Mode for VSync
+        /// Sets the mode for VSync
         /// </summary>
         /// <param name="isActive">Is On?</param>
         public void SetVSync(VSyncMode mode) => 
             gameWindow.VSync = mode;
 
         /// <summary>
-        /// Sets the Window to be Fullscreen
+        /// Sets the window to be fullscreen
         /// </summary>
         /// <param name="fullscreen">Is Fullscreen?</param>
         public void SetFullscreen(bool fullscreen)
@@ -178,41 +207,41 @@ namespace PGE
         }
 
         /// <summary>
-        /// Sets the Background Color
+        /// Sets the background color
         /// </summary>
-        /// <param name="p">The Color</param>
-        public void SetBackground(Pixel p) =>
-            background.Clear(p);
+        /// <param name="color">The Color</param>
+        public void SetBackgroundColor(Pixel color) =>
+            background.Clear(color);
 
         #endregion
 
         #region Abstractions
 
         /// <summary>
-        /// Called when Window is Opened, use for Initialization
+        /// Called when window is opened, use for initialization
         /// </summary>
         protected virtual void Start() {}
 
         /// <summary>
-        /// Called every Tick, use for Logic
+        /// Called every tick, use for logic
         /// </summary>
         /// <param name="deltaTime">Delta Time</param>
         protected virtual void Update(float deltaTime) {}
 
         /// <summary>
-        /// Called every Frame, use for Drawing
+        /// Called every frame, use for drawing
         /// </summary>
         /// <param name="deltaTime">Delta Time</param>
         protected virtual void Draw(float deltaTime) {}
 
         /// <summary>
-        /// Called every Frame, used for drawing GPU Sprites, Shapes, etc.
+        /// Called every frame, used for drawing GPU Sprites, Shapes, etc.
         /// </summary>
         /// <param name="deltaTime">Delta Time</param>
         protected virtual void GPUDraw(float deltaTime) {}
 
         /// <summary>
-        /// Called when Window is Closed, use for Cleanup
+        /// Called when window is closing, use for cleanup
         /// </summary>
         protected virtual void Destroyed() {}
 

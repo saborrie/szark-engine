@@ -1,7 +1,7 @@
 /*
 	Drawing.cs
         By: Jakub P. Szarkowicz / JakubSzark
-	Credit: One Lone Coder
+	String Stuff Credit: One Lone Coder
 */
 
 using System;
@@ -25,72 +25,53 @@ namespace PGE
         /// </summary>
         public OpacityMode OpacityMode { get; set; } = OpacityMode.ALPHA;
 
-        public Sprite drawTarget;
+        /// <summary>
+        /// The current frame or sprite that is being drawn on
+        /// </summary>
+        public Sprite DrawTarget { get; set; }
+
         private Sprite fontSprite;
 
-        public Graphics2D(Sprite target) 
+        public Graphics2D(int width, int height)
         {
-            if (target == null)
-                throw new NullReferenceException();
-
-            this.drawTarget = target;
+            DrawTarget = new Sprite(width, height);
             ConstructFontSheet();
         }
 
         /// <summary>
-        /// Returns the current Frame
-        /// </summary>
-        /// <returns>Draw Target</returns>
-        public Sprite GetDrawTarget(bool copy = false)
-        {
-            if (drawTarget == null)
-                throw new NullReferenceException();
-
-            return !copy ? drawTarget : new Sprite(drawTarget);
-        }
-
-        /// <summary>
-        /// Set the Draw Target.
-        /// </summary>
-        /// <param name="target">The New Target</param>
-        public void SetDrawTarget(Sprite target)
-        {
-            if (target == null)
-                throw new NullReferenceException();
-            drawTarget = target;
-        }
-
-        /// <summary>
-        /// Draws a Pixel on the Screen
+        /// Draws a pixel on the screen
         /// </summary>
         /// <param name="x">X</param>
         /// <param name="y">Y</param>
-        /// <param name="p">Color</param>
-        public virtual void Draw(int x, int y, Pixel p)
+        /// <param name="color">Color</param>
+        public virtual void Draw(int x, int y, Pixel color)
         {
-            if (OpacityMode == OpacityMode.ALPHA && p.a < 255)
+            if (color.alpha < 255)
             {
-                var l = Pixel.Lerp(drawTarget.GetPixel(x, y), p, p.a / 255f);
-                drawTarget.SetPixel(x, y, new Pixel(l.r, l.g, l.b));
-                return;
+                if (OpacityMode == OpacityMode.MASK)
+                    return;
+
+                if (OpacityMode == OpacityMode.ALPHA)
+                {
+                    var l = Pixel.Lerp(DrawTarget.GetPixel(x, y), color, color.alpha / 255f);
+                    DrawTarget.SetPixel(x, y, new Pixel(l.red, l.green, l.blue));
+                    return;
+                }
             }
 
-            if (OpacityMode == OpacityMode.MASK && p.a < 255)
-                return;
-
-            drawTarget.SetPixel(x, y, p);
+            DrawTarget.SetPixel(x, y, color);
         }
 
         /// <summary>
-        /// Draws a Line
+        /// Draws a line
         /// </summary>
         /// <param name="x1">X1</param>
         /// <param name="y1">Y1</param>
         /// <param name="x2">X2</param>
         /// <param name="y2">Y2</param>
-        /// <param name="p">Color</param>
+        /// <param name="color">Color</param>
         /// <param name="thickness">Thickness</param>
-        public void DrawLine(int x1, int y1, int x2, int y2, Pixel p, int thickness = 1)
+        public void DrawLine(int x1, int y1, int x2, int y2, Pixel color, int thickness = 1)
         {
             float x, y, step;
             float dx = x2 - x1;
@@ -109,14 +90,14 @@ namespace PGE
 
             for (int i = 1; i <= step; i++)
             {
-                Draw((int)x, (int)y, p);
+                Draw((int)x, (int)y, color);
 
                 if (thickness > 1)
                 {
                     for(int j = 1; j < thickness; j++)
                     {
-                        Draw((int)x + j, (int)y, p);
-                        Draw((int)x, (int)y + j, p);
+                        Draw((int)x + j, (int)y, color);
+                        Draw((int)x, (int)y + j, color);
                     }
                 }
 
@@ -126,14 +107,14 @@ namespace PGE
         }
 
         /// <summary>
-        /// Draws a Rectangle Outline
+        /// Draws a rectangle outline
         /// </summary>
         /// <param name="x">X</param>
         /// <param name="y">Y</param>
         /// <param name="w">Width</param>
         /// <param name="h">Height</param>
-        /// <param name="p">Color</param>
-        public void DrawRect(int x, int y, int w, int h, Pixel p)
+        /// <param name="color">Color</param>
+        public void DrawRect(int x, int y, int w, int h, Pixel color)
         {
             if (w < 0)
             {
@@ -141,35 +122,35 @@ namespace PGE
                 x -= w;
             }
 
-            DrawLine(x, y, x + w, y, p);
-            DrawLine(x + w - 1, y, x + w - 1, y + h, p);
-            DrawLine(x, y + h - 1, x + w, y + h - 1, p);
-            DrawLine(x, y, x, y + h, p);
+            DrawLine(x, y, x + w, y, color);
+            DrawLine(x + w - 1, y, x + w - 1, y + h, color);
+            DrawLine(x, y + h - 1, x + w, y + h - 1, color);
+            DrawLine(x, y, x, y + h, color);
         }
 
         /// <summary>
-        /// Draws a Filled In Rectangle
+        /// Draws a filled In rectangle
         /// </summary>
         /// <param name="x">X</param>
         /// <param name="y">Y</param>
         /// <param name="w">Width</param>
         /// <param name="h">Height</param>
-        /// <param name="p">Color</param>
-        public void FillRect(int x, int y, int w, int h, Pixel p)
+        /// <param name="color">Color</param>
+        public void FillRect(int x, int y, int w, int h, Pixel color)
         {
             for (int i = 0; i < w; i++)
                 for (int j = 0; j < h; j++)
-                    Draw(x + i, y + j, p);
+                    Draw(x + i, y + j, color);
         }
 
         /// <summary>
-        /// Draws a Circle Outline
+        /// Draws a circle outline
         /// </summary>
         /// <param name="x">X</param>
         /// <param name="y">Y</param>
         /// <param name="r">Radius</param>
-        /// <param name="p">Color</param>
-        public void DrawCircle(int x, int y, int r, Pixel p)
+        /// <param name="color">Color</param>
+        public void DrawCircle(int x, int y, int r, Pixel color)
         {
             if (r == 0) return;
 
@@ -185,40 +166,40 @@ namespace PGE
 
             while (y0 >= x0)
             {
-                Draw(x - x0, y - y0, p);
-                Draw(x - y0, y - x0, p);
-                Draw(x + y0, y - x0, p);
-                Draw(x + x0, y - y0, p);
-                Draw(x - x0, y + y0, p);
-                Draw(x - y0, y + x0, p);
-                Draw(x + y0, y + x0, p);
-                Draw(x + x0, y + y0, p);
+                Draw(x - x0, y - y0, color);
+                Draw(x - y0, y - x0, color);
+                Draw(x + y0, y - x0, color);
+                Draw(x + x0, y - y0, color);
+                Draw(x - x0, y + y0, color);
+                Draw(x - y0, y + x0, color);
+                Draw(x + y0, y + x0, color);
+                Draw(x + x0, y + y0, color);
                 if (d < 0) d += 4 * x0++ + 6;
                 else d += 4 * (x0++ - y0--) + 10;
             }
         }
 
         /// <summary>
-        /// Draws a Filled in Circle
+        /// Draws a filled in circle
         /// </summary>
         /// <param name="x">X</param>
         /// <param name="y">Y</param>
         /// <param name="r">Radius</param>
-        /// <param name="p">Color</param>
-        public void FillCircle(int x, int y, int r, Pixel p)
+        /// <param name="color">Color</param>
+        public void FillCircle(int x, int y, int r, Pixel color)
         {
             for (int i = 0; i < r * 2; i++)
             {
                 for (int j = 0; j < r * 2; j++)
                 {
                     var dist = Math.Sqrt((r - i) * (r - i) + (r - j) * (r - j));
-                    if (dist < r) Draw(x - 1 + i, y - 1 + j, p);
+                    if (dist < r) Draw(x - 1 + i, y - 1 + j, color);
                 }
             }
         }
 
         /// <summary>
-        /// Draw a Triangle Outline
+        /// Draw a triangle outline
         /// </summary>
         /// <param name="x1">X1</param>
         /// <param name="y1">Y1</param>
@@ -226,16 +207,16 @@ namespace PGE
         /// <param name="y2">Y2</param>
         /// <param name="x3">X3</param>
         /// <param name="y3">Y3</param>
-        /// <param name="p">Color</param>
-        public void DrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Pixel p)
+        /// <param name="color">Color</param>
+        public void DrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Pixel color)
         {
-            DrawLine(x1, y1, x2, y2, p);
-            DrawLine(x2, y2, x3, y3, p);
-            DrawLine(x1, y1, x3, y3, p);
+            DrawLine(x1, y1, x2, y2, color);
+            DrawLine(x2, y2, x3, y3, color);
+            DrawLine(x1, y1, x3, y3, color);
         }
 
         /// <summary>
-        /// Draws a Filled In Triangle
+        /// Draws a filled in triangle
         /// </summary>
         /// <param name="x1">X1</param>
         /// <param name="y1">Y1</param>
@@ -243,8 +224,8 @@ namespace PGE
         /// <param name="y2">Y2</param>
         /// <param name="x3">X3</param>
         /// <param name="y3">Y3</param>
-        /// <param name="p">Color</param>
-        public void FillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Pixel p)
+        /// <param name="color">Color</param>
+        public void FillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Pixel color)
         {
             var minX = Math.Min(Math.Min(x1, x2), x3);
             var maxX = Math.Max(Math.Max(x1, x2), x3);
@@ -268,7 +249,7 @@ namespace PGE
 
                     if (!(hasNeg && hasPos))
                     {
-                        Draw(x, y, p);
+                        Draw(x, y, color);
                     }
                 }
             }
@@ -278,18 +259,7 @@ namespace PGE
             (x1 - x3) * (y2 - y3) - (x2 - x3) * (y1 - y3);
 
         /// <summary>
-        /// Gives you the Distance Between to Points
-        /// </summary>
-        /// <param name="x1">X1</param>
-        /// <param name="y1">Y1</param>
-        /// <param name="x2">X2</param>
-        /// <param name="y2">Y2</param>
-        /// <returns>The Distance</returns>
-        public float Distance(int x1, int y1, int x2, int y2) =>
-            (float)Math.Sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
-
-        /// <summary>
-        /// Draws a Sprite on the Screen
+        /// Draws a sprite on the screen
         /// </summary>
         /// <param name="x">X</param>
         /// <param name="y">Y</param>
@@ -305,7 +275,7 @@ namespace PGE
         }
 
         /// <summary>
-        /// Draws a Sprite on the Screen with Rotation
+        /// Draws a sprite on the screen with rotation
         /// </summary>
         /// <param name="x">X Position</param>
         /// <param name="y">Y Position</param>
@@ -340,7 +310,7 @@ namespace PGE
         }
 
         /// <summary>
-        /// Partially Draws a Sprite
+        /// Partially draws a sprite
         /// </summary>
         /// <param name="x">X</param>
         /// <param name="y">Y</param>
@@ -358,14 +328,14 @@ namespace PGE
         }
 
         /// <summary>
-        /// Draws a String using Embeded Character Data.
+        /// Draws a string using embeded character data.
         /// </summary>
         /// <param name="x">X</param>
         /// <param name="y">Y</param>
         /// <param name="text">Text</param>
-        /// <param name="p">Color</param>
+        /// <param name="color">Color</param>
         /// <param name="scale">Scale</param>
-        public void DrawString(int x, int y, string text, Pixel p, int scale = 1)
+        public void DrawString(int x, int y, string text, Pixel color, int scale = 1)
         {
             int sx = 0;
             int sy = 0;
@@ -384,17 +354,17 @@ namespace PGE
                     {
                         for (int i = 0; i < 8; i++)
                             for (int j = 0; j < 8; j++)
-                                if (fontSprite.GetPixel(i + ox * 8, j + oy * 8).r > 0)
+                                if (fontSprite.GetPixel(i + ox * 8, j + oy * 8).red > 0)
                                     for (int s = 0; s < scale; s++)
                                         for (int js = 0; js < scale; js++)
-                                            Draw(x + sx + (i*scale) + s, y + sy + (j*scale) + js, p);
+                                            Draw(x + sx + (i*scale) + s, y + sy + (j*scale) + js, color);
                     }
                     else
                     {
                         for (int i = 0; i < 8; i++)
                             for (int j = 0; j < 8; j++)
-                                if (fontSprite.GetPixel(i + ox * 8, j + oy * 8).r > 0)								
-                                    Draw(x + sx + i, y + sy + j, p);
+                                if (fontSprite.GetPixel(i + ox * 8, j + oy * 8).red > 0)								
+                                    Draw(x + sx + i, y + sy + j, color);
                     }	
 
                     sx += 8 * scale;
