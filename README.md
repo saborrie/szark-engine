@@ -56,6 +56,5 @@ by looking through the Engine folder.
 * https://github.com/jakubshark/PixelGameEngine/wiki/Getting-Started
 
 # Other Examples
-<img src="https://i.imgur.com/SPTGHfe.gif" width="256">
-![alt text](https://i.imgur.com/sgPtLmT.gif)
-
+<img src="https://i.imgur.com/SPTGHfe.gif" width="512">
+<img src="https://i.imgur.com/sgPtLmT.gif" width="512">
