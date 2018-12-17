@@ -42,18 +42,7 @@ namespace Example
     }
 }
 ```
-## What am I looking at?
-* Getting started with this engine the first thing you'll need to do is to use the namespace PGE to get access to all the engine's features. 
-
-* Then simply just create a class that inherits from the PixelGameEngine. This is the class where you will do most of your work in.
-
-* To get a Window to show up simply create a main method in your CS file and instantiate the class you just created. 
-
-* After this call the Construct function
-
-* If you would like to change things like the window's title use the start function and change the string property WindowTitle.
-
-* You may want to override a few methods in your class like:
+## Built-in Overridable Methods
   * **Start** - Called when window is created (Use for initializing)
   * **Update** - Called every tick (Use for game logic like player movement, physics, etc.)
   * **Draw** - Called every frame (Use for rendering stuff and drawing)
