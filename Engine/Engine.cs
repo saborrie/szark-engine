@@ -1,4 +1,10 @@
-﻿using OpenTK;
+﻿/*
+ * Created by: Jakub P. Szarkowicz
+ * Derivation of olcPixelGameEngine by Javidx9
+ * Please check OLC-3.txt for Javidx9's license.
+*/
+
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System;
 
