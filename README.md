@@ -1,4 +1,5 @@
 ### Current Version: 1.0
+### MIT License
 
 ## How to get started:
 1. Download .Net Core 2.2 SDK or Higher
