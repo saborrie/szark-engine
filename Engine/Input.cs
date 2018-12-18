@@ -94,6 +94,8 @@ namespace PGE
 
         #endregion
 
+        #region Keyboard
+
         /// <summary>
         /// Checks if a key is held
         /// </summary>
@@ -110,6 +112,18 @@ namespace PGE
             keyboardState[key] && (keyboardState[key] != lastKeyboardState[key]);
 
         /// <summary>
+        /// Checks if a key was released
+        /// </summary>
+        /// <param name="key">The Key</param>
+        /// <returns>Was Released?</returns>
+        public static bool GetKeyUp(Key key) =>
+            lastKeyboardState[key] && (keyboardState[key] != lastKeyboardState[key]);
+
+        #endregion
+
+        #region Mouse
+
+        /// <summary>
         /// Checks if mouse button is pressed
         /// </summary>
         /// <param name="button">The Button</param>
@@ -124,5 +138,15 @@ namespace PGE
         /// <returns>Is Up?</returns>
         public static bool GetMouseButtonDown(MouseButton button) =>
             mouseState[button] && (mouseState[button] != lastMouseState[button]);
+
+        /// <summary>
+        /// Checks if mouse button was released
+        /// </summary>
+        /// <param name="button">The Button</param>
+        /// <returns>Was Released?</returns>
+        public static bool GetMouseButtonUp(MouseButton button) =>
+            lastMouseState[button] && (mouseState[button] != lastMouseState[button]);
+
+        #endregion
     }
 }
