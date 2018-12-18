@@ -1,4 +1,4 @@
-## Current Version: 1.0
+### Current Version: 1.0
 
 ## How to get started:
 1. Download .Net Core 2.2 SDK or Higher
