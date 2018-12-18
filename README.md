@@ -62,5 +62,5 @@ by looking through the Engine folder.
 
 ## Acknowledgments
 
-Check out the C++ version of this engine, the olcPixelGameEngine by Javidx9 (OneLoneCoder.com). 
+Check out the C++ original of this engine, the olcPixelGameEngine by Javidx9 (OneLoneCoder.com). 
 He uses the OLC-3 License in his original project.
