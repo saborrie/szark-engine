@@ -3,7 +3,7 @@
 ## Acknowledgments
 
 Check out the C++ version of this engine, the olcPixelGameEngine by Javidx9 (OneLoneCoder.com). 
-The the OLC-3 License is in the original project.
+He uses the OLC-3 License in his original project.
 
 ## How to get started:
 1. Download .Net Core 2.2 SDK or Higher
