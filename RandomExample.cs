@@ -1,9 +1,9 @@
 ﻿using System;
-using PGE;
+using Szark;
 
 namespace Example
 {
-    class RandomExample : PixelGameEngine
+    class RandomExample : SzarkEngine
     {
         RandomExample() =>
             WindowTitle = "Random Pixels Example";

@@ -1,9 +1,4 @@
-/*
-	Pixel.cs
-        By: Jakub P. Szarkowicz / JakubSzark
-*/
-
-namespace PGE
+namespace Szark
 {
     /// <summary>
     /// A struct containing RGBA information for a pixel.

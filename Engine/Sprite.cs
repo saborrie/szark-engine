@@ -1,13 +1,8 @@
-/*
-	Sprite.cs
-        By: Jakub P. Szarkowicz / JakubSzark
-*/
-
 using System;
 using System.Drawing;
 using System.IO;
 
-namespace PGE
+namespace Szark
 {
     /// <summary>
     /// A Class that contains an array of pixels

@@ -1,12 +1,6 @@
-/*
-	Drawing.cs
-        By: Jakub P. Szarkowicz / JakubSzark
-	String Stuff Credit: One Lone Coder
-*/
-
 using System;
 
-namespace PGE
+namespace Szark
 {
     public enum OpacityMode
     {

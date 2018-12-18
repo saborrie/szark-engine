@@ -1,8 +1,3 @@
-/*
-	Audio.cs
-        By: Jakub P. Szarkowicz / JakubSzark
-*/
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,7 +5,7 @@ using System.Linq;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 
-namespace PGE
+namespace Szark
 {
     public class Audio
     {

@@ -1,11 +1,6 @@
-/*
-	Debug.cs
-        By: Jakub P. Szarkowicz / JakubSzark
-*/
-
 using System;
 
-namespace PGE
+namespace Szark
 {
     public class Debug
     {

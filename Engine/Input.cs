@@ -1,14 +1,14 @@
 using OpenTK;
 using OpenTK.Input;
 
-namespace PGE
+namespace Szark
 {
     public class Input
     {
         private static int offsetX, offsetY;
 
         private static GameWindow gameWindow;
-        private static PixelGameEngine engine;
+        private static SzarkEngine engine;
 
         private static KeyboardState keyboardState, lastKeyboardState;
         private static MouseState mouseState, lastMouseState;
@@ -36,7 +36,7 @@ namespace PGE
         /// </summary>
         /// <param name="engine">The Engine</param>
         /// <param name="window">The Window</param>
-        public static void SetContext(PixelGameEngine engine, GameWindow window) 
+        public static void SetContext(SzarkEngine engine, GameWindow window) 
         {
             if (gameWindow != null)
             {

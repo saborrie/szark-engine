@@ -1,12 +1,7 @@
-/*
-	SpriteRenderer.cs
-        By: Jakub P. Szarkowicz / JakubSzark
-*/
-
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
-namespace PGE
+namespace Szark
 {
     public class SpriteRenderer
     {
@@ -17,7 +12,7 @@ namespace PGE
         private readonly int projLocation, modelLocation, 
             scaleLocation, rotLocation;
 
-        private PixelGameEngine engine;
+        private SzarkEngine engine;
 
         private const float orthoFactor = 0.0312f;
 
@@ -36,7 +31,7 @@ namespace PGE
             1, 2, 3
         };
 
-        public SpriteRenderer(PixelGameEngine engine, Sprite sprite, int shaderID)
+        public SpriteRenderer(SzarkEngine engine, Sprite sprite, int shaderID)
         {
             this.engine = engine;
 

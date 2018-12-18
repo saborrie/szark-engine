@@ -1,13 +1,7 @@
-/*
-	ShaderLoader.cs
-        By: Jakub P. Szarkowicz / JakubSzark
-*/
-
 using OpenTK.Graphics.OpenGL;
-using System.IO;
 using System;
 
-namespace PGE
+namespace Szark
 {
     public class ShaderLoader
     {
