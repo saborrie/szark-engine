@@ -146,36 +146,45 @@ namespace PGE
         /// <summary>
         /// Draws a circle outline
         /// </summary>
-        /// <param name="x">X</param>
-        /// <param name="y">Y</param>
+        /// <param name="x0">X</param>
+        /// <param name="y0">Y</param>
         /// <param name="r">Radius</param>
         /// <param name="color">Color</param>
-        public void DrawCircle(int x, int y, int r, Pixel color)
+        public void DrawCircle(int x0, int y0, int r, Pixel color)
         {
-            if (r == 0) return;
+            x0 += r - 1;
+            y0 += r - 1;
 
-            if (r < 0)
+            int x = r - 1;
+            int y = 0;
+            int dx = 1;
+            int dy = 1;
+            int err = dx - (r << 1);
+
+            while (x >= y)
             {
-                r *= -1;
-                x -= r;
-            }
+                Draw(x0 + x, y0 + y, color);
+                Draw(x0 + y, y0 + x, color);
+                Draw(x0 - y, y0 + x, color);
+                Draw(x0 - x, y0 + y, color);
+                Draw(x0 - x, y0 - y, color);
+                Draw(x0 - y, y0 - x, color);
+                Draw(x0 + y, y0 - x, color);
+                Draw(x0 + x, y0 - y, color);
 
-            int x0 = 0;
-            int y0 = r / 2;
-            int d = 3 - 2 * r;
+                if (err <= 0)
+                {
+                    y++;
+                    err += dy;
+                    dy += 2;
+                }
 
-            while (y0 >= x0)
-            {
-                Draw(x - x0, y - y0, color);
-                Draw(x - y0, y - x0, color);
-                Draw(x + y0, y - x0, color);
-                Draw(x + x0, y - y0, color);
-                Draw(x - x0, y + y0, color);
-                Draw(x - y0, y + x0, color);
-                Draw(x + y0, y + x0, color);
-                Draw(x + x0, y + y0, color);
-                if (d < 0) d += 4 * x0++ + 6;
-                else d += 4 * (x0++ - y0--) + 10;
+                if (err > 0)
+                {
+                    x--;
+                    dx += 2;
+                    err += dx - (r << 1);
+                }
             }
         }
 

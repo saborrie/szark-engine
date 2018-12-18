@@ -24,6 +24,10 @@
     SOFTWARE.
 */
 
+/*
+    Pixel Game Engine: Version 1.0 
+*/
+
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System;
