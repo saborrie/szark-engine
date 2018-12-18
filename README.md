@@ -55,8 +55,6 @@ namespace Example
 You can find documentation either by going to the wiki tab or
 by looking through the Engine folder.
 
-* https://github.com/jakubshark/PixelGameEngine/wiki/Getting-Started
-
 # Other Examples
 <img src="https://i.imgur.com/SPTGHfe.gif" width="400"><img src="https://i.imgur.com/sgPtLmT.gif" width="400">
 
