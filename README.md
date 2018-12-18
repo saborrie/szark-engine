@@ -2,7 +2,7 @@
 
 ## Acknowledgments
 
-Check out the C# version of this engine, the olcPixelGameEngine by Javidx9 (OneLoneCoder.com). 
+Check out the C++ version of this engine, the olcPixelGameEngine by Javidx9 (OneLoneCoder.com). 
 The the OLC-3 License is in the original project.
 
 ## How to get started:
