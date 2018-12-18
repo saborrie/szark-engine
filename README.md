@@ -1,10 +1,5 @@
 ### Current Version: 1.0
 
-## Acknowledgments
-
-Check out the C++ version of this engine, the olcPixelGameEngine by Javidx9 (OneLoneCoder.com). 
-He uses the OLC-3 License in his original project.
-
 ## How to get started:
 1. Download .Net Core 2.2 SDK or Higher
 2. Clone or download this project
@@ -65,3 +60,7 @@ by looking through the Engine folder.
 # Other Examples
 <img src="https://i.imgur.com/SPTGHfe.gif" width="400"><img src="https://i.imgur.com/sgPtLmT.gif" width="400">
 
+## Acknowledgments
+
+Check out the C++ version of this engine, the olcPixelGameEngine by Javidx9 (OneLoneCoder.com). 
+He uses the OLC-3 License in his original project.
