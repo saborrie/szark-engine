@@ -15,29 +15,29 @@
 ## Getting Starting Example
 ```c#
 using System;
-using PGE;
+using Szark;
 
 namespace Example
 {
-    class RandomExample : PixelGameEngine
+    class RandomExample : SzarkEngine
     {
         RandomExample() =>
             WindowTitle = "Random Pixels Example";
-    
-        protected override void Start() {}
 
-        protected override void Update(float deltaTime) {}
+        protected override void Start() { }
+
+        protected override void Update(float deltaTime) { }
 
         protected override void Draw(Graphics2D graphics, float deltaTime)
         {
             var random = new Random();
             for (int i = 0; i < ScreenWidth; i++)
                 for (int j = 0; j < ScreenHeight; j++)
-                    graphics.Draw(i, j, new Pixel((byte)random.Next(255), 
+                    graphics.Draw(i, j, new Pixel((byte)random.Next(255),
                         (byte)random.Next(255), (byte)random.Next(255)));
         }
 
-        protected override void Destroyed() {}
+        protected override void Destroyed() { }
 
         static void Main() => 
             new RandomExample().Construct(800, 800, 8);
@@ -55,12 +55,10 @@ namespace Example
 You can find documentation either by going to the wiki tab or
 by looking through the Engine folder.
 
-* https://github.com/jakubshark/PixelGameEngine/wiki/Getting-Started
-
 # Other Examples
 <img src="https://i.imgur.com/SPTGHfe.gif" width="400"><img src="https://i.imgur.com/sgPtLmT.gif" width="400">
 
 ## Acknowledgments
 
-Check out the C++ original of this engine, the olcPixelGameEngine by Javidx9 (OneLoneCoder.com). 
+Check out the C++ original and the inspiration of this engine, the [olcPixelGameEngine](https://github.com/OneLoneCoder/olcPixelGameEngine) by [Javidx9](https://www.youtube.com/channel/UC-yuWVUplUJZvieEligKBkA) (OneLoneCoder.com). 
 He uses the OLC-3 License in his original project.
