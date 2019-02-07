@@ -1,3 +1,7 @@
+## New Update
+- Big changes to drawing. Now drawing is done with SpriteRenderer and on the GPU.
+Please look at the Starting Example!
+
 ## How to get started:
 1. Download .Net Core 2.2 SDK or Higher
 2. Clone or download this project
