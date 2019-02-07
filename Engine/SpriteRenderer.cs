@@ -1,5 +1,6 @@
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using System;
 
 namespace Szark
 {
@@ -7,14 +8,13 @@ namespace Szark
     {
         public Sprite Sprite { get; private set; }
         public int Shader { get; private set; }
+        public Graphics2D Graphics { get; private set; }
 
         private readonly int VAO, EBO, textureID;
         private readonly int projLocation, modelLocation, 
             scaleLocation, rotLocation;
 
         private SzarkEngine engine;
-
-        private const float orthoFactor = 0.0312f;
 
         private float[] vertices =
         {
@@ -37,6 +37,8 @@ namespace Szark
 
             Shader = shaderID;
             Sprite = sprite;
+
+            Graphics = new Graphics2D(Sprite);
 
             VAO = GL.GenVertexArray();
             GL.BindVertexArray(VAO);
@@ -88,12 +90,23 @@ namespace Szark
         {
             GL.UseProgram(Shader);
 
-            float left = 0, right = fillScreen ? 2 : engine.ScreenWidth * orthoFactor;
-            float bottom = 0, top = fillScreen ? 2 : engine.ScreenHeight * orthoFactor;
-            float posX = x * orthoFactor / scale, posY = y * orthoFactor / scale;
+            float min = Math.Min(Sprite.Width, Sprite.Height);
+            float max = Math.Max(Sprite.Width, Sprite.Height);
+            float sizeScale = max / min;
+
+            float scaleX = 1, scaleY = 1;
+
+            if (Sprite.Width > Sprite.Height)
+                scaleX = sizeScale;
+            else if (Sprite.Width < Sprite.Height)
+                scaleY = sizeScale;
+
+            float left = 0, right = fillScreen ? 2 : (float)engine.ScreenWidth / engine.PixelSize / scaleX;
+            float bottom = 0, top = fillScreen ? 2 : (float)engine.ScreenHeight / engine.PixelSize / scaleY;
+            float posX = x / scale / scaleX / engine.PixelSize, posY = y / scale / scaleY / engine.PixelSize;
 
             Matrix4.CreateTranslation(posX + 1, posY + 1, layer, out var model);
-            Matrix4.CreateOrthographicOffCenter(left, right, top, bottom, 0.1f, 100f, out var projection);
+            Matrix4.CreateOrthographicOffCenter(left, right, top, bottom, 0.0f, 100f, out var projection);
             Matrix4.CreateRotationZ(rotation, out var rot);
             Matrix4.CreateScale(scale, out var sc);
 

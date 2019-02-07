@@ -32,6 +32,12 @@ namespace Szark
             ConstructFontSheet();
         }
 
+        public Graphics2D(Sprite sprite)
+        {
+            DrawTarget = sprite;
+            ConstructFontSheet();
+        }
+
         /// <summary>
         /// Draws a pixel on the screen
         /// </summary>

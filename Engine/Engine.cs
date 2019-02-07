@@ -33,13 +33,11 @@ namespace Szark
 
         public Action AdditionalUpdates { get; set; }
 
+        private Pixel backgroundColor;
+
         private double lastFPSCheck;
         private int renderOffsetX, renderOffsetY;
-
         private GameWindow gameWindow;
-        private SpriteRenderer pixelGraphics;
-        private Graphics2D graphics;
-        private Sprite background;
 
         private const string vertexShader = 
         @"
@@ -101,10 +99,6 @@ namespace Szark
             ScreenWidth = WindowWidth / PixelSize;
             ScreenHeight = WindowHeight / PixelSize;
 
-            background = new Sprite(ScreenWidth, ScreenHeight);
-            graphics = new Graphics2D(ScreenWidth, ScreenHeight);
-            background.Clear(Pixel.BLACK);
-
             GL.Enable(EnableCap.Blend);
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.Texture2D);
@@ -113,7 +107,6 @@ namespace Szark
                 BlendingFactorDest.OneMinusSrcAlpha);
 
             BaseShaderID = ShaderLoader.CreateProgram(vertexShader, fragmentShader);
-            pixelGraphics = new SpriteRenderer(this, graphics.DrawTarget, BaseShaderID);
 
             Audio.Init();
             Input.SetContext(this, gameWindow);
@@ -139,14 +132,10 @@ namespace Szark
         {
             GL.Viewport(renderOffsetX, renderOffsetY, WindowWidth, WindowHeight);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            GL.ClearColor(0, 0, 0, 1);
+            GL.ClearColor(backgroundColor.red, backgroundColor.green, 
+                backgroundColor.blue, 1);
 
-            background.CopyTo(graphics.DrawTarget);
-            pixelGraphics.Render(0, 0, 0, 1, -99, true);
-
-            Draw(graphics, (float)e.Time);
-            pixelGraphics.Refresh();
-            GPUDraw((float)e.Time);
+            Draw((float)e.Time);
 
             if ((lastFPSCheck += e.Time) > 1)
             {
@@ -191,7 +180,7 @@ namespace Szark
         /// </summary>
         /// <param name="color">The Color</param>
         public void SetBackgroundColor(Pixel color) =>
-            background.Clear(color);
+            backgroundColor = color;
 
         #endregion
 
@@ -209,17 +198,10 @@ namespace Szark
         protected virtual void Update(float deltaTime) {}
 
         /// <summary>
-        /// Called every frame, use for drawing
-        /// </summary>
-        /// <param name="graphics">The Graphics</param>
-        /// <param name="deltaTime">Delta Time</param>
-        protected virtual void Draw(Graphics2D graphics, float deltaTime) {}
-
-        /// <summary>
         /// Called every frame, used for drawing GPU Sprites, Shapes, etc.
         /// </summary>
         /// <param name="deltaTime">Delta Time</param>
-        protected virtual void GPUDraw(float deltaTime) {}
+        protected virtual void Draw(float deltaTime) {}
 
         /// <summary>
         /// Called when window is closing, use for cleanup
