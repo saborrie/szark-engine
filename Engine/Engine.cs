@@ -5,8 +5,7 @@
 */
 
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
-using System;
+using OpenTK.Graphics.OpenGL4;
 
 namespace Szark
 {
@@ -16,7 +15,7 @@ namespace Szark
     /// </summary>
     public abstract class SzarkEngine
     {
-        public string WindowTitle { get; protected set; }
+        public string WindowTitle { get; set; }
 
         public int WindowWidth { get; private set; }
         public int WindowHeight { get; private set; }
@@ -26,14 +25,23 @@ namespace Szark
         public int PixelSize { get; private set; }
 
         public int CurrentFPS { get; private set; }
-        public int BaseShaderID { get; private set; }
+        public int BaseShader { get; private set; }
 
         public bool ShowFPS { get; set; } = true;
-        public bool IsFullscreen { get; private set; }
+        public Pixel Background { get; set; }
+        public VSyncMode Vsync => gameWindow.VSync;
 
-        public Action AdditionalUpdates { get; set; }
-
-        private Pixel backgroundColor;
+        public bool IsFullscreen
+        {
+            get => gameWindow.WindowState == WindowState.Fullscreen;
+            set
+            {
+                gameWindow.WindowState = (WindowState)(value ? 3 : 0);
+                renderOffsetX = value ? (gameWindow.Width - WindowWidth) / 2 : 0;
+                renderOffsetY = value ? (gameWindow.Height - WindowHeight) / 2 : 0;
+                Input.UpdateOffsets();
+            }
+        }
 
         private double lastFPSCheck;
         private int renderOffsetX, renderOffsetY;
@@ -47,16 +55,12 @@ namespace Szark
             layout(location = 1) in vec2 tex;
 
             out vec2 texCoord;
-
-            uniform mat4 projection;
-            uniform mat4 model;
-            uniform mat4 rotation;
-            uniform mat4 scale;
+            uniform mat4 mvp;
 
             void main() 
             {
                 texCoord = tex;
-                gl_Position = projection * scale * model * rotation * vec4(pos.x, pos.y, 0, 1.0);
+                gl_Position = mvp * vec4(pos.x, pos.y, 0, 1.0);
             }
         ";
 
@@ -76,67 +80,66 @@ namespace Szark
         /// <summary>
         /// Creates a window and starts OpenGL.
         /// </summary>
-        /// <param name="width">Width of the Window</param>
-        /// <param name="height">Height of the Window</param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
         /// <param name="pixelSize">Size of Each Pixel</param>
-        public void Construct(int width = 800, int height = 800, int pixelSize = 8)
+        public SzarkEngine(string title, int width, int height, int pixelSize = 8)
         {
             WindowWidth = width;
             WindowHeight = height;
+            WindowTitle = title;
             PixelSize = pixelSize;
 
-            gameWindow = new GameWindow(WindowWidth, WindowHeight)
-            {
-                VSync = VSyncMode.Off,
-                Title = WindowTitle
-            };
+            // Create the window
+            gameWindow = new GameWindow(width, height);
+            gameWindow.Title = title;
 
-            gameWindow.Load += Loaded;
-            gameWindow.RenderFrame += Render;
-            gameWindow.UpdateFrame += Update;
-            gameWindow.Disposed += Disposed;
+            // Set internal window events
+            gameWindow.RenderFrame += (s, f) => Render(f);
 
+            // Set abstract window events
+            gameWindow.Load += (s, f) => Start();
+            gameWindow.UpdateFrame += (s, f) => Update((float)f.Time);
+            gameWindow.Disposed += (s, f) => Destroyed();
+
+            // Calculate the internal screen dimensions
             ScreenWidth = WindowWidth / PixelSize;
             ScreenHeight = WindowHeight / PixelSize;
 
-            GL.Enable(EnableCap.Blend);
-            GL.Enable(EnableCap.DepthTest);
-            GL.Enable(EnableCap.Texture2D);
+            // Do some OpenGL setup
+            SetupOpenGL();
 
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, 
-                BlendingFactorDest.OneMinusSrcAlpha);
-
-            BaseShaderID = ShaderLoader.CreateProgram(vertexShader, fragmentShader);
+            // Set window as a fixed size
+            gameWindow.WindowBorder = WindowBorder.Fixed;
+            gameWindow.Run();
 
             Audio.Init();
             Input.SetContext(this, gameWindow);
-
-            gameWindow.WindowBorder = WindowBorder.Fixed;
-            gameWindow.Run();
         }
 
-        #region Events
-
-        // On Window Loaded
-        private void Loaded(object sender, EventArgs e) => Start();
-
-        // On Window Disposed
-        private void Disposed(object sender, EventArgs e) => Destroyed();
-
-        // On Window Update
-        private void Update(object sender, FrameEventArgs e) =>
-            Update((float)e.Time);
-
-        // On Window Render Frame
-        private void Render(object sender, FrameEventArgs e)
+        private void SetupOpenGL()
         {
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, 
+                BlendingFactorDest.OneMinusSrcAlpha);
+
+            GL.Enable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.Texture2D);
+
+            BaseShader = ShaderLoader.CreateProgram(vertexShader, 
+                fragmentShader);
+        }
+
+        private void Render(FrameEventArgs e)
+        {
+            // Clear screen the a single color
             GL.Viewport(renderOffsetX, renderOffsetY, WindowWidth, WindowHeight);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            GL.ClearColor(backgroundColor.red, backgroundColor.green, 
-                backgroundColor.blue, 1);
+            GL.ClearColor(Background.red, Background.green, Background.blue, 1);
 
             Draw((float)e.Time);
 
+            // Calculate framerate
             if ((lastFPSCheck += e.Time) > 1)
             {
                 CurrentFPS = (int)(1 / e.Time);
@@ -145,68 +148,40 @@ namespace Szark
                 lastFPSCheck = 0;
             }
 
-            AdditionalUpdates?.Invoke();
             gameWindow.SwapBuffers();
         }
 
-        #endregion
-
-        #region Extra
-
         /// <summary>
-        /// Sets the mode for VSync
+        /// Creates a Sprite Renderer
         /// </summary>
-        /// <param name="isActive">Is On?</param>
-        public void SetVSync(VSyncMode mode) => 
-            gameWindow.VSync = mode;
-
-        /// <summary>
-        /// Sets the window to be fullscreen
-        /// </summary>
-        /// <param name="fullscreen">Is Fullscreen?</param>
-        public void SetFullscreen(bool fullscreen)
-        {
-            IsFullscreen = fullscreen;
-            gameWindow.WindowState = fullscreen ? WindowState.Fullscreen :
-                WindowState.Normal;
-
-            renderOffsetX = fullscreen ? (gameWindow.Width - WindowWidth) / 2 : 0;
-            renderOffsetY = fullscreen ? (gameWindow.Height - WindowHeight) / 2 : 0;
-            Input.UpdateOffsets();
-        }
-
-        /// <summary>
-        /// Sets the background color
-        /// </summary>
-        /// <param name="color">The Color</param>
-        public void SetBackgroundColor(Pixel color) =>
-            backgroundColor = color;
-
-        #endregion
+        /// <param name="sprite">The sprite to render</param>
+        /// <returns></returns>
+        public SpriteRenderer CreateRenderer(Sprite sprite) =>
+            new SpriteRenderer(this, sprite, BaseShader);
 
         #region Abstractions
 
         /// <summary>
         /// Called when window is opened, use for initialization
         /// </summary>
-        protected virtual void Start() {}
+        protected abstract void Start();
 
         /// <summary>
         /// Called every tick, use for logic
         /// </summary>
         /// <param name="deltaTime">Delta Time</param>
-        protected virtual void Update(float deltaTime) {}
+        protected abstract void Update(float deltaTime);
 
         /// <summary>
         /// Called every frame, used for drawing GPU Sprites, Shapes, etc.
         /// </summary>
         /// <param name="deltaTime">Delta Time</param>
-        protected virtual void Draw(float deltaTime) {}
+        protected abstract void Draw(float deltaTime);
 
         /// <summary>
         /// Called when window is closing, use for cleanup
         /// </summary>
-        protected virtual void Destroyed() {}
+        protected abstract void Destroyed();
 
         #endregion
     }

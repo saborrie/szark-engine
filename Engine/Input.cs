@@ -46,13 +46,8 @@ namespace Szark
                 gameWindow.MouseUp -= MouseUp;
             }
 
-            if (engine != null)
-                engine.AdditionalUpdates -= Update;
-
             Input.engine = engine;
             gameWindow = window;
-
-            engine.AdditionalUpdates += Update;
 
             gameWindow.KeyUp += KeyUp;
             gameWindow.KeyDown += KeyDown;
@@ -72,7 +67,10 @@ namespace Szark
                 engine.WindowHeight) / 2 : 0;
         }
 
-        private static void Update()
+        /// <summary>
+        /// Used internally to update input states
+        /// </summary>
+        public static void Update()
         {
             lastKeyboardState = keyboardState;
             lastMouseState = mouseState;

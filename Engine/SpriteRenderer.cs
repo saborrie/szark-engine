@@ -1,6 +1,5 @@
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
-using System;
 
 namespace Szark
 {
@@ -11,10 +10,8 @@ namespace Szark
         public Graphics2D Graphics { get; private set; }
 
         private readonly int VAO, EBO, textureID;
-        private readonly int projLocation, modelLocation, 
-            scaleLocation, rotLocation;
-
-        private SzarkEngine engine;
+        private readonly int mvpLocation;
+        private readonly SzarkEngine engine;
 
         private float[] vertices =
         {
@@ -34,11 +31,11 @@ namespace Szark
         public SpriteRenderer(SzarkEngine engine, Sprite sprite, int shaderID)
         {
             this.engine = engine;
-
             Shader = shaderID;
             Sprite = sprite;
 
             Graphics = new Graphics2D(Sprite);
+            mvpLocation = GL.GetUniformLocation(shaderID, "mvp");
 
             VAO = GL.GenVertexArray();
             GL.BindVertexArray(VAO);
@@ -66,60 +63,51 @@ namespace Szark
 
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, 
                 (int)TextureMinFilter.Nearest);
-
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, 
                 (int)TextureMagFilter.Nearest);
-
-            modelLocation = GL.GetUniformLocation(shaderID, "model");
-            projLocation = GL.GetUniformLocation(shaderID, "projection");
-            rotLocation = GL.GetUniformLocation(shaderID, "rotation");
-            scaleLocation = GL.GetUniformLocation(shaderID, "scale");
         }
 
         /// <summary>
         /// Renders a sprite on screen with the GPU
         /// </summary>
-        /// <param name="x">X Position</param>
-        /// <param name="y">Y Position</param>
-        /// <param name="rotation">Rotation (Radians)</param>
-        /// <param name="scale">Scale</param>
-        /// <param name="layer">Layer</param>
-        /// <param name="fillScreen">Stretch to Screen?</param>
-        public void Render(float x, float y, float rotation = 0, float scale = 1, 
-            float layer = -1, bool fillScreen = false)
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="rotation">Radians</param>
+        /// <param name="scale"></param>
+        /// <param name="layer"></param>
+        /// <param name="fillScreen">Stretch to Screen</param>
+        public void Render(float x, float y, float rotation = 0, float scale = 1, float layer = -1, bool fillScreen = false)
         {
             GL.UseProgram(Shader);
 
-            float min = Math.Min(Sprite.Width, Sprite.Height);
-            float max = Math.Max(Sprite.Width, Sprite.Height);
-            float sizeScale = max / min;
-
+            // Get the sprite's scale
             float scaleX = 1, scaleY = 1;
+            if (Sprite.Width > Sprite.Height) scaleX = Sprite.Width / Sprite.Height;
+            if (Sprite.Width < Sprite.Height) scaleY = Sprite.Height / Sprite.Width;
 
-            if (Sprite.Width > Sprite.Height)
-                scaleX = sizeScale;
-            else if (Sprite.Width < Sprite.Height)
-                scaleY = sizeScale;
-
-            float left = 0, right = fillScreen ? 2 : (float)engine.ScreenWidth / engine.PixelSize / scaleX;
-            float bottom = 0, top = fillScreen ? 2 : (float)engine.ScreenHeight / engine.PixelSize / scaleY;
+            // Calculate the orthographic scale and position
+            float right = fillScreen ? 2 : (float)engine.ScreenWidth / engine.PixelSize / scaleX;
+            float top = fillScreen ? 2 : (float)engine.ScreenHeight / engine.PixelSize / scaleY;
             float posX = x / scale / scaleX / engine.PixelSize, posY = y / scale / scaleY / engine.PixelSize;
 
-            Matrix4.CreateTranslation(posX + 1, posY + 1, layer, out var model);
-            Matrix4.CreateOrthographicOffCenter(left, right, top, bottom, 0.0f, 100f, out var projection);
+            // Create matrices for the shader
+            Matrix4.CreateTranslation(posX + 1, posY + 1, layer, out var mvp);
+            Matrix4.CreateOrthographicOffCenter(0, right, top, 0, -100f, 100f, out var projection);
             Matrix4.CreateRotationZ(rotation, out var rot);
             Matrix4.CreateScale(scale, out var sc);
 
+            // Send matrices to the shader
+            mvp *= projection * rot * sc;
+            GL.UniformMatrix4(mvpLocation, 1, false, ref mvp.Row0.X);
+
+            // Bind texture the the shader
             GL.BindTexture(TextureTarget.Texture2D, textureID);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, EBO);
             GL.BindVertexArray(VAO);
 
-            GL.UniformMatrix4(modelLocation, 1, false, ref model.Row0.X);
-            GL.UniformMatrix4(projLocation, 1, false, ref projection.Row0.X);
-            GL.UniformMatrix4(scaleLocation, 1, false, ref sc.Row0.X);
-            GL.UniformMatrix4(rotLocation, 1, false, ref rot.Row0.X);
-
-            GL.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, 0);
+            // Draw the sprite
+            GL.DrawElements(PrimitiveType.Triangles, 
+                6, DrawElementsType.UnsignedInt, 0);
         }
 
         /// <summary>

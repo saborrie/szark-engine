@@ -59,7 +59,7 @@ namespace Szark
                 }
             }
 
-            DrawTarget.SetPixel(x, y, color);
+            DrawTarget?.SetPixel(x, y, color);
         }
 
         /// <summary>
