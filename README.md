@@ -1,11 +1,5 @@
-## New Update
-- Big changes to drawing. Now drawing is done with SpriteRenderer and on the GPU.
-Please look at the Starting Example! 
-- Updating to this version will most likely breakwhat you have
-- There are massive performance improvements when drawing multiple sprites
-
 ## How to get started:
-1. Download .Net Core 2.2 SDK or Higher
+1. Download .Net Core 2.1 SDK or Higher
 2. Clone or download this project
 3. Open the project in your favorite IDE
 4. Restore the project if necessary
