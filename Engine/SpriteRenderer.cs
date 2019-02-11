@@ -11,13 +11,16 @@ namespace Szark
             set
             {
                 if (value == null) return;
+                bool sameSize = value.Width == sprite.Width &&
+                    value.Height == sprite.Height;
+
                 sprite = value;
                 Graphics.DrawTarget = value;
-                CreateTexImage2D();
+
+                if (!sameSize) CreateTexImage2D();
+                else Refresh();
             }
         }
-
-        private Sprite sprite;
 
         public int Shader { get; set; }
         public Graphics2D Graphics { get; private set; }
@@ -25,6 +28,7 @@ namespace Szark
         private static int VAO, EBO;
         private static bool buffersCreated;
 
+        private Sprite sprite;
         private int mvpLocation, textureID;
         private SzarkEngine engine;
 
