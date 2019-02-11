@@ -149,6 +149,7 @@ namespace Szark
             }
 
             gameWindow.SwapBuffers();
+            Input.Update();
         }
 
         /// <summary>

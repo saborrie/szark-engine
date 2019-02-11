@@ -1,5 +1,6 @@
 using OpenTK;
 using OpenTK.Input;
+using System;
 
 namespace Szark
 {
@@ -116,6 +117,58 @@ namespace Szark
         /// <returns>Was Released?</returns>
         public static bool GetKeyUp(Key key) =>
             lastKeyboardState[key] && (keyboardState[key] != lastKeyboardState[key]);
+
+        /// <summary>
+        /// Checks if a key is held
+        /// </summary>
+        /// <param name="key">Name of the key</param>
+        public static bool GetKey(string key)
+        {
+            if (Enum.TryParse(key, out Key result))
+                return keyboardState[result];
+            else
+            {
+                Debug.Log($"Key with value '{key}' does not exist!",
+                    LogLevel.WARNING);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks is key was pressed
+        /// </summary>
+        public static bool GetKeyDown(string key)
+        {
+            if (Enum.TryParse(key, out Key result))
+            {
+                return keyboardState[result] && (keyboardState[result] != 
+                    lastKeyboardState[result]);
+            }
+            else
+            {
+                Debug.Log($"Key with value '{key}' does not exist!", 
+                    LogLevel.WARNING);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks if key was released
+        /// </summary>
+        public static bool GetKeyUp(string key)
+        {
+            if (Enum.TryParse(key, out Key result))
+            {
+                return lastKeyboardState[result] && (keyboardState[result] !=
+                    lastKeyboardState[result]);
+            }
+            else
+            {
+                Debug.Log($"Key with value '{key}' does not exist!", 
+                    LogLevel.WARNING);
+                return false;
+            }
+        }
 
         #endregion
 
