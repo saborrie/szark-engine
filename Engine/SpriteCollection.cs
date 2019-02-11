@@ -5,6 +5,8 @@ namespace Szark
 {
     public class SpriteCollection
     {
+        public int Count => sprites.Count;
+
         private Dictionary<string, Sprite> sprites;
 
         /// <summary>
@@ -61,6 +63,17 @@ namespace Szark
             if (sprites.ContainsKey(name))
                 return sprites[name];
             return null;
+        }
+
+        /// <summary>
+        /// Returns all sprites in the collection
+        /// </summary>
+        public Sprite[] GetSprites()
+        {
+            var result = new List<Sprite>();
+            foreach (var sprite in sprites)
+                result.Add(sprite.Value);
+            return result.ToArray();
         }
     }
 }
