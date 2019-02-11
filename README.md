@@ -1,11 +1,5 @@
-## New Update
-- Big changes to drawing. Now drawing is done with SpriteRenderer and on the GPU.
-Please look at the Starting Example! 
-- Updating to this version will most likely breakwhat you have
-- There are massive performance improvements when drawing multiple sprites
-
 ## How to get started:
-1. Download .Net Core 2.2 SDK or Higher
+1. Download .Net Core 2.1 SDK or Higher
 2. Clone or download this project
 3. Open the project in your favorite IDE
 4. Restore the project if necessary
@@ -25,26 +19,30 @@ namespace Example
 {
     class RandomExample : SzarkEngine
     {
+        private Random random;
         private SpriteRenderer renderer;
 
-        RandomExample() =>
-            WindowTitle = "Random Pixels Example";
+        RandomExample() : base("Random Pixels Example", 
+            800, 800, 8) { }
 
         protected override void Start()
         {
-            renderer = new SpriteRenderer(this, 
-                new Sprite(ScreenWidth, ScreenHeight), BaseShaderID);
+            random = new Random();
+            renderer = CreateRenderer(new Sprite(ScreenWidth, ScreenHeight));
         }
 
         protected override void Update(float deltaTime) { }
 
         protected override void Draw(float deltaTime)
         {
-            var random = new Random();
             for (int i = 0; i < ScreenWidth; i++)
+            {
                 for (int j = 0; j < ScreenHeight; j++)
+                {
                     renderer.Graphics.Draw(i, j, new Pixel((byte)random.Next(255),
                         (byte)random.Next(255), (byte)random.Next(255)));
+                }
+            }
 
             renderer.Render(0, 0, 0, 1, -1, true);
             renderer.Refresh();
@@ -52,8 +50,8 @@ namespace Example
 
         protected override void Destroyed() { }
 
-        static void Main() => 
-            new RandomExample().Construct(800, 800, 8);
+        static void Main(string[] theArgs) => 
+            new RandomExample();
     }
 }
 ```
