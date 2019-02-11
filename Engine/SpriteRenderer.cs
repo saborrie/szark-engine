@@ -5,7 +5,20 @@ namespace Szark
 {
     public class SpriteRenderer
     {
-        public Sprite Sprite { get; private set; }
+        public Sprite Sprite
+        {
+            get { return sprite; }
+            set
+            {
+                if (value == null) return;
+                sprite = value;
+                Graphics.DrawTarget = value;
+                CreateTexImage2D();
+            }
+        }
+
+        private Sprite sprite;
+
         public int Shader { get; set; }
         public Graphics2D Graphics { get; private set; }
 
@@ -30,9 +43,9 @@ namespace Szark
 
         public SpriteRenderer(SzarkEngine engine, Sprite sprite, int shaderID)
         {
+            this.sprite = sprite;
             this.engine = engine;
             Shader = shaderID;
-            Sprite = sprite;
 
             Graphics = new Graphics2D(Sprite);
             mvpLocation = GL.GetUniformLocation(shaderID, "mvp");
@@ -56,15 +69,21 @@ namespace Szark
             GL.EnableVertexAttribArray(1);
 
             textureID = GL.GenTexture();
-            GL.BindTexture(TextureTarget.Texture2D, textureID);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba,
-                sprite.Width, sprite.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte,
-                    sprite.Pixels);
+            CreateTexImage2D();
 
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, 
                 (int)TextureMinFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, 
                 (int)TextureMagFilter.Nearest);
+        }
+
+        // Creates and binds a texture
+        private void CreateTexImage2D()
+        {
+            GL.BindTexture(TextureTarget.Texture2D, textureID);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba,
+                sprite.Width, sprite.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte,
+                    sprite.Pixels);
         }
 
         /// <summary>
@@ -82,8 +101,8 @@ namespace Szark
 
             // Get the sprite's scale
             float scaleX = 1, scaleY = 1;
-            if (Sprite.Width > Sprite.Height) scaleX = Sprite.Width / Sprite.Height;
-            if (Sprite.Width < Sprite.Height) scaleY = Sprite.Height / Sprite.Width;
+            if (sprite.Width > sprite.Height) scaleX = sprite.Width / sprite.Height;
+            if (sprite.Width < sprite.Height) scaleY = sprite.Height / sprite.Width;
 
             // Calculate the orthographic scale and position
             float right = fillScreen ? 2 : (float)engine.ScreenWidth / engine.PixelSize / scaleX;
@@ -115,8 +134,8 @@ namespace Szark
         /// </summary>
         public void Refresh()
         {
-            GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, Sprite.Width, Sprite.Height,
-                PixelFormat.Rgba, PixelType.UnsignedByte, Sprite.Pixels);
+            GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, sprite.Width, sprite.Height,
+                PixelFormat.Rgba, PixelType.UnsignedByte, sprite.Pixels);
         }
     }
 }
