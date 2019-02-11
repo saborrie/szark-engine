@@ -22,9 +22,11 @@ namespace Szark
         public int Shader { get; set; }
         public Graphics2D Graphics { get; private set; }
 
-        private readonly int VAO, EBO, textureID;
-        private readonly int mvpLocation;
-        private readonly SzarkEngine engine;
+        private static int VAO, EBO;
+        private static bool buffersCreated;
+
+        private int mvpLocation, textureID;
+        private SzarkEngine engine;
 
         private float[] vertices =
         {
@@ -49,13 +51,19 @@ namespace Szark
 
             Graphics = new Graphics2D(Sprite);
             mvpLocation = GL.GetUniformLocation(shaderID, "mvp");
+            if (!buffersCreated) CreateBuffers();
+            CreateTexture();
+        }
 
+        // Creates vertex and element buffers
+        private void CreateBuffers()
+        {
             VAO = GL.GenVertexArray();
             GL.BindVertexArray(VAO);
 
             int VBO = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, VBO);
-            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * 4, 
+            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * 4,
                 vertices, BufferUsageHint.StaticDraw);
 
             EBO = GL.GenBuffer();
@@ -68,12 +76,18 @@ namespace Szark
             GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 16, 8);
             GL.EnableVertexAttribArray(1);
 
+            buffersCreated = true;
+        }
+
+        // Creates the initial texture with parameters
+        private void CreateTexture()
+        {
             textureID = GL.GenTexture();
             CreateTexImage2D();
 
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, 
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
                 (int)TextureMinFilter.Nearest);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, 
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter,
                 (int)TextureMagFilter.Nearest);
         }
 
