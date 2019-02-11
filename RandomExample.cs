@@ -8,25 +8,16 @@ namespace Example
         private Random random;
         private SpriteRenderer renderer;
 
-        private Sprite testSprite;
-        private Sprite randomSprite;
-
         RandomExample() : base("Random Pixels Example", 
             800, 800, 8) { }
 
         protected override void Start()
         {
             random = new Random();
-            randomSprite = new Sprite(ScreenWidth, ScreenHeight);
-            renderer = CreateRenderer(randomSprite);
-            testSprite = new Sprite(@"C:\Users\Jakub\Documents\RTSGame\RTSGame\Sprites\Ground-Sandstone.png");
+            renderer = CreateRenderer(new Sprite(ScreenWidth, ScreenHeight));
         }
 
-        protected override void Update(float deltaTime)
-        {
-            if (Input.GetKeyDown("Space"))
-                renderer.Sprite = testSprite;
-        }
+        protected override void Update(float deltaTime) { }
 
         protected override void Draw(float deltaTime)
         {
