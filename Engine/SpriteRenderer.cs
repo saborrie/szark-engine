@@ -6,7 +6,7 @@ namespace Szark
     public class SpriteRenderer
     {
         public Sprite Sprite { get; private set; }
-        public int Shader { get; private set; }
+        public int Shader { get; set; }
         public Graphics2D Graphics { get; private set; }
 
         private readonly int VAO, EBO, textureID;

@@ -94,6 +94,9 @@ namespace Szark
             gameWindow = new GameWindow(width, height);
             gameWindow.Title = title;
 
+            Audio.Init();
+            Input.SetContext(this, gameWindow);
+
             // Set internal window events
             gameWindow.RenderFrame += (s, f) => Render(f);
 
@@ -112,9 +115,6 @@ namespace Szark
             // Set window as a fixed size
             gameWindow.WindowBorder = WindowBorder.Fixed;
             gameWindow.Run();
-
-            Audio.Init();
-            Input.SetContext(this, gameWindow);
         }
 
         private void SetupOpenGL()
