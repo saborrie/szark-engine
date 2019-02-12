@@ -5,7 +5,7 @@
 1. Clone this project
 2. Restore dependencies
 
-or
+    **or**
 
 1. Download latest release
 2. Create new project and link the dll
