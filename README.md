@@ -1,8 +1,16 @@
 ## How to get started:
-1. Download .Net Core SDK 
-2. Clone this project
-3. Restore dependencies
-4. Your good to go!
+
+**You must have .Net Core SDK**
+
+1. Clone this project
+2. Restore dependencies
+
+or
+
+1. Download latest release
+2. Create new project and link the dll
+3. Add the dependencies to your project<br>
+through Nuget Packet Manager
 
 ## Dependencies
 * OpenTK.NetCore
