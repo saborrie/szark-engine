@@ -1,9 +1,8 @@
 ## How to get started:
-1. Download .Net Core 2.1 SDK or Higher
-2. Clone or download this project
-3. Open the project in your favorite IDE
-4. Restore the project if necessary
-5. Your good to go!
+1. Download .Net Core SDK 
+2. Clone this project
+3. Restore dependencies
+4. Your good to go!
 
 ## Dependencies
 * OpenTK.NetCore
@@ -55,15 +54,9 @@ namespace Example
     }
 }
 ```
-## Built-in Overridable Methods
-  * **Start** - Called when window is created (Use for initializing)
-  * **Update** - Called every tick (Use for game logic like player movement, physics, etc.)
-  * **Draw** - Called every frame (Use for rendering stuff and drawing)
-  * **Destroyed** - Called when window closes (Use for cleanup)
   
 # Documention
-You can find documentation either by going to the wiki tab or
-by looking through the Engine folder.
+You can find documentation by going to the wiki tab.
 
 # Other Examples
 <img src="https://i.imgur.com/SPTGHfe.gif" width="400"><img src="https://i.imgur.com/sgPtLmT.gif" width="400">
