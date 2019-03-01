@@ -25,7 +25,7 @@ namespace Example
             {
                 for (int j = 0; j < ScreenHeight; j++)
                 {
-                    renderer.Graphics.Draw(i, j, new Pixel((byte)random.Next(255),
+                    renderer.Graphics.Draw(i, j, new Color((byte)random.Next(255),
                         (byte)random.Next(255), (byte)random.Next(255)));
                 }
             }

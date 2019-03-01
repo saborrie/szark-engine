@@ -5,14 +5,15 @@ using System.IO;
 namespace Szark
 {
     /// <summary>
-    /// A Class that contains an array of pixels
+    /// A Class that contains an array of 
+    /// s
     /// and may represent an image
     /// </summary>
     public class Sprite
     {
         public int Width { get; private set; }
         public int Height { get; private set; }        
-        public Pixel[] Pixels { get; set; }
+        public Color[] Pixels { get; set; }
 
         /// <summary>
         /// Constructor for a blank sprite
@@ -23,7 +24,7 @@ namespace Szark
         {
             Width = width;
             Height = height;
-            Pixels = new Pixel[width * height];
+            Pixels = new Color[width * height];
         }
 
         /// <summary>
@@ -33,7 +34,7 @@ namespace Szark
         public Sprite(Sprite other)
         {
             if (other == null) return;
-            Pixels = new Pixel[other.Width * other.Height];
+            Pixels = new Color[other.Width * other.Height];
             for (int i = 0; i < other.Pixels.Length; i++)
                 Pixels[i] = other.Pixels[i];
         }
@@ -53,14 +54,14 @@ namespace Szark
                 Width = bitmap.Width;
                 Height = bitmap.Height;
 
-                Pixels = new Pixel[Width * Height];
+                Pixels = new Color[Width * Height];
 
                 for (var x = 0; x < bitmap.Width; x++)
                 {
                     for (var y = 0; y < bitmap.Height; y++)
                     {
                         var p = bitmap.GetPixel(x, y);
-                        var col = new Pixel(p.R, p.G, p.B, p.A);
+                        var col = new Color(p.R, p.G, p.B, p.A);
                         SetPixel(x, y, col);
                     }
                 }
@@ -79,11 +80,11 @@ namespace Szark
         /// <param name="x">X</param>
         /// <param name="y">Y</param>
         /// <returns>A Pixel</returns>
-        public Pixel GetPixel(int x, int y)
+        public Color GetPixel(int x, int y)
         {
             if (x >= 0 && x < Width && y >= 0 && y < Height)
                 return Pixels[y * Width + x];
-            else return new Pixel();
+            else return new Color();
         }
 
         /// <summary>
@@ -92,7 +93,7 @@ namespace Szark
         /// <param name="x">X</param>
         /// <param name="y">Y</param>
         /// <param name="color">Pixel Replacement</param>
-        public void SetPixel(int x, int y, Pixel p)
+        public void SetPixel(int x, int y, Color p)
         {
             if (x >= 0 && x < Width && y >= 0 && y < Height)
                 Pixels[y * Width + x] = p;
@@ -102,7 +103,7 @@ namespace Szark
         /// Clears the sprite to a specific color
         /// </summary>
         /// <param name="p">Pixel / Color</param>
-        public void Clear(Pixel p)
+        public void Clear(Color p)
         {
             for(int i = 0; i < Pixels.Length; i++)
                 Pixels[i] = p;

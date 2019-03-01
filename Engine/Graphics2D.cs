@@ -44,7 +44,7 @@ namespace Szark
         /// <param name="x">X</param>
         /// <param name="y">Y</param>
         /// <param name="color">Color</param>
-        public virtual void Draw(int x, int y, Pixel color)
+        public virtual void Draw(int x, int y, Color color)
         {
             if (color.alpha < 255)
             {
@@ -53,8 +53,8 @@ namespace Szark
 
                 if (OpacityMode == OpacityMode.ALPHA)
                 {
-                    var l = Pixel.Lerp(DrawTarget.GetPixel(x, y), color, color.alpha / 255f);
-                    DrawTarget.SetPixel(x, y, new Pixel(l.red, l.green, l.blue));
+                    var l = Color.Lerp(DrawTarget.GetPixel(x, y), color, color.alpha / 255f);
+                    DrawTarget.SetPixel(x, y, new Color(l.red, l.green, l.blue));
                     return;
                 }
             }
@@ -71,7 +71,7 @@ namespace Szark
         /// <param name="y2">Y2</param>
         /// <param name="color">Color</param>
         /// <param name="thickness">Thickness</param>
-        public void DrawLine(int x1, int y1, int x2, int y2, Pixel color, int thickness = 1)
+        public void DrawLine(int x1, int y1, int x2, int y2, Color color, int thickness = 1)
         {
             float x, y, step;
             float dx = x2 - x1;
@@ -114,7 +114,7 @@ namespace Szark
         /// <param name="w">Width</param>
         /// <param name="h">Height</param>
         /// <param name="color">Color</param>
-        public void DrawRect(int x, int y, int w, int h, Pixel color)
+        public void DrawRect(int x, int y, int w, int h, Color color)
         {
             if (w < 0)
             {
@@ -136,7 +136,7 @@ namespace Szark
         /// <param name="w">Width</param>
         /// <param name="h">Height</param>
         /// <param name="color">Color</param>
-        public void FillRect(int x, int y, int w, int h, Pixel color)
+        public void FillRect(int x, int y, int w, int h, Color color)
         {
             for (int i = 0; i < w; i++)
                 for (int j = 0; j < h; j++)
@@ -150,7 +150,7 @@ namespace Szark
         /// <param name="y0">Y</param>
         /// <param name="r">Radius</param>
         /// <param name="color">Color</param>
-        public void DrawCircle(int x0, int y0, int r, Pixel color)
+        public void DrawCircle(int x0, int y0, int r, Color color)
         {
             x0 += r - 1;
             y0 += r - 1;
@@ -195,7 +195,7 @@ namespace Szark
         /// <param name="y">Y</param>
         /// <param name="r">Radius</param>
         /// <param name="color">Color</param>
-        public void FillCircle(int x, int y, int r, Pixel color)
+        public void FillCircle(int x, int y, int r, Color color)
         {
             for (int i = 0; i < r * 2; i++)
             {
@@ -217,7 +217,7 @@ namespace Szark
         /// <param name="x3">X3</param>
         /// <param name="y3">Y3</param>
         /// <param name="color">Color</param>
-        public void DrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Pixel color)
+        public void DrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Color color)
         {
             DrawLine(x1, y1, x2, y2, color);
             DrawLine(x2, y2, x3, y3, color);
@@ -234,7 +234,7 @@ namespace Szark
         /// <param name="x3">X3</param>
         /// <param name="y3">Y3</param>
         /// <param name="color">Color</param>
-        public void FillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Pixel color)
+        public void FillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Color color)
         {
             var minX = Math.Min(Math.Min(x1, x2), x3);
             var maxX = Math.Max(Math.Max(x1, x2), x3);
@@ -312,7 +312,7 @@ namespace Szark
 
                     var pixel = sprite.GetPixel(xs, ys);
 
-                    if (!pixel.Compare(new Pixel(0, 0, 0, 0)))
+                    if (!pixel.Compare(new Color(0, 0, 0, 0)))
                         Draw((int)(x + i - sprite.Width), (int)(y + j - sprite.Height), pixel);
                 }
             }
@@ -344,7 +344,7 @@ namespace Szark
         /// <param name="text">Text</param>
         /// <param name="color">Color</param>
         /// <param name="scale">Scale</param>
-        public void DrawString(int x, int y, string text, Pixel color, int scale = 1)
+        public void DrawString(int x, int y, string text, Color color, int scale = 1)
         {
             int sx = 0;
             int sy = 0;
@@ -414,7 +414,7 @@ namespace Szark
                 for (int i = 0; i < 24; i++)
                 {
                     byte k = (byte)((r & (1 << i)) > 0 ? 255 : 0);
-                    fontSprite.SetPixel(px, py, new Pixel(k, k, k, k));
+                    fontSprite.SetPixel(px, py, new Color(k, k, k, k));
                     if (++py == 48) { px++; py = 0; }
                 }
             }

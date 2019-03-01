@@ -28,7 +28,7 @@ namespace Szark
         public int BaseShader { get; private set; }
 
         public bool ShowFPS { get; set; } = true;
-        public Pixel Background { get; set; }
+        public Color Background { get; set; }
         public VSyncMode Vsync => gameWindow.VSync;
 
         public bool IsFullscreen
