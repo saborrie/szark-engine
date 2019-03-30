@@ -4,41 +4,38 @@ using System;
 
 namespace Szark
 {
-    public class Input
+    public static class Input
     {
         private static int offsetX, offsetY;
+        private static KeyboardState keyboardState, lastKeyboardState;
+        private static MouseState mouseState, lastMouseState;
 
         private static GameWindow gameWindow;
         private static SzarkEngine engine;
 
-        private static KeyboardState keyboardState, lastKeyboardState;
-        private static MouseState mouseState, lastMouseState;
-
         /// <summary>
         /// Mouse X position on screen
         /// </summary>
-        public static int MouseX
-        {
-            get => engine.IsFullscreen ? (gameWindow.Mouse.X - offsetX) / 
+        public static int MouseX =>
+            engine.IsFullscreen ? (gameWindow.Mouse.X - offsetX) / 
                 engine.PixelSize : gameWindow.Mouse.X / engine.PixelSize;
-        }
 
         /// <summary>
         /// Mouse Y position on screen
         /// </summary>
-        public static int MouseY
-        {
-            get => engine.IsFullscreen ? (gameWindow.Mouse.Y - offsetY) / 
+        public static int MouseY =>
+            engine.IsFullscreen ? (gameWindow.Mouse.Y - offsetY) / 
                 engine.PixelSize : gameWindow.Mouse.Y / engine.PixelSize;
-        }
 
         /// <summary>
         /// Sets the current active window and engine for input
         /// </summary>
         /// <param name="engine">The Engine</param>
-        /// <param name="window">The Window</param>
-        public static void SetContext(SzarkEngine engine, GameWindow window) 
+        public static void SetContext(SzarkEngine engine) 
         {
+            if (engine == null)
+                throw new NullReferenceException();
+
             if (gameWindow != null)
             {
                 gameWindow.KeyUp -= KeyUp;
@@ -47,20 +44,25 @@ namespace Szark
                 gameWindow.MouseUp -= MouseUp;
             }
 
+            if (engine != null)
+            {
+                engine.WindowStateChanged -= OnWindowStateChanged;
+                engine.WindowUpdated -= OnWindowUpdated;
+            }
+
+            gameWindow = engine.GameWindow;
             Input.engine = engine;
-            gameWindow = window;
 
             gameWindow.KeyUp += KeyUp;
             gameWindow.KeyDown += KeyDown;
             gameWindow.MouseDown += MouseDown;
             gameWindow.MouseUp += MouseUp;
+
+            engine.WindowStateChanged += OnWindowStateChanged;
+            engine.WindowUpdated += OnWindowUpdated;
         }
 
-        /// <summary>
-        /// Used internally to update mouse position based
-        /// on if the window is in fullscreen
-        /// </summary>
-        public static void UpdateOffsets()
+        private static void OnWindowStateChanged()
         {
             offsetX = engine.IsFullscreen ? (gameWindow.Width - 
                 engine.WindowWidth) / 2 : 0;
@@ -68,10 +70,7 @@ namespace Szark
                 engine.WindowHeight) / 2 : 0;
         }
 
-        /// <summary>
-        /// Used internally to update input states
-        /// </summary>
-        public static void Update()
+        private static void OnWindowUpdated(float deltaTime)
         {
             lastKeyboardState = keyboardState;
             lastMouseState = mouseState;
@@ -197,6 +196,10 @@ namespace Szark
         /// <returns>Was Released?</returns>
         public static bool GetMouseButtonUp(MouseButton button) =>
             lastMouseState[button] && (mouseState[button] != lastMouseState[button]);
+
+        public static bool GetMouseButton(int button) => GetMouseButton((MouseButton)button);
+        public static bool GetMouseButtonDown(int button) => GetMouseButtonDown((MouseButton)button);
+        public static bool GetMouseButtonUp(int button) => GetMouseButtonUp((MouseButton)button);
 
         #endregion
     }

@@ -25,62 +25,30 @@ namespace Szark
         public int Shader { get; set; }
         public Graphics2D Graphics { get; private set; }
 
-        private static int VAO, EBO;
-        private static bool buffersCreated;
-
         private Sprite sprite;
-        private int mvpLocation, textureID;
-        private SzarkEngine engine;
+        private readonly int mvpLocation;
+        private int textureID;
 
-        private float[] vertices =
-        {
-            // Vertices    // Texture Coords
-             1.0f,  1.0f,  1.0f, 1.0f,
-             1.0f, -1.0f,  1.0f, 0.0f,
-            -1.0f, -1.0f,  0.0f, 0.0f,
-            -1.0f,  1.0f,  0.0f, 1.0f
-        };
+        public SpriteRenderer(string path) : this(new Sprite(path),
+            SzarkEngine.Context.BaseShader)
+        { }
 
-        private int[] indices = 
-        {
-            0, 1, 3,
-            1, 2, 3
-        };
+        public SpriteRenderer(int width, int height) : this(new Sprite(width,
+            height), SzarkEngine.Context.BaseShader)
+        { }
 
-        public SpriteRenderer(SzarkEngine engine, Sprite sprite, int shaderID)
+        public SpriteRenderer(Sprite sprite) : this(sprite,
+            SzarkEngine.Context.BaseShader)
+        { }
+
+        public SpriteRenderer(Sprite sprite, int shaderID)
         {
             this.sprite = sprite;
-            this.engine = engine;
             Shader = shaderID;
 
             Graphics = new Graphics2D(Sprite);
             mvpLocation = GL.GetUniformLocation(shaderID, "mvp");
-            if (!buffersCreated) CreateBuffers();
             CreateTexture();
-        }
-
-        // Creates vertex and element buffers
-        private void CreateBuffers()
-        {
-            VAO = GL.GenVertexArray();
-            GL.BindVertexArray(VAO);
-
-            int VBO = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VBO);
-            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * 4,
-                vertices, BufferUsageHint.StaticDraw);
-
-            EBO = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, EBO);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * 4,
-                indices, BufferUsageHint.StaticDraw);
-
-            GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 16, 0);
-            GL.EnableVertexAttribArray(0);
-            GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 16, 8);
-            GL.EnableVertexAttribArray(1);
-
-            buffersCreated = true;
         }
 
         // Creates the initial texture with parameters
@@ -123,6 +91,7 @@ namespace Szark
             if (sprite.Width < sprite.Height) scaleY = sprite.Height / sprite.Width;
 
             // Calculate the orthographic scale and position
+            var engine = SzarkEngine.Context;
             float right = fillScreen ? 2 : (float)engine.ScreenWidth / engine.PixelSize / scaleX;
             float top = fillScreen ? 2 : (float)engine.ScreenHeight / engine.PixelSize / scaleY;
             float posX = x / scale / scaleX / engine.PixelSize, posY = y / scale / scaleY / engine.PixelSize;
@@ -139,11 +108,11 @@ namespace Szark
 
             // Bind texture the the shader
             GL.BindTexture(TextureTarget.Texture2D, textureID);
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, EBO);
-            GL.BindVertexArray(VAO);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, QuadData.EBO);
+            GL.BindVertexArray(QuadData.VAO);
 
             // Draw the sprite
-            GL.DrawElements(PrimitiveType.Triangles, 
+            GL.DrawElements(PrimitiveType.Triangles,
                 6, DrawElementsType.UnsignedInt, 0);
         }
 

@@ -6,6 +6,7 @@
 
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
+using System;
 
 namespace Szark
 {
@@ -15,6 +16,8 @@ namespace Szark
     /// </summary>
     public abstract class SzarkEngine
     {
+        #region Variables
+
         public string WindowTitle { get; set; }
 
         public int WindowWidth { get; private set; }
@@ -29,25 +32,62 @@ namespace Szark
 
         public bool ShowFPS { get; set; } = true;
         public Color Background { get; set; }
-        public VSyncMode Vsync => gameWindow.VSync;
-
-        public bool IsFullscreen
-        {
-            get => gameWindow.WindowState == WindowState.Fullscreen;
-            set
-            {
-                gameWindow.WindowState = (WindowState)(value ? 3 : 0);
-                renderOffsetX = value ? (gameWindow.Width - WindowWidth) / 2 : 0;
-                renderOffsetY = value ? (gameWindow.Height - WindowHeight) / 2 : 0;
-                Input.UpdateOffsets();
-            }
-        }
+        public VSyncMode Vsync => GameWindow.VSync;
+        public GameWindow GameWindow { get; private set; }
 
         private double lastFPSCheck;
         private int renderOffsetX, renderOffsetY;
-        private GameWindow gameWindow;
 
-        private const string vertexShader = 
+        public bool IsFullscreen
+        {
+            get => GameWindow.WindowState == WindowState.Fullscreen;
+            set
+            {
+                GameWindow.WindowState = (WindowState)(value ? 3 : 0);
+                renderOffsetX = value ? (GameWindow.Width - WindowWidth) / 2 : 0;
+                renderOffsetY = value ? (GameWindow.Height - WindowHeight) / 2 : 0;
+                WindowStateChanged?.Invoke();
+            }
+        }
+
+        #endregion
+
+        #region Context
+
+        /// <summary>
+        /// This determines what engine is the current focused
+        /// </summary>
+        public static SzarkEngine Context { get; private set; }
+
+        /// <summary>
+        /// Called when the context variable changes
+        /// </summary>
+        public static event Action ContextChanged;
+
+        #endregion
+
+        #region Events
+
+        /// <summary>
+        /// Called when fullscreen property is changed
+        /// </summary>
+        public event Action WindowStateChanged;
+
+        /// <summary>
+        /// Called when the window renders a frame
+        /// </summary>
+        public event Action<float> WindowRendered;
+
+        /// <summary>
+        /// Called when the window updates
+        /// </summary>
+        public event Action<float> WindowUpdated;
+
+        #endregion
+
+        #region Shaders
+
+        private const string vertexShader =
         @"
             #version 400 
 
@@ -64,7 +104,7 @@ namespace Szark
             }
         ";
 
-        private const string fragmentShader = 
+        private const string fragmentShader =
         @"
             #version 400
 
@@ -76,6 +116,10 @@ namespace Szark
                 FragColor = texture(tex, texCoord);
             } 
         ";
+
+        #endregion
+
+        #region Constructor and Initialization
 
         /// <summary>
         /// Creates a window and starts OpenGL.
@@ -91,19 +135,27 @@ namespace Szark
             PixelSize = pixelSize;
 
             // Create the window
-            gameWindow = new GameWindow(width, height);
-            gameWindow.Title = title;
+            GameWindow = new GameWindow(width, height);
+            GameWindow.Title = title;
 
+            MakeContext();
+            Input.SetContext(this);
             Audio.Init();
-            Input.SetContext(this, gameWindow);
 
-            // Set internal window events
-            gameWindow.RenderFrame += (s, f) => Render(f);
+            GameWindow.Load += (s, f) => Start();
+            GameWindow.Disposed += (s, f) => Destroyed();
 
-            // Set abstract window events
-            gameWindow.Load += (s, f) => Start();
-            gameWindow.UpdateFrame += (s, f) => Update((float)f.Time);
-            gameWindow.Disposed += (s, f) => Destroyed();
+            GameWindow.RenderFrame += (s, f) =>
+            {
+                Render(f);
+                WindowRendered?.Invoke((float)f.Time);
+            };
+
+            GameWindow.UpdateFrame += (s, f) =>
+            {
+                Update((float)f.Time);
+                WindowUpdated?.Invoke((float)f.Time);
+            };
 
             // Calculate the internal screen dimensions
             ScreenWidth = WindowWidth / PixelSize;
@@ -113,22 +165,26 @@ namespace Szark
             SetupOpenGL();
 
             // Set window as a fixed size
-            gameWindow.WindowBorder = WindowBorder.Fixed;
-            gameWindow.Run();
+            GameWindow.WindowBorder = WindowBorder.Fixed;
+            GameWindow.Run();
         }
 
         private void SetupOpenGL()
         {
             GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, 
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha,
                 BlendingFactorDest.OneMinusSrcAlpha);
 
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.Texture2D);
 
-            BaseShader = ShaderLoader.CreateProgram(vertexShader, 
+            BaseShader = ShaderLoader.CreateProgram(vertexShader,
                 fragmentShader);
         }
+
+        #endregion
+
+        #region Rendering
 
         private void Render(FrameEventArgs e)
         {
@@ -143,22 +199,28 @@ namespace Szark
             if ((lastFPSCheck += e.Time) > 1)
             {
                 CurrentFPS = (int)(1 / e.Time);
-                gameWindow.Title = $"{WindowTitle} " + (ShowFPS ? 
+                GameWindow.Title = $"{WindowTitle} " + (ShowFPS ?
                     $"| FPS: {CurrentFPS}" : "");
                 lastFPSCheck = 0;
             }
 
-            gameWindow.SwapBuffers();
-            Input.Update();
+            GameWindow.SwapBuffers();
         }
 
+        #endregion
+
+        #region Public Methods
+
         /// <summary>
-        /// Creates a Sprite Renderer
+        /// Makes this Engine the Current Context
         /// </summary>
-        /// <param name="sprite">The sprite to render</param>
-        /// <returns></returns>
-        public SpriteRenderer CreateRenderer(Sprite sprite) =>
-            new SpriteRenderer(this, sprite, BaseShader);
+        public void MakeContext()
+        {
+            Context = this;
+            ContextChanged?.Invoke();
+        }
+
+        #endregion
 
         #region Abstractions
 

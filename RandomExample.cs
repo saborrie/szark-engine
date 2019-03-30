@@ -8,13 +8,14 @@ namespace Example
         private Random random;
         private SpriteRenderer renderer;
 
-        RandomExample() : base("Random Pixels Example", 
-            800, 800, 8) { }
+        RandomExample() : base("Random Pixels Example",
+            800, 800, 8)
+        { }
 
         protected override void Start()
         {
             random = new Random();
-            renderer = CreateRenderer(new Sprite(ScreenWidth, ScreenHeight));
+            renderer = new SpriteRenderer(ScreenWidth, ScreenHeight);
         }
 
         protected override void Update(float deltaTime) { }
@@ -36,7 +37,7 @@ namespace Example
 
         protected override void Destroyed() { }
 
-        static void Main(string[] theArgs) => 
+        static void Main(string[] theArgs) =>
             new RandomExample();
     }
 }
