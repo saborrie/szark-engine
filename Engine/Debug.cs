@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 namespace Szark
 {
@@ -30,6 +31,20 @@ namespace Szark
             }
 
             Console.ResetColor();
+        }
+
+        /// <summary>
+        /// Creates a Stopwatch and times the action provided
+        /// </summary>
+        /// <param name="action">The action to be performed</param>
+        /// <returns>The time it took in milliseconds</returns>
+        public static float Stopwatch(Action action)
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            action();
+            stopwatch.Stop();
+            return stopwatch.ElapsedMilliseconds;
         }
     }
 
