@@ -37,7 +37,6 @@ namespace Example
 
         protected override void Destroyed() { }
 
-        static void Main(string[] theArgs) =>
-            new RandomExample();
+        static void Main() => new RandomExample();
     }
 }

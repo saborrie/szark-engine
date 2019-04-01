@@ -3,7 +3,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Szark
 {
-    public class SpriteRenderer
+    public sealed class SpriteRenderer
     {
         public Sprite Sprite
         {

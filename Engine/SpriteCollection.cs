@@ -3,11 +3,11 @@ using System.IO;
 
 namespace Szark
 {
-    public class SpriteCollection
+    public sealed class SpriteCollection
     {
         public int Count => sprites.Count;
 
-        private Dictionary<string, Sprite> sprites;
+        private readonly Dictionary<string, Sprite> sprites;
 
         /// <summary>
         /// Creates a collection of sprites given

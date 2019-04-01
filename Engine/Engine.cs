@@ -31,8 +31,8 @@ namespace Szark
         public int BaseShader { get; private set; }
 
         public bool ShowFPS { get; set; } = true;
-        public Color Background { get; set; }
         public GameWindow GameWindow { get; private set; }
+        public Color Background { get; set; }
 
         public VSyncMode Vsync
         {
@@ -140,8 +140,9 @@ namespace Szark
             PixelSize = pixelSize;
 
             // Create the window
-            GameWindow = new GameWindow(width, height);
-            GameWindow.Title = title;
+            GameWindow = new GameWindow(width, height) {
+                Title = title
+            };
 
             MakeContext();
             Input.SetContext(this);

@@ -7,20 +7,22 @@ using NAudio.Wave.SampleProviders;
 
 namespace Szark
 {
-    public class Audio
+    public static class Audio
     {
         private static IWavePlayer outputDevice;
         private static MixingSampleProvider mixer;
         private static bool initialized;
 
-        public static void Init()
+        internal static void Init()
         {
             if (initialized) return;
 
             initialized = true;
             outputDevice = new WaveOutEvent();
-            mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(44100, 2));
-            mixer.ReadFully = true;
+            mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(44100, 2)) {
+                ReadFully = true
+            };
+
             outputDevice.Init(mixer);
         }
 

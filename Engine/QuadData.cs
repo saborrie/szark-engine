@@ -6,7 +6,7 @@ namespace Szark
     {
         public readonly static int VAO, EBO;
 
-        private static float[] vertices =
+        private readonly static float[] vertices =
         {
             // Vertices    // Texture Coords
              1.0f,  1.0f,  1.0f, 1.0f,
@@ -15,7 +15,7 @@ namespace Szark
             -1.0f,  1.0f,  0.0f, 1.0f
         };
 
-        private static int[] indices =
+        private readonly static int[] indices =
         {
             0, 1, 3,
             1, 2, 3

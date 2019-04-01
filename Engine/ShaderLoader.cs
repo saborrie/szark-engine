@@ -3,7 +3,7 @@ using System;
 
 namespace Szark
 {
-    public class ShaderLoader
+    public static class ShaderLoader
     {
         /// <summary>
         /// Creates a Shader Program from a Vertex Shader and a Fragment Shader

@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace Szark
 {
-    public class Debug
+    public static class Debug
     {
         /// <summary>
         /// Logs a message to the console

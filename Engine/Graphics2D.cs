@@ -9,7 +9,7 @@ namespace Szark
         ALPHA
     }
 
-    public class Graphics2D
+    public sealed class Graphics2D
     {
         /// <summary>
         /// The Alpha 'Blending' Modes
@@ -44,7 +44,7 @@ namespace Szark
         /// <param name="x">X</param>
         /// <param name="y">Y</param>
         /// <param name="color">Color</param>
-        public virtual void Draw(int x, int y, Color color)
+        public void Draw(int x, int y, Color color)
         {
             if (color.alpha < 255)
             {

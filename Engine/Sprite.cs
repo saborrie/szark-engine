@@ -9,7 +9,7 @@ namespace Szark
     /// s
     /// and may represent an image
     /// </summary>
-    public class Sprite
+    public sealed class Sprite
     {
         public int Width { get; private set; }
         public int Height { get; private set; }        
