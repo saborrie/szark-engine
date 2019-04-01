@@ -32,8 +32,13 @@ namespace Szark
 
         public bool ShowFPS { get; set; } = true;
         public Color Background { get; set; }
-        public VSyncMode Vsync => GameWindow.VSync;
         public GameWindow GameWindow { get; private set; }
+
+        public VSyncMode Vsync
+        {
+            get => GameWindow.VSync;
+            set => GameWindow.VSync = value;
+        }
 
         private double lastFPSCheck;
         private int renderOffsetX, renderOffsetY;
