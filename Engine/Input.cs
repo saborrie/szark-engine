@@ -17,21 +17,21 @@ namespace Szark
         /// Mouse X position on screen
         /// </summary>
         public static int MouseX =>
-            engine.IsFullscreen ? (gameWindow.Mouse.X - offsetX) / 
-                engine.PixelSize : gameWindow.Mouse.X / engine.PixelSize;
+            engine.IsFullscreen ? (gameWindow.Mouse.X - offsetX)
+                 : gameWindow.Mouse.X;
 
         /// <summary>
         /// Mouse Y position on screen
         /// </summary>
         public static int MouseY =>
-            engine.IsFullscreen ? (gameWindow.Mouse.Y - offsetY) / 
-                engine.PixelSize : gameWindow.Mouse.Y / engine.PixelSize;
+            engine.IsFullscreen ? (gameWindow.Mouse.Y - offsetY)
+                : gameWindow.Mouse.Y;
 
         /// <summary>
         /// Sets the current active window and engine for input
         /// </summary>
         /// <param name="engine">The Engine</param>
-        public static void SetContext(SzarkEngine engine) 
+        public static void SetContext(SzarkEngine engine)
         {
             if (engine == null)
                 throw new NullReferenceException();
@@ -64,10 +64,8 @@ namespace Szark
 
         private static void OnWindowStateChanged()
         {
-            offsetX = engine.IsFullscreen ? (gameWindow.Width - 
-                engine.WindowWidth) / 2 : 0;
-            offsetY = engine.IsFullscreen ? (gameWindow.Height - 
-                engine.WindowHeight) / 2 : 0;
+            offsetX = engine.IsFullscreen ? gameWindow.Width / 2 : 0;
+            offsetY = engine.IsFullscreen ? gameWindow.Height / 2 : 0;
         }
 
         private static void OnWindowUpdated(float deltaTime)
@@ -106,7 +104,7 @@ namespace Szark
         /// </summary>
         /// <param name="key">The Key</param>
         /// <returns>Was Pressed?</returns>
-        public static bool GetKeyDown(Key key) => 
+        public static bool GetKeyDown(Key key) =>
             keyboardState[key] && (keyboardState[key] != lastKeyboardState[key]);
 
         /// <summary>
@@ -140,12 +138,12 @@ namespace Szark
         {
             if (Enum.TryParse(key, out Key result))
             {
-                return keyboardState[result] && (keyboardState[result] != 
+                return keyboardState[result] && (keyboardState[result] !=
                     lastKeyboardState[result]);
             }
             else
             {
-                Debug.Log($"Key with value '{key}' does not exist!", 
+                Debug.Log($"Key with value '{key}' does not exist!",
                     LogLevel.WARNING);
                 return false;
             }
@@ -163,7 +161,7 @@ namespace Szark
             }
             else
             {
-                Debug.Log($"Key with value '{key}' does not exist!", 
+                Debug.Log($"Key with value '{key}' does not exist!",
                     LogLevel.WARNING);
                 return false;
             }

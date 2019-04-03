@@ -20,12 +20,8 @@ namespace Szark
 
         public string WindowTitle { get; set; }
 
-        public int WindowWidth { get; private set; }
-        public int WindowHeight { get; private set; }
-
         public int ScreenWidth { get; private set; }
         public int ScreenHeight { get; private set; }
-        public int PixelSize { get; private set; }
 
         public int CurrentFPS { get; private set; }
         public int BaseShader { get; private set; }
@@ -49,8 +45,8 @@ namespace Szark
             set
             {
                 GameWindow.WindowState = (WindowState)(value ? 3 : 0);
-                renderOffsetX = value ? (GameWindow.Width - WindowWidth) / 2 : 0;
-                renderOffsetY = value ? (GameWindow.Height - WindowHeight) / 2 : 0;
+                renderOffsetX = value ? (GameWindow.Width - ScreenWidth) / 2 : 0;
+                renderOffsetY = value ? (GameWindow.Height - ScreenHeight) / 2 : 0;
                 WindowStateChanged?.Invoke();
             }
         }
@@ -132,12 +128,11 @@ namespace Szark
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <param name="pixelSize">Size of Each Pixel</param>
-        public SzarkEngine(string title, int width, int height, int pixelSize = 8)
+        public SzarkEngine(string title, int width, int height)
         {
-            WindowWidth = width;
-            WindowHeight = height;
+            ScreenWidth = width;
+            ScreenHeight = height;
             WindowTitle = title;
-            PixelSize = pixelSize;
 
             // Create the window
             GameWindow = new GameWindow(width, height) {
@@ -162,10 +157,6 @@ namespace Szark
                 Update((float)f.Time);
                 WindowUpdated?.Invoke((float)f.Time);
             };
-
-            // Calculate the internal screen dimensions
-            ScreenWidth = WindowWidth / PixelSize;
-            ScreenHeight = WindowHeight / PixelSize;
 
             // Do some OpenGL setup
             SetupOpenGL();
@@ -195,7 +186,7 @@ namespace Szark
         private void Render(FrameEventArgs e)
         {
             // Clear screen the a single color
-            GL.Viewport(renderOffsetX, renderOffsetY, WindowWidth, WindowHeight);
+            GL.Viewport(renderOffsetX, renderOffsetY, ScreenWidth, ScreenHeight);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.ClearColor(Background.red, Background.green, Background.blue, 1);
 

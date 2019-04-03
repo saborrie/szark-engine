@@ -2,7 +2,7 @@
 
 namespace Szark
 {
-    internal struct QuadData
+    public struct QuadData
     {
         public readonly static int VAO, EBO;
 

@@ -85,16 +85,11 @@ namespace Szark
         {
             GL.UseProgram(Shader);
 
-            // Get the sprite's scale
-            float scaleX = 1, scaleY = 1;
-            if (sprite.Width > sprite.Height) scaleX = sprite.Width / sprite.Height;
-            if (sprite.Width < sprite.Height) scaleY = sprite.Height / sprite.Width;
-
             // Calculate the orthographic scale and position
             var engine = SzarkEngine.Context;
-            float right = fillScreen ? 2 : (float)engine.ScreenWidth / engine.PixelSize / scaleX;
-            float top = fillScreen ? 2 : (float)engine.ScreenHeight / engine.PixelSize / scaleY;
-            float posX = x / scale / scaleX / engine.PixelSize, posY = y / scale / scaleY / engine.PixelSize;
+            float right = fillScreen ? 2 : engine.ScreenWidth / sprite.Width;
+            float top = fillScreen ? 2 : engine.ScreenHeight / sprite.Height;
+            float posX = x / scale / sprite.Width, posY = y / scale / sprite.Height;
 
             // Create matrices for the shader
             Matrix4.CreateTranslation(posX + 1, posY + 1, layer, out var mvp);
