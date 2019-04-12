@@ -31,11 +31,8 @@ namespace Szark
         /// Sets the current active window and engine for input
         /// </summary>
         /// <param name="engine">The Engine</param>
-        public static void SetContext(SzarkEngine engine)
+        internal static void SetContext(GameWindow window, SzarkEngine engine)
         {
-            if (engine == null)
-                throw new NullReferenceException();
-
             if (gameWindow != null)
             {
                 gameWindow.KeyUp -= KeyUp;
@@ -44,31 +41,22 @@ namespace Szark
                 gameWindow.MouseUp -= MouseUp;
             }
 
-            if (engine != null)
-            {
-                engine.FullscreenChanged -= OnWindowStateChanged;
-                engine.WindowUpdated -= OnWindowUpdated;
-            }
-
-            gameWindow = engine.Window;
+            gameWindow = window;
             Input.engine = engine;
 
             gameWindow.KeyUp += KeyUp;
             gameWindow.KeyDown += KeyDown;
             gameWindow.MouseDown += MouseDown;
             gameWindow.MouseUp += MouseUp;
-
-            engine.FullscreenChanged += OnWindowStateChanged;
-            engine.WindowUpdated += OnWindowUpdated;
         }
 
-        private static void OnWindowStateChanged()
+        internal static void UpdateOffsets()
         {
             offsetX = engine.Fullscreen ? gameWindow.Width / 2 : 0;
             offsetY = engine.Fullscreen ? gameWindow.Height / 2 : 0;
         }
 
-        private static void OnWindowUpdated(float deltaTime)
+        internal static void Update()
         {
             lastKeyboardState = keyboardState;
             lastMouseState = mouseState;

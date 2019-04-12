@@ -1,8 +1,6 @@
-﻿/* Created by: Jakub P. Szarkowicz */
-
-using OpenTK;
+﻿using OpenTK;
+using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
-using System;
 
 namespace Szark
 {
@@ -13,11 +11,6 @@ namespace Szark
     public abstract class SzarkEngine
     {
         public static SzarkEngine Context { get; private set; }
-        public static event Action ContextChanged;
-
-        public event Action FullscreenChanged;
-        public event Action<float> WindowRendered;
-        public event Action<float> WindowUpdated;
 
         public string Title { get; set; }
 
@@ -26,30 +19,30 @@ namespace Szark
         public int FPS { get; private set; }
 
         public bool ShowFPS { get; set; } = true;
+        public Color Background { get; set; }
 
         public bool Fullscreen
         {
-            get => Window.WindowState == WindowState.Fullscreen;
+            get => window.WindowState == WindowState.Fullscreen;
             set
             {
-                Window.WindowState = (WindowState)(value ? 3 : 0);
-                renderOffsetX = value ? (Window.Width - Width) / 2 : 0;
-                renderOffsetY = value ? (Window.Height - Height) / 2 : 0;
-                FullscreenChanged?.Invoke();
+                window.WindowState = (WindowState)(value ? 3 : 0);
+                renderOffsetX = value ? (window.Width - Width) / 2 : 0;
+                renderOffsetY = value ? (window.Height - Height) / 2 : 0;
+                Input.UpdateOffsets();
             }
         }
 
-        public Color Background { get; set; }
-        public GameWindow Window { get; private set; }
-
-        public VSyncMode Vsync
+        public bool Vsync
         {
-            get => Window.VSync;
-            set => Window.VSync = value;
+            get => window.VSync == VSyncMode.On;
+            set => window.VSync = value ? 
+                VSyncMode.On : VSyncMode.Off;
         }
 
         private double lastFPSCheck;
         private int renderOffsetX, renderOffsetY;
+        private readonly GameWindow window;
 
         /// <summary>
         /// Creates a window and starts OpenGL.
@@ -63,21 +56,20 @@ namespace Szark
             Height = height;
             Title = title;
 
-            Window = new GameWindow(width, height);
-            Window.Title = title;
+            window = new GameWindow(width, height,
+                GraphicsMode.Default, title);
 
             MakeContext();
-            Input.SetContext(this);
             Audio.Init();
 
-            Window.Load += (s, f) => Start();
-            Window.RenderFrame += (s, f) => Render(f);
-            Window.Disposed += (s, f) => Destroyed();
+            window.Load += (s, f) => Start();
+            window.RenderFrame += (s, f) => Render(f);
+            window.Disposed += (s, f) => Destroyed();
 
-            Window.UpdateFrame += (s, f) =>
+            window.UpdateFrame += (s, f) =>
             {
                 Update((float)f.Time);
-                WindowUpdated?.Invoke((float)f.Time);
+                Input.Update();
             };
 
             GL.Enable(EnableCap.Blend);
@@ -87,14 +79,12 @@ namespace Szark
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.Texture2D);
 
-            Window.WindowBorder = WindowBorder.Fixed;
-            Window.Run();
+            window.WindowBorder = WindowBorder.Fixed;
+            window.Run();
         }
 
         private void Render(FrameEventArgs e)
         {
-            WindowRendered?.Invoke((float)e.Time);
-
             GL.Viewport(renderOffsetX, renderOffsetY, Width, Height);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.ClearColor(Background.red, Background.green, Background.blue, 1);
@@ -104,39 +94,41 @@ namespace Szark
             if ((lastFPSCheck += e.Time) > 1)
             {
                 FPS = (int)(1 / e.Time);
-                Window.Title = $"{Title} " + (ShowFPS ?
+                window.Title = $"{Title} " + (ShowFPS ?
                     $"| FPS: {FPS}" : "");
                 lastFPSCheck = 0;
             }
 
-            Window.SwapBuffers();
-        }
-
-        public void MakeContext()
-        {
-            Context = this;
-            ContextChanged?.Invoke();
+            window.SwapBuffers();
         }
 
         /// <summary>
-        /// Called when window is opened, use for initialization
+        /// Makes this instance of the Engine the
+        /// prefered focused instance.
+        /// </summary>
+        public void MakeContext()
+        {
+            Context = this;
+            Input.SetContext(window, this);
+        }
+
+        /// <summary>
+        /// Called when window is opened.
         /// </summary>
         protected abstract void Start();
 
         /// <summary>
-        /// Called every tick, use for logic
+        /// Called every tick.
         /// </summary>
-        /// <param name="deltaTime">Delta Time</param>
         protected abstract void Update(float deltaTime);
 
         /// <summary>
-        /// Called every frame, used for drawing GPU Sprites, Shapes, etc.
+        /// Called every frame.
         /// </summary>
-        /// <param name="deltaTime">Delta Time</param>
         protected abstract void Draw(float deltaTime);
 
         /// <summary>
-        /// Called when window is closing, use for cleanup
+        /// Called when window is closes.
         /// </summary>
         protected abstract void Destroyed();
     }
