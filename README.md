@@ -72,5 +72,4 @@ You can find documentation by going to the wiki tab.
 
 ## Acknowledgments
 
-Check out the C++ inspiration of this engine, the [olcPixelGameEngine](https://github.com/OneLoneCoder/olcPixelGameEngine) by [Javidx9](https://www.youtube.com/channel/UC-yuWVUplUJZvieEligKBkA) (OneLoneCoder.com). 
-He uses the OLC-3 License in his original project.
+Check out what inspired me to make this engine, the [olcPixelGameEngine](https://github.com/OneLoneCoder/olcPixelGameEngine) by [Javidx9]
