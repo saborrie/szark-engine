@@ -17,14 +17,14 @@ namespace Szark
         /// Mouse X position on screen
         /// </summary>
         public static int MouseX =>
-            engine.IsFullscreen ? (gameWindow.Mouse.X - offsetX)
+            engine.Fullscreen ? (gameWindow.Mouse.X - offsetX)
                  : gameWindow.Mouse.X;
 
         /// <summary>
         /// Mouse Y position on screen
         /// </summary>
         public static int MouseY =>
-            engine.IsFullscreen ? (gameWindow.Mouse.Y - offsetY)
+            engine.Fullscreen ? (gameWindow.Mouse.Y - offsetY)
                 : gameWindow.Mouse.Y;
 
         /// <summary>
@@ -46,11 +46,11 @@ namespace Szark
 
             if (engine != null)
             {
-                engine.WindowStateChanged -= OnWindowStateChanged;
+                engine.FullscreenChanged -= OnWindowStateChanged;
                 engine.WindowUpdated -= OnWindowUpdated;
             }
 
-            gameWindow = engine.GameWindow;
+            gameWindow = engine.Window;
             Input.engine = engine;
 
             gameWindow.KeyUp += KeyUp;
@@ -58,14 +58,14 @@ namespace Szark
             gameWindow.MouseDown += MouseDown;
             gameWindow.MouseUp += MouseUp;
 
-            engine.WindowStateChanged += OnWindowStateChanged;
+            engine.FullscreenChanged += OnWindowStateChanged;
             engine.WindowUpdated += OnWindowUpdated;
         }
 
         private static void OnWindowStateChanged()
         {
-            offsetX = engine.IsFullscreen ? gameWindow.Width / 2 : 0;
-            offsetY = engine.IsFullscreen ? gameWindow.Height / 2 : 0;
+            offsetX = engine.Fullscreen ? gameWindow.Width / 2 : 0;
+            offsetY = engine.Fullscreen ? gameWindow.Height / 2 : 0;
         }
 
         private static void OnWindowUpdated(float deltaTime)

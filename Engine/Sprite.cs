@@ -1,6 +1,7 @@
-using System;
 using System.Drawing;
 using System.IO;
+
+using OpenTK.Graphics.OpenGL4;
 
 namespace Szark
 {
@@ -9,8 +10,11 @@ namespace Szark
     /// s
     /// and may represent an image
     /// </summary>
-    public sealed class Sprite
+    public struct Sprite
     {
+        public int ID { get; private set; }
+        public Shader Shader { get; set; }
+
         public int Width { get; private set; }
         public int Height { get; private set; }        
         public Color[] Pixels { get; set; }
@@ -25,6 +29,10 @@ namespace Szark
             Width = width;
             Height = height;
             Pixels = new Color[width * height];
+
+            ID = GL.GenTexture();
+            Shader = Shader.Default;
+            CreateTexture();
         }
 
         /// <summary>
@@ -33,10 +41,16 @@ namespace Szark
         /// <param name="other"></param>
         public Sprite(Sprite other)
         {
-            if (other == null) return;
+            Width = other.Width;
+            Height = other.Height;
+
             Pixels = new Color[other.Width * other.Height];
             for (int i = 0; i < other.Pixels.Length; i++)
                 Pixels[i] = other.Pixels[i];
+
+            ID = GL.GenTexture();
+            Shader = Shader.Default;
+            CreateTexture();
         }
 
         /// <summary>
@@ -46,6 +60,13 @@ namespace Szark
         /// <param name="path">The Path on the Computer</param>
         public Sprite(string path)
         {
+            Width = 1;
+            Height = 1;
+            Pixels = new Color[1];
+
+            ID = GL.GenTexture();
+            Shader = Shader.Default;
+
             try
             {
                 var image = Image.FromFile(path);
@@ -72,6 +93,22 @@ namespace Szark
             catch(FileNotFoundException) {
                 Debug.Log($"Image / File not found at\n \"{path}\"", LogLevel.ERROR);
             }
+
+            CreateTexture();
+        }
+
+        // Creates the Texture for the GPU
+        private void CreateTexture()
+        {
+            GL.BindTexture(TextureTarget.Texture2D, ID);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba,
+                Width, Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte,
+                    Pixels);
+
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
+                (int)TextureMinFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter,
+                (int)TextureMagFilter.Nearest);
         }
 
         /// <summary>
@@ -103,27 +140,20 @@ namespace Szark
         /// Clears the sprite to a specific color
         /// </summary>
         /// <param name="p">Pixel / Color</param>
-        public void Clear(Color p)
+        public void ClearToColor(Color p)
         {
             for(int i = 0; i < Pixels.Length; i++)
                 Pixels[i] = p;
+            Refresh();
         }
 
         /// <summary>
-        /// Copies all pixels into another sprite
-        /// (Both sprites must be the same size!)
+        /// Will refresh the texture if edited by the CPU
         /// </summary>
-        /// <param name="destination">The Sprite to Copy To</param>
-        public void CopyTo(Sprite destination)
+        public void Refresh()
         {
-            if (destination == null) 
-                throw new NullReferenceException();
-
-            if (destination.Width != Width || destination.Height != Height)
-                throw new Exception("Destination sprite size is not the same" +
-                    "as the source sprite!");
-
-            Pixels.CopyTo(destination.Pixels, 0);
+            GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, Width, Height,
+                PixelFormat.Rgba, PixelType.UnsignedByte, Pixels);
         }
     }
 }
