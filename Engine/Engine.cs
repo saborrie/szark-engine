@@ -60,7 +60,6 @@ namespace Szark
                 GraphicsMode.Default, title);
 
             MakeContext();
-            Audio.Init();
 
             window.Load += (s, f) => Start();
             window.RenderFrame += (s, f) => Render(f);

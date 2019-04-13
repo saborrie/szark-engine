@@ -1,159 +1,105 @@
+using OpenTK.Audio;
+using OpenTK.Audio.OpenAL;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using NAudio.Wave;
-using NAudio.Wave.SampleProviders;
 
 namespace Szark
 {
-    public static class Audio
+    public struct AudioClip
     {
-        private static IWavePlayer outputDevice;
-        private static MixingSampleProvider mixer;
-        private static bool initialized;
+        private readonly int buffer, channels;
+        private readonly int source, bitsPerSample, sampleRate;
+        private readonly ALFormat soundFormat;
+        private readonly byte[] audioData;
 
-        internal static void Init()
+        // Check to see if OpenAL is Installed
+        static AudioClip()
         {
-            if (initialized) return;
-
-            initialized = true;
-            outputDevice = new WaveOutEvent();
-            mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(44100, 2)) {
-                ReadFully = true
-            };
-
-            outputDevice.Init(mixer);
-        }
-
-        private static void AddMixerInput(ISampleProvider input)
-        {
-            if (input.WaveFormat.Channels != mixer.WaveFormat.Channels)
-                input = new MonoToStereoSampleProvider(input);
-            mixer.AddMixerInput(input);
-        }
-
-        /// <summary>
-        /// Play audio from File
-        /// </summary>
-        /// <param name="filePath">File Path / Name</param>
-        /// <param name="volume">Audio Volume</param>
-        public static void PlaySound(string filePath, float volume = 1)
-        {
-            if (!IsSupportedAudio(filePath))
-                return;
-            
-            outputDevice.Volume = volume;
-            AddMixerInput(new AudioReader(new AudioFileReader(filePath)));
-            outputDevice.Play();
-        }
-
-        /// <summary>
-        /// Play audio from cached sound object
-        /// </summary>
-        /// <param name="sound">Sound</param>
-        /// <param name="volume">Volume</param>
-        public static void PlaySound(AudioClip sound, float volume = 1)
-        {
-            if (sound == null) return;
-
-            outputDevice.Volume = volume;
-            AddMixerInput(new SoundSample(sound));
-            outputDevice.Play();
-        }
-
-        /// <summary>
-        /// Checks if the audio file extension at the path is supported.
-        /// Also writes to console if file is not supported.
-        /// </summary>
-        /// <param name="filePath">The path of the audio file</param>
-        /// <returns>If extension is supported</returns>
-        public static bool IsSupportedAudio(string filePath)
-        {
-            if (Path.GetExtension(filePath) != ".wav")
+            try { new AudioContext(); }
+            catch (Exception)
             {
-                Debug.Log($"Sound file at [{filePath}] - extension not supported!", 
+                Debug.Log("OpenAL is not installed on this device!",
                     LogLevel.ERROR);
-                return false;
             }
-
-            return true;
         }
-    }
-
-    public class AudioClip
-    {
-        public float[] AudioData { get; private set; }
-        public WaveFormat WaveFormat { get; private set; }
 
         public AudioClip(string filePath)
         {
-            if (!Audio.IsSupportedAudio(filePath))
-                return;
-
-            using (var audioFileReader = new AudioFileReader(filePath))
+            try
             {
-                WaveFormat = audioFileReader.WaveFormat;
+                using (var stream = File.Open(filePath, FileMode.Open))
+                {
+                    using (var reader = new BinaryReader(stream))
+                    {
+                        string signature = new string(reader.ReadChars(4));
+                        if (signature != "RIFF") throw new NotSupportedException();
 
-                var wholeFile = new List<float>((int)(audioFileReader.Length / 4));
-                var readBuffer = new float[audioFileReader.WaveFormat.SampleRate * audioFileReader.WaveFormat.Channels];
-                int samplesRead;
+                        int riff_chunck_size = reader.ReadInt32();
 
-                while((samplesRead = audioFileReader.Read(readBuffer,0,readBuffer.Length)) > 0)
-                    wholeFile.AddRange(readBuffer.Take(samplesRead));
+                        string format = new string(reader.ReadChars(4));
+                        if (format != "WAVE") throw new NotSupportedException();
 
-                AudioData = wholeFile.ToArray();
+                        string format_signature = new string(reader.ReadChars(4));
+                        if (format_signature != "fmt ") throw new NotSupportedException();
+
+                        int format_chunk_size = reader.ReadInt32();
+                        int audio_format = reader.ReadInt16();
+                        channels = reader.ReadInt16();
+                        sampleRate = reader.ReadInt32();
+                        int byte_rate = reader.ReadInt32();
+                        int block_align = reader.ReadInt16();
+                        bitsPerSample = reader.ReadInt16();
+
+                        string data_signature = new string(reader.ReadChars(4));
+                        if (data_signature != "data") throw new NotSupportedException();
+                        int data_chunk_size = reader.ReadInt32();
+
+                        audioData = reader.ReadBytes((int)reader.BaseStream.Length);
+
+                        switch (channels)
+                        {
+                            case 1:
+                                soundFormat = bitsPerSample == 8 ? ALFormat.Mono8 : ALFormat.Mono16;
+                                break;
+                            case 2:
+                                soundFormat = bitsPerSample == 8 ? ALFormat.Stereo8 : ALFormat.Stereo16;
+                                break;
+
+                            default: throw new NotSupportedException();
+                        }
+
+                        buffer = AL.GenBuffer();
+                        source = AL.GenSource();
+
+                        AL.BufferData(buffer, soundFormat, audioData, audioData.Length, sampleRate);
+                        AL.Source(source, ALSourcei.Buffer, buffer);
+
+                        return;
+                    }
+                }
             }
-        }
-    }
-
-    class AudioReader : ISampleProvider
-    {
-        public WaveFormat WaveFormat { get; private set; }
-
-        private bool isDisposed;
-        private readonly AudioFileReader reader;
-
-        public AudioReader(AudioFileReader reader)
-        {
-            this.reader = reader;
-            WaveFormat = reader.WaveFormat;
-        }
-
-        public int Read(float[] buffer, int offset, int count)
-        {
-            if (isDisposed) return 0;
-            
-            int read = reader.Read(buffer, offset, count);
-
-            if (read == 0)
+            catch (Exception)
             {
-                reader.Dispose();
-                isDisposed = true;
+                Debug.Log("Sound file not found or not of valid type!",
+                    LogLevel.ERROR);
             }
 
-            return read;
+            audioData = null;
+            bitsPerSample = 0;
+            sampleRate = 0;
+            channels = 0;
+            soundFormat = 0;
+            buffer = 0;
+            source = 0;
+
+            Debug.Log("Audio clip could not be successfully created!",
+                LogLevel.ERROR);
         }
-    }
 
-    class SoundSample : ISampleProvider
-    {
-        private readonly AudioClip cachedSound;
-        private long position;
-
-        public SoundSample(AudioClip cachedSound) {
-            this.cachedSound = cachedSound;
-        }
-
-        public int Read(float[] buffer, int offset, int count)
+        public void Play(float volume = 1)
         {
-            var availableSamples = cachedSound.AudioData.Length - position;
-            var samplesToCopy = Math.Min(availableSamples, count);
-            Array.Copy(cachedSound.AudioData, position, buffer, offset, samplesToCopy);
-            position += samplesToCopy;
-            return (int)samplesToCopy;
+            AL.Listener(ALListenerf.Gain, volume);
+            AL.SourcePlay(source);
         }
-
-        public WaveFormat WaveFormat { get { return cachedSound.WaveFormat; } }
     }
 }
