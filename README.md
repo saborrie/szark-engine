@@ -2,7 +2,7 @@
 
 **You must have .Net Core SDK**
 
-1. Create a .Net Core Console Projects
+1. Create a .Net Core Console Project
 2. Use Nuget Package Manager to install SzarkEngine
 https://www.nuget.org/packages/SzarkEngine/1.0.5#
 3. Done!
