@@ -4,7 +4,8 @@ namespace Szark
 {
     public struct QuadData
     {
-        public readonly static int VAO, EBO;
+        public static int VAO { get; private set; }
+        public static int EBO { get; private set; }
 
         private readonly static float[] vertices =
         {
@@ -21,7 +22,7 @@ namespace Szark
             1, 2, 3
         };
 
-        static QuadData()
+        internal static void CreateQuadData()
         {
             VAO = GL.GenVertexArray();
             GL.BindVertexArray(VAO);

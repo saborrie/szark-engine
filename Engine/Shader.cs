@@ -21,7 +21,7 @@ namespace Szark
 
         private const string defaultVertex =
         @"
-            #version 400 
+            #version 420 
 
             layout(location = 0) in vec2 pos;
             layout(location = 1) in vec2 tex;
@@ -38,18 +38,18 @@ namespace Szark
 
         private const string defaultFragment =
         @"
-            #version 400
+            #version 420
 
             out vec4 FragColor;
             in vec2 texCoord;
             uniform sampler2D tex;
 
             void main() {
-                FragColor = texture(tex, vec2(texCoord.x, -texCoord.y));
+                FragColor = texture(tex, texCoord);
             } 
         ";
 
-        static Shader()
+        internal static void CreateDefaultShader()
         {
             Default = new Shader(defaultVertex, 
                 defaultFragment, "mvp");

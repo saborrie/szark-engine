@@ -10,7 +10,7 @@ namespace Szark
     /// s
     /// and may represent an image
     /// </summary>
-    public struct Sprite
+    public class Sprite
     {
         public int ID { get; private set; }
         public Shader Shader { get; set; }

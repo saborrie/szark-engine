@@ -5,7 +5,7 @@ namespace Szark
 {
     public static class SpriteExtensions
     {
-        private static float zRange = 100f;
+        private static readonly float zRange = 100f;
 
         /// <summary>
         /// Renders a sprite on screen with the GPU
@@ -14,19 +14,21 @@ namespace Szark
         public static void Render(this Sprite sprite, float x, 
             float y, float rotation = 0, float scale = 1, int layer = 1)
         {
-            GL.UseProgram(sprite.ID);
+            GL.UseProgram(sprite.Shader.ID);
 
             var engine = SzarkEngine.Context;
 
-            var mvp = Matrix4.CreateRotationZ(rotation);
-            mvp *= Matrix4.CreateTranslation(x / scale / sprite.Width, 
+            var mvp = Matrix4.Identity;
+
+            mvp *= Matrix4.CreateRotationZ(rotation);
+            mvp *= Matrix4.CreateTranslation(x / scale / sprite.Width,
                     y / scale / sprite.Height, layer / zRange);
             mvp *= Matrix4.CreateScale(scale, scale, 1);
             mvp *= Matrix4.CreateOrthographic(engine.Width * 2.0f / sprite.Width,
                 engine.Height * 2.0f / sprite.Height, -zRange, zRange);
 
             // Send matrices to the shader
-            GL.UniformMatrix4(sprite.Shader.MVP, 1, false, ref mvp.Row0.X);
+            GL.UniformMatrix4(sprite.Shader.MVP, false, ref mvp);
 
             // Bind texture the the shader
             GL.BindTexture(TextureTarget.Texture2D, sprite.ID);

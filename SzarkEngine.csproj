@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <OutputType>Library</OutputType>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <ApplicationIcon />
     <StartupObject />
     <FileUpgradeFlags>40</FileUpgradeFlags>
@@ -10,7 +10,7 @@
     <Version>1.0.6</Version>
     <Company />
     <Authors>Jakub Szarkowicz</Authors>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Description>This is a engine for creating 2D games, visuals, and custom shaders. This engine is a WIP and should be used in a .Net Core project.</Description>
     <Copyright>Jakub P. Szarkowicz</Copyright>
@@ -20,7 +20,7 @@
     <PackageTags>2D Engine</PackageTags>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="OpenTK.NetStandard" Version="1.0.7-prerelease" />
+    <PackageReference Include="OpenTK.NetStandard" Version="1.0.4" />
   </ItemGroup>
   <ItemGroup>
     <None Include="LICENSE">

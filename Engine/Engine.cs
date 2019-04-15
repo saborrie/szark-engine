@@ -52,14 +52,18 @@ namespace Szark
         /// <param name="pixelSize">Size of Each Pixel</param>
         public SzarkEngine(string title, int width, int height)
         {
-            Width = width;
-            Height = height;
             Title = title;
-
             window = new GameWindow(width, height,
                 GraphicsMode.Default, title);
 
+            window.WindowBorder = WindowBorder.Fixed;
+
+            Width = window.Width;
+            Height = window.Height;
+
             MakeContext();
+            QuadData.CreateQuadData();
+            Shader.CreateDefaultShader();
 
             window.Load += (s, f) => Start();
             window.RenderFrame += (s, f) => Render(f);
@@ -71,18 +75,17 @@ namespace Szark
                 Input.Update();
             };
 
+            GL.Enable(EnableCap.Texture2D);
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactor.SrcAlpha,
                 BlendingFactor.OneMinusSrcAlpha);
-            GL.Enable(EnableCap.Texture2D);
 
-            window.WindowBorder = WindowBorder.Fixed;
             window.Run();
         }
 
         private void Render(FrameEventArgs e)
         {
-            GL.Viewport(renderOffsetX, renderOffsetY, Width, Height);
+            GL.Viewport(renderOffsetX, renderOffsetY, window.Width, window.Height);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.ClearColor(Background.red, Background.green, Background.blue, 1);
 
