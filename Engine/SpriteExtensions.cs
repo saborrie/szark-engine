@@ -25,8 +25,8 @@ namespace Szark
             float posX = x / scale / sprite.Width;
             float posY = y / scale / sprite.Height;
 
-            var mvp = Matrix4.CreateTranslation(posX, posY, layer / zRange);
-            mvp *= Matrix4.CreateRotationZ(rotation);
+            var mvp = Matrix4.CreateRotationZ(rotation);
+            mvp *= Matrix4.CreateTranslation(posX, posY, layer / zRange);
             mvp *= Matrix4.CreateScale(scale, scale, 1);
 
             mvp *= Matrix4.CreateOrthographic(width, height, -zRange, zRange);

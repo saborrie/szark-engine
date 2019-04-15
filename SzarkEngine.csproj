@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
@@ -7,9 +7,26 @@
     <FileUpgradeFlags>40</FileUpgradeFlags>
     <UpgradeBackupLocation>C:\Users\Jakub\Documents\GitHub\SzarkEngine\Backup\</UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
+    <Version>1.0.6</Version>
+    <Company />
+    <Authors>Jakub Szarkowicz</Authors>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Description>This is a engine for creating 2D games, visuals, and custom shaders. This engine is a WIP and should be used in a .Net Core project.</Description>
+    <Copyright>Jakub P. Szarkowicz</Copyright>
+    <PackageProjectUrl>https://github.com/JakubSzark/SzarkEngine</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/JakubSzark/SzarkEngine</RepositoryUrl>
+    <RepositoryType>Github</RepositoryType>
+    <PackageTags>2D Engine</PackageTags>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="OpenTK.NETCore" Version="1.1.2749.6433" />
     <PackageReference Include="CoreCompat.System.Drawing" Version="1.0.0-beta006" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 </Project>
