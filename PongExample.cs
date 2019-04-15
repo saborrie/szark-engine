@@ -15,6 +15,7 @@ namespace Example
         private bool ballShot;
 
         private Sprite paddle, line, ball;
+        private Text text;
 
         PongExample() : base("Pong Example",
             1280, 720) { }
@@ -29,6 +30,8 @@ namespace Example
 
             ball = new Sprite(16, 16);
             ball.ClearToColor(Color.White);
+
+            text = new Text("Arial", 16);
         }
 
         protected override void Update(float deltaTime)
@@ -75,16 +78,12 @@ namespace Example
             {
                 ballShot = false;
                 playerScore++;
-                Debug.Log("Player Scored!");
-                Debug.Log($"{playerScore} | {enemyScore}");
             }
 
             if (ballPos.x < -Width)
             {
                 ballShot = false;
                 enemyScore++;
-                Debug.Log("Enemy Scored!");
-                Debug.Log($"{playerScore} | {enemyScore}");
             }
         }
 
@@ -94,6 +93,8 @@ namespace Example
             paddle.Render(Width - 64, enemyY);
             ball.Render(ballPos.x, ballPos.y);
             line.Render(0, 0);
+            text.DrawString(playerScore.ToString(), -64, Height - 128, 2);
+            text.DrawString(enemyScore.ToString(), 64, Height - 128, 2);
         }
 
         protected override void Destroyed() { }

@@ -74,8 +74,6 @@ namespace Szark
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha,
                 BlendingFactorDest.OneMinusSrcAlpha);
-
-            GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.Texture2D);
 
             window.WindowBorder = WindowBorder.Fixed;
