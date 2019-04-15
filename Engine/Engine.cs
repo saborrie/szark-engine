@@ -62,8 +62,6 @@ namespace Szark
             Height = window.Height;
 
             MakeContext();
-            QuadData.CreateQuadData();
-            Shader.CreateDefaultShader();
 
             window.Load += (s, f) => Start();
             window.RenderFrame += (s, f) => Render(f);

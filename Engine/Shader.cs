@@ -49,7 +49,7 @@ namespace Szark
             } 
         ";
 
-        internal static void CreateDefaultShader()
+        static Shader()
         {
             Default = new Shader(defaultVertex, 
                 defaultFragment, "mvp");

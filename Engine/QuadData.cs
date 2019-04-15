@@ -10,10 +10,10 @@ namespace Szark
         private readonly static float[] vertices =
         {
             // Vertices    // Texture Coords
-             1.0f,  1.0f,  1.0f, 1.0f,
-             1.0f, -1.0f,  1.0f, 0.0f,
-            -1.0f, -1.0f,  0.0f, 0.0f,
-            -1.0f,  1.0f,  0.0f, 1.0f
+             1.0f,  1.0f,  1.0f, 0.0f,
+             1.0f, -1.0f,  1.0f, 1.0f,
+            -1.0f, -1.0f,  0.0f, 1.0f,
+            -1.0f,  1.0f,  0.0f, 0.0f
         };
 
         private readonly static int[] indices =
@@ -22,7 +22,7 @@ namespace Szark
             1, 2, 3
         };
 
-        internal static void CreateQuadData()
+        static QuadData()
         {
             VAO = GL.GenVertexArray();
             GL.BindVertexArray(VAO);
