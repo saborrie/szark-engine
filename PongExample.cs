@@ -31,7 +31,7 @@ namespace Example
             ball = new Sprite(16, 16);
             ball.ClearToColor(Color.White);
 
-            text = new Text("Arial", 16);
+            text = new Text("Arial", 32);
         }
 
         protected override void Update(float deltaTime)
@@ -93,8 +93,8 @@ namespace Example
             paddle.Render(Width - 64, enemyY);
             ball.Render(ballPos.x, ballPos.y);
             line.Render(0, 0);
-            text.DrawString(playerScore.ToString(), -64, Height - 128, 2);
-            text.DrawString(enemyScore.ToString(), 64, Height - 128, 2);
+            text.DrawString(playerScore.ToString(), -64, Height - 128, 1);
+            text.DrawString(enemyScore.ToString(), 64, Height - 128, 1);
         }
 
         protected override void Destroyed() { }

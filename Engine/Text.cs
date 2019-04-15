@@ -24,6 +24,9 @@ namespace Szark
                 charBitmap.MakeTransparent();
 
                 graphics = Graphics.FromImage(charBitmap);
+                graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+                graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+
                 graphics.DrawString(c.ToString(), font, Brushes.White, 0, 0);
                 characters[index] = new Sprite(charBitmap.Width, charBitmap.Height);
 
