@@ -7,6 +7,8 @@ namespace Szark
     public static class Input
     {
         private static int offsetX, offsetY;
+        private static int mouseX, mouseY;
+
         private static KeyboardState keyboardState, lastKeyboardState;
         private static MouseState mouseState, lastMouseState;
 
@@ -14,12 +16,10 @@ namespace Szark
         private static SzarkEngine engine;
 
         public static int MouseX =>
-            engine.Fullscreen ? (gameWindow.Mouse.X - offsetX)
-                 : gameWindow.Mouse.X;
+            engine.Fullscreen ? (mouseX - offsetX) : mouseX;
 
         public static int MouseY =>
-            engine.Fullscreen ? (gameWindow.Mouse.Y - offsetY)
-                : gameWindow.Mouse.Y;
+            engine.Fullscreen ? (mouseY - offsetY) : mouseY;
 
         internal static void SetContext(GameWindow window, SzarkEngine engine)
         {
@@ -29,6 +29,7 @@ namespace Szark
                 gameWindow.KeyDown -= KeyDown;
                 gameWindow.MouseDown -= MouseDown;
                 gameWindow.MouseUp -= MouseUp;
+                gameWindow.MouseMove -= MouseMoved;
             }
 
             gameWindow = window;
@@ -38,6 +39,13 @@ namespace Szark
             gameWindow.KeyDown += KeyDown;
             gameWindow.MouseDown += MouseDown;
             gameWindow.MouseUp += MouseUp;
+            gameWindow.MouseMove += MouseMoved;
+        }
+
+        private static void MouseMoved(object sender, MouseMoveEventArgs e)
+        {
+            mouseX = e.X;
+            mouseY = e.Y;
         }
 
         internal static void UpdateOffsets()
