@@ -18,18 +18,19 @@ namespace Szark
 
             var engine = SzarkEngine.Context;
 
-            // Calculate the orthographic scale and position
-            float width = engine.Width * 2.0f / sprite.Width;
-            float height = engine.Height * 2.0f / sprite.Height;
+            var mvp = Matrix4.Identity;
 
-            float posX = x / scale / sprite.Width;
-            float posY = y / scale / sprite.Height;
+            if (rotation != 0)
+                mvp *= Matrix4.CreateRotationZ(rotation);
 
-            var mvp = Matrix4.CreateRotationZ(rotation);
-            mvp *= Matrix4.CreateTranslation(posX, posY, layer / zRange);
-            mvp *= Matrix4.CreateScale(scale, scale, 1);
+            mvp *= Matrix4.CreateTranslation(x / scale / sprite.Width, 
+                    y / scale / sprite.Height, layer / zRange);
 
-            mvp *= Matrix4.CreateOrthographic(width, height, -zRange, zRange);
+            if (scale != 1)
+                mvp *= Matrix4.CreateScale(scale, scale, 1);
+
+            mvp *= Matrix4.CreateOrthographic(engine.Width * 2.0f / sprite.Width,
+                engine.Height * 2.0f / sprite.Height, -zRange, zRange);
 
             // Send matrices to the shader
             GL.UniformMatrix4(sprite.Shader.MVP, 1, false, ref mvp.Row0.X);
