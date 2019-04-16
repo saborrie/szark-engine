@@ -17,15 +17,15 @@ namespace Szark
             GL.UseProgram(sprite.Shader.ID);
 
             var engine = SzarkEngine.Context;
+            float ratioX = sprite.Width * 0.5f, ratioY = sprite.Height * 0.5f;
+            float posX = x / ratioX, posY = y / ratioY;
 
             var mvp = Matrix4.Identity;
-
             mvp *= Matrix4.CreateRotationZ(rotation);
-            mvp *= Matrix4.CreateTranslation(x / scale / sprite.Width,
-                    y / scale / sprite.Height, layer / zRange);
             mvp *= Matrix4.CreateScale(scale, scale, 1);
-            mvp *= Matrix4.CreateOrthographic(engine.Width * 2.0f / sprite.Width,
-                engine.Height * 2.0f / sprite.Height, -zRange, zRange);
+            mvp *= Matrix4.CreateTranslation(posX + 1, posY + 1, layer / zRange);
+            mvp *= Matrix4.CreateOrthographicOffCenter(0, engine.Width / ratioX,
+                engine.Height / ratioY, 0, -zRange, zRange);
 
             // Send matrices to the shader
             GL.UniformMatrix4(sprite.Shader.MVP, false, ref mvp);

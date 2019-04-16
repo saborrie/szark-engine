@@ -83,7 +83,7 @@ namespace Szark
 
         private void Render(FrameEventArgs e)
         {
-            GL.Viewport(renderOffsetX, renderOffsetY, window.Width, window.Height);
+            GL.Viewport(renderOffsetX, renderOffsetY, Width, Height);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.ClearColor(Background.red, Background.green, Background.blue, 1);
 
