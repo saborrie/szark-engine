@@ -4,24 +4,26 @@ using System;
 
 namespace Szark
 {
+    /// <summary>
+    /// Holds the states of the keyboard and the mouse.
+    /// Use methods in the update thread for optimal accuracy.
+    /// </summary>
     public static class Input
     {
         private static int offsetX, offsetY;
-        private static int mouseX, mouseY;
-
         private static KeyboardState keyboardState, lastKeyboardState;
         private static MouseState mouseState, lastMouseState;
 
         private static GameWindow gameWindow;
         private static SzarkEngine engine;
 
-        public static int MouseX =>
-            engine.Fullscreen ? (mouseX - offsetX) : mouseX;
+        // -- Mouse Static Values --
 
-        public static int MouseY =>
-            engine.Fullscreen ? (mouseY - offsetY) : mouseY;
+        public static int MouseX => engine.Fullscreen ? (mouseState.X - offsetX) : mouseState.X;
+        public static int MouseY => engine.Fullscreen ? (mouseState.Y - offsetY) : mouseState.Y;
+        public static float MouseWheel { get; private set; }
 
-        public static float MouseWheelDelta { get; private set; }
+        // -- Internal Static Methods --
 
         internal static void SetContext(GameWindow window, SzarkEngine engine)
         {
@@ -31,8 +33,8 @@ namespace Szark
                 gameWindow.KeyDown -= KeyDown;
                 gameWindow.MouseDown -= MouseDown;
                 gameWindow.MouseUp -= MouseUp;
-                gameWindow.MouseMove -= MouseMoved;
-                gameWindow.MouseWheel -= MouseWheel;
+                gameWindow.MouseMove -= OnMouseMoved;
+                gameWindow.MouseWheel -= OnMouseWheel;
             }
 
             gameWindow = window;
@@ -42,19 +44,8 @@ namespace Szark
             gameWindow.KeyDown += KeyDown;
             gameWindow.MouseDown += MouseDown;
             gameWindow.MouseUp += MouseUp;
-            gameWindow.MouseMove += MouseMoved;
-            gameWindow.MouseWheel += MouseWheel;
-        }
-
-        private static void MouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            MouseWheelDelta = e.Value;
-        }
-
-        private static void MouseMoved(object sender, MouseMoveEventArgs e)
-        {
-            mouseX = e.X;
-            mouseY = e.Y;
+            gameWindow.MouseMove += OnMouseMoved;
+            gameWindow.MouseWheel += OnMouseWheel;
         }
 
         internal static void UpdateOffsets()
@@ -67,74 +58,42 @@ namespace Szark
         {
             lastKeyboardState = keyboardState;
             lastMouseState = mouseState;
-            if (MouseWheelDelta != 0)
-                MouseWheelDelta = 0;
+            MouseWheel = 0;
         }
 
-        private static void KeyDown(object sender, KeyboardKeyEventArgs e) =>
-            keyboardState = e.Keyboard;
+        // -- Window Input Events --
 
-        private static void KeyUp(object sender, KeyboardKeyEventArgs e) =>
-            keyboardState = e.Keyboard;
+        private static void KeyDown(object sender, KeyboardKeyEventArgs e) => keyboardState = e.Keyboard;
+        private static void KeyUp(object sender, KeyboardKeyEventArgs e) => keyboardState = e.Keyboard;
+        private static void MouseDown(object sender, MouseButtonEventArgs args) => mouseState = args.Mouse;
+        private static void MouseUp(object sender, MouseButtonEventArgs args) => mouseState = args.Mouse;
+        private static void OnMouseWheel(object sender, MouseWheelEventArgs e) => MouseWheel = e.Value;
+        private static void OnMouseMoved(object sender, MouseMoveEventArgs e) => mouseState = e.Mouse;
 
-        private static void MouseDown(object sender, MouseButtonEventArgs args) =>
-            mouseState = args.Mouse;
-
-        private static void MouseUp(object sender, MouseButtonEventArgs args) =>
-            mouseState = args.Mouse;
+        // -- Keyboard Static Methods --
 
         public static bool GetKey(Key key) => keyboardState[key];
+
+        public static bool GetKey(string key) =>
+            Enum.TryParse(key, out Key result) ? keyboardState[result] : false;
 
         public static bool GetKeyDown(Key key) =>
             keyboardState[key] && (keyboardState[key] != lastKeyboardState[key]);
 
+        public static bool GetKeyDown(string key) =>
+            Enum.TryParse(key, out Key result) ? keyboardState[result] && 
+                (keyboardState[result] != lastKeyboardState[result]) : false;
+
         public static bool GetKeyUp(Key key) =>
             lastKeyboardState[key] && (keyboardState[key] != lastKeyboardState[key]);
 
-        public static bool GetKey(string key)
-        {
-            if (Enum.TryParse(key, out Key result))
-                return keyboardState[result];
-            else
-            {
-                Debug.Log($"Key with value '{key}' does not exist!",
-                    LogLevel.WARNING);
-                return false;
-            }
-        }
+        public static bool GetKeyUp(string key) =>
+            Enum.TryParse(key, out Key result) ? lastKeyboardState[result] &&
+                (keyboardState[result] != lastKeyboardState[result]) : false;
 
-        public static bool GetKeyDown(string key)
-        {
-            if (Enum.TryParse(key, out Key result))
-            {
-                return keyboardState[result] && (keyboardState[result] !=
-                    lastKeyboardState[result]);
-            }
-            else
-            {
-                Debug.Log($"Key with value '{key}' does not exist!",
-                    LogLevel.WARNING);
-                return false;
-            }
-        }
+        // -- Mouse Static Methods --
 
-        public static bool GetKeyUp(string key)
-        {
-            if (Enum.TryParse(key, out Key result))
-            {
-                return lastKeyboardState[result] && (keyboardState[result] !=
-                    lastKeyboardState[result]);
-            }
-            else
-            {
-                Debug.Log($"Key with value '{key}' does not exist!",
-                    LogLevel.WARNING);
-                return false;
-            }
-        }
-
-        public static bool GetMouseButton(MouseButton button) =>
-            mouseState[button];
+        public static bool GetMouseButton(MouseButton button) => mouseState[button];
 
         public static bool GetMouseButtonDown(MouseButton button) =>
             mouseState[button] && (mouseState[button] != lastMouseState[button]);

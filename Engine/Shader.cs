@@ -14,9 +14,6 @@ namespace Szark
         /// </summary>
         public int MVP { get; private set; }
 
-        /// <summary>
-        /// A Ordinary Sprite Shader
-        /// </summary>
         public static Shader Default { get; private set; }
 
         private const string defaultVertex =
@@ -49,18 +46,14 @@ namespace Szark
             } 
         ";
 
-        static Shader()
-        {
+        static Shader() =>
             Default = new Shader(defaultVertex, 
                 defaultFragment, "mvp");
-        }
 
         /// <summary>
-        /// Creates a Shader Program from a Vertex Shader and a Fragment Shader
+        /// Creates a Shader Program from a
+        /// vertex shader and a fragment shader
         /// </summary>
-        /// <param name="vertexShader">Vertex Shader</param>
-        /// <param name="fragmentShader">Fragment Shader</param>
-        /// <returns>Shader Program ID</returns>
         public Shader(string vertexShader, string fragmentShader, string mvp)
         {
             int vertexShaderID = GL.CreateShader(ShaderType.VertexShader);
