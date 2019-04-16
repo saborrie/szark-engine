@@ -21,6 +21,8 @@ namespace Szark
         public static int MouseY =>
             engine.Fullscreen ? (mouseY - offsetY) : mouseY;
 
+        public static float MouseWheelDelta { get; private set; }
+
         internal static void SetContext(GameWindow window, SzarkEngine engine)
         {
             if (gameWindow != null)
@@ -30,6 +32,7 @@ namespace Szark
                 gameWindow.MouseDown -= MouseDown;
                 gameWindow.MouseUp -= MouseUp;
                 gameWindow.MouseMove -= MouseMoved;
+                gameWindow.MouseWheel -= MouseWheel;
             }
 
             gameWindow = window;
@@ -40,6 +43,12 @@ namespace Szark
             gameWindow.MouseDown += MouseDown;
             gameWindow.MouseUp += MouseUp;
             gameWindow.MouseMove += MouseMoved;
+            gameWindow.MouseWheel += MouseWheel;
+        }
+
+        private static void MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            MouseWheelDelta = e.Value;
         }
 
         private static void MouseMoved(object sender, MouseMoveEventArgs e)
@@ -58,6 +67,8 @@ namespace Szark
         {
             lastKeyboardState = keyboardState;
             lastMouseState = mouseState;
+            if (MouseWheelDelta != 0)
+                MouseWheelDelta = 0;
         }
 
         private static void KeyDown(object sender, KeyboardKeyEventArgs e) =>
