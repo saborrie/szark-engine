@@ -20,9 +20,6 @@ namespace Szark
         public int Height { get; private set; }
         public Color Background { get; set; }
 
-        public float TargetUPS { get; set; }
-        public float TargetFPS { get; set; }
-
         protected PerformanceMonitor Monitor { private set; get; }
 
         public bool Fullscreen
@@ -42,6 +39,12 @@ namespace Szark
             get => window.VSync == VSyncMode.On;
             set => window.VSync = value ? 
                 VSyncMode.On : VSyncMode.Off;
+        }
+
+        public float TargetFPS
+        {
+            get => (float)window.TargetRenderFrequency;
+            set => window.TargetRenderFrequency = value;
         }
 
         private int renderOffsetX, renderOffsetY;
@@ -78,9 +81,6 @@ namespace Szark
 
         private void Update(FrameEventArgs e)
         {
-            window.TargetRenderFrequency = TargetFPS;
-            window.TargetUpdateFrequency = TargetUPS;
-
             Update((float)e.Time);
             Monitor.Update((float)e.Time);
             Input.Update();
