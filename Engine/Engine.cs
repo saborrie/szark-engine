@@ -16,11 +16,27 @@ namespace Szark
         public static SzarkEngine Context { get; private set; }
 
         public string Title { get; set; }
-        public int Width { get; private set; }
-        public int Height { get; private set; }
         public Color Background { get; set; }
 
         protected PerformanceMonitor Monitor { private set; get; }
+
+        public WindowBorder WindowBorder
+        {
+            get => window.WindowBorder;
+            set => window.WindowBorder = value;
+        }
+
+        public int Width
+        {
+            get => window.Width;
+            set => window.Width = value;
+        }
+
+        public int Height
+        {
+            get => window.Height;
+            set => window.Height = value;
+        }
 
         public bool Fullscreen
         {
@@ -53,14 +69,13 @@ namespace Szark
         /// <summary>
         /// Creates a window and starts OpenGL.
         /// </summary>
-        public SzarkEngine(string title, int width, int height)
+        public SzarkEngine(string title, int width, int height, bool resizable = false)
         {
             window = new GameWindow(width, height,
                 GraphicsMode.Default, title);
-            window.WindowBorder = WindowBorder.Fixed;
+            window.WindowBorder = resizable ? WindowBorder.Resizable :
+                WindowBorder.Fixed;
 
-            Width = window.Width;
-            Height = window.Height;
             Title = window.Title;
 
             MakeContext();
@@ -90,7 +105,7 @@ namespace Szark
         {
             GL.Viewport(renderOffsetX, renderOffsetY, Width, Height);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            GL.ClearColor(Background.red, Background.green, Background.blue, 1);
+            GL.ClearColor(Background.red / 255f, Background.green / 255f, Background.blue / 255f, 1);
 
             Draw((float)e.Time);
             Monitor.Render((float)e.Time);

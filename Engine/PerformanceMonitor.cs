@@ -40,8 +40,8 @@ namespace Szark
                 process.Refresh();
             }
 
-            text.DrawString($"FPS: {(int)FPS}, UPS: {(int)UPS}", 0, 0, 1, 1, -8);
-            text.DrawString($"Memory Usage: {(int)(process.PrivateMemorySize64 / 1e+6)}MB", 0, 20, 1, 1, -8);
+            text.DrawString($"FPS: {(int)FPS}, UPS: {(int)UPS}", 0f, 0f);
+            text.DrawString($"Memory Usage: {(int)(process.PrivateMemorySize64 / 1e+6)}MB", 0f, 20f);
         }
     }
 }
