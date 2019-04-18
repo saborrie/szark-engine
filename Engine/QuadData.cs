@@ -10,10 +10,10 @@ namespace Szark
         private readonly static float[] vertices =
         {
             // Vertices    // Texture Coords
-             1.0f,  1.0f,  1.0f, 0.0f,
-             1.0f, -1.0f,  1.0f, 1.0f,
-            -1.0f, -1.0f,  0.0f, 1.0f,
-            -1.0f,  1.0f,  0.0f, 0.0f
+             1.0f,  1.0f,  1.0f, 1.0f,
+             1.0f, -1.0f,  1.0f, 0.0f,
+            -1.0f, -1.0f,  0.0f, 0.0f,
+            -1.0f,  1.0f,  0.0f, 1.0f
         };
 
         private readonly static int[] indices =

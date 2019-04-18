@@ -1,6 +1,6 @@
 ﻿using OpenTK;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
+using OpenTK.Graphics;
 
 namespace Szark
 {
@@ -10,16 +10,33 @@ namespace Szark
     /// </summary>
     public abstract class SzarkEngine
     {
+        /// <summary>
+        /// The Currently Focused Window / Engine
+        /// </summary>
         public static SzarkEngine Context { get; private set; }
 
         public string Title { get; set; }
-
-        public int Width { get; private set; }
-        public int Height { get; private set; }
-        public int FPS { get; private set; }
-
-        public bool ShowFPS { get; set; } = true;
         public Color Background { get; set; }
+
+        protected PerformanceMonitor Monitor { private set; get; }
+
+        public WindowBorder WindowBorder
+        {
+            get => window.WindowBorder;
+            set => window.WindowBorder = value;
+        }
+
+        public int Width
+        {
+            get => window.Width;
+            set => window.Width = value;
+        }
+
+        public int Height
+        {
+            get => window.Height;
+            set => window.Height = value;
+        }
 
         public bool Fullscreen
         {
@@ -40,63 +57,58 @@ namespace Szark
                 VSyncMode.On : VSyncMode.Off;
         }
 
-        private double lastFPSCheck;
+        public float TargetFPS
+        {
+            get => (float)window.TargetRenderFrequency;
+            set => window.TargetRenderFrequency = value;
+        }
+
         private int renderOffsetX, renderOffsetY;
         private readonly GameWindow window;
 
         /// <summary>
         /// Creates a window and starts OpenGL.
         /// </summary>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        /// <param name="pixelSize">Size of Each Pixel</param>
-        public SzarkEngine(string title, int width, int height)
+        public SzarkEngine(string title, int width, int height, bool resizable = false)
         {
-            Title = title;
             window = new GameWindow(width, height,
                 GraphicsMode.Default, title);
+            window.WindowBorder = resizable ? WindowBorder.Resizable :
+                WindowBorder.Fixed;
 
-            window.WindowBorder = WindowBorder.Fixed;
-
-            Width = window.Width;
-            Height = window.Height;
+            Title = window.Title;
 
             MakeContext();
 
             window.Load += (s, f) => Start();
             window.RenderFrame += (s, f) => Render(f);
+            window.UpdateFrame += (s, f) => Update(f);
             window.Disposed += (s, f) => Destroyed();
-
-            window.UpdateFrame += (s, f) =>
-            {
-                Update((float)f.Time);
-                Input.Update();
-            };
 
             GL.Enable(EnableCap.Texture2D);
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactor.SrcAlpha,
                 BlendingFactor.OneMinusSrcAlpha);
 
+            Monitor = new PerformanceMonitor();
             window.Run();
+        }
+
+        private void Update(FrameEventArgs e)
+        {
+            Update((float)e.Time);
+            Monitor.Update((float)e.Time);
+            Input.Update();
         }
 
         private void Render(FrameEventArgs e)
         {
             GL.Viewport(renderOffsetX, renderOffsetY, Width, Height);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            GL.ClearColor(Background.red, Background.green, Background.blue, 1);
+            GL.ClearColor(Background.red / 255f, Background.green / 255f, Background.blue / 255f, 1);
 
             Draw((float)e.Time);
-
-            if ((lastFPSCheck += e.Time) > 1)
-            {
-                FPS = (int)(1 / e.Time);
-                window.Title = $"{Title} " + (ShowFPS ?
-                    $"| FPS: {FPS}" : "");
-                lastFPSCheck = 0;
-            }
-
+            Monitor.Render((float)e.Time);
             window.SwapBuffers();
         }
 

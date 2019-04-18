@@ -2,9 +2,6 @@ using System;
 
 namespace Szark
 {
-    /// <summary>
-    /// A struct containing RGBA information.
-    /// </summary>
     public struct Color
     {
         public byte red, green, blue, alpha;
@@ -14,10 +11,6 @@ namespace Szark
         /// Alpha is not required and will just render
         /// completely opaque.
         /// </summary>
-        /// <param name="red">Red</param>
-        /// <param name="green">Green</param>
-        /// <param name="blue">Blue</param>
-        /// <param name="alpha">Alpha</param>
         public Color(byte red, byte green, byte blue, byte alpha = 255)
         {
             this.red = red;
@@ -26,33 +19,26 @@ namespace Szark
             this.alpha = alpha;
         }
 
-        #region Preset Constants
+        // -- Constants --
 
-        // Greyscale Colors
         public readonly static Color Clear = new Color(0, 0, 0, 0);
         public readonly static Color White = new Color(255, 255, 255);
         public readonly static Color Grey = new Color(192, 192, 192);
         public readonly static Color Black = new Color(0, 0, 0);
 
-        // RGB Colors
         public readonly static Color Red = new Color(255, 0, 0);
         public readonly static Color Green = new Color(0, 255, 0);
         public readonly static Color Blue = new Color(0, 0, 255);
 
-        // CYM Colors
         public readonly static Color Yellow = new Color(255, 255, 0);
         public readonly static Color Magenta = new Color(255, 0, 255);
         public readonly static Color Cyan = new Color(0, 255, 255);
 
-        #endregion
+        // -- Methods --
 
         /// <summary>
-        /// Interpolates two colors
+        /// Interpolates between two colors
         /// </summary>
-        /// <param name="first">First Color</param>
-        /// <param name="second">Second Color</param>
-        /// <param name="value">Mix Value (0-1)</param>
-        /// <returns>The Blended Color</returns>
         public static Color Lerp(Color first, Color second, float value)
         {
             var red = (byte)((1 - value) * first.red + value * second.red);
@@ -64,69 +50,54 @@ namespace Szark
         }
 
         /// <summary>
-        /// Compares this color to another
+        /// Creates a Color from HSV
         /// </summary>
-        /// <returns>If both colors are the same</returns>
-        public bool Compare(Color other) =>
-            other.red == red && other.green == green &&
-                other.blue == blue && other.alpha == alpha;
-
-        /// <summary>
-        /// Creates a instance of Color from HSV color
-        /// </summary>
-        /// <param name="h">Hue</param>
+        /// <param name="H">Hue</param>
         /// <param name="S">Saturation</param>
         /// <param name="V">Value</param>
         /// <param name="alpha">Alpha</param>
-        /// <returns></returns>
-        public static Color FromHSV(double h, double S, double V, byte alpha = 255)
+        public static Color FromHSV(float H, float S, float V, byte alpha = 255)
         {
-            double H = h;
-            double R, G, B;
+            float R, G, B;
+            float hf = (H %= 360) / 60.0f;
+            int i = (int)Math.Floor(hf);
 
-            while (H < 0) { H += 360; };
-            while (H >= 360) { H -= 360; };
-        
-            if (V <= 0) { R = G = B = 0; }
-            else if (S <= 0) { R = G = B = V; }
-            else
+            float pv = V * (1 - S);
+            float qv = V * (1 - S * (hf - i));
+            float tv = V * (1 - S * (1 - (hf - i)));
+
+            switch (i)
             {
-                double hf = H / 60.0;
-                int i = (int)Math.Floor(hf);
-                double f = hf - i;
-                double pv = V * (1 - S);
-                double qv = V * (1 - S * f);
-                double tv = V * (1 - S * (1 - f));
-                switch (i)
-                {
-                    case 0: R = V;  G = tv; B = pv; break;
-                    case 1: R = qv; G = V;  B = pv; break;
-                    case 2: R = pv; G = V;  B = tv; break;
-                    case 3: R = pv; G = qv; B = V; break;
-                    case 4: R = tv; G = pv; B = V; break;
-                    case 5: R = V;  G = pv; B = qv; break;
-                    case 6: R = V;  G = tv; B = pv; break;
-                    case -1: R = V; G = pv; B = qv; break;
-                    default: R = G = B = V; break;
-                }
+                case 0:  R = V;  G = tv; B = pv; break;
+                case 1:  R = qv; G = V;  B = pv; break;
+                case 2:  R = pv; G = V;  B = tv; break;
+                case 3:  R = pv; G = qv; B = V;  break;
+                case 4:  R = tv; G = pv; B = V;  break;
+                default: R = V;  G = pv; B = qv; break;
             }
 
-            return new Color(
-                ByteClamp((byte)(R * 255.0)), 
-                ByteClamp((byte)(G * 255.0)), 
-                ByteClamp((byte)(B * 255.0)), 
-                alpha);
+            return new Color((byte)(R * 255.0), 
+                (byte)(G * 255.0), (byte)(B * 255.0), alpha);
         }
 
-
-        private static byte ByteClamp(byte i)
+        public override bool Equals(object obj)
         {
-            if (i < 0) return 0;
-            if (i > 255) return 255;
-            return i;
+            return obj is Color color && red == color.red &&
+                green == color.green && blue == color.blue &&
+                   alpha == color.alpha;
         }
 
-        // -- Operators --
+        public override int GetHashCode()
+        {
+            var hashCode = 0;
+            hashCode = (hashCode * 397) ^ red;
+            hashCode = (hashCode * 397) ^ green;
+            hashCode = (hashCode * 397) ^ blue;
+            hashCode = (hashCode * 397) ^ alpha;
+            return hashCode;
+        }
+
+        // -- Arithmetic Operators --
 
         public static Color operator +(Color f, Color p) =>
             new Color((byte)(f.red + p.red), (byte)(f.green + p.green),
@@ -139,5 +110,15 @@ namespace Szark
         public static Color operator *(Color f, float t) =>
             new Color((byte)(f.red * t), (byte)(f.green * t),
                 (byte)(f.blue * t), (byte)(f.alpha * t));
+
+        // -- Equality Operators --
+
+        public static bool operator ==(Color a, Color b) =>
+            a.red == b.red && a.green == b.green && 
+                a.blue == b.blue && a.alpha == b.alpha;
+
+        public static bool operator !=(Color a, Color b) =>
+            a.red != b.red || a.green != b.green || 
+                a.blue != b.blue || a.alpha != b.alpha;
     }
 }

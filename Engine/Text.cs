@@ -2,15 +2,23 @@
 
 namespace Szark
 {
-    public class Text
+    public sealed class Text
     {
+        public float X { get; set; }
+        public float Y { get; set; }
+
+        public string FontFamily { get; private set; }
+        public float FontSize { get; private set; }
+
         private readonly Sprite[] characters;
         private const string charSheet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()-=_+[]{}\\|;:'\".,<>/?`~ ";
 
         public Text(string fontFamily, float fontSize)
         {
-            characters = new Sprite[charSheet.Length];
+            FontFamily = fontFamily;
+            FontSize = fontSize;
 
+            characters = new Sprite[charSheet.Length];
             int index = 0;
 
             foreach (var c in charSheet)
@@ -47,22 +55,26 @@ namespace Szark
             }
         }
 
-        public void DrawString(string text, float x, float y, float scale = 1, int spacing = 8, int layer = 1)
+        public float DrawString(string text, float x, float y, int spacing = -8, float scale = 1, int layer = 1)
+        {
+            X = x;
+            Y = y;
+            return DrawString(text, spacing, scale, layer);
+        }
+
+        public float DrawString(string text, int spacing = -8, float scale = 1, int layer = 1)
         {
             float space = 0;
 
             for (int i = 0; i < text.Length; i++)
             {
                 int charIndex = charSheet.IndexOf(text[i]);
-
-                int nextIndex = 0;
-                if (i < text.Length - 1)
-                    nextIndex = charSheet.IndexOf(text[i + 1]);
-
-                characters[charIndex].Render(x + space, y, 0, scale, layer);
-                space += characters[charIndex].Width * 0.5f + 
-                    characters[nextIndex].Width * 0.5f + spacing;
+                characters[charIndex].Render(X + space, Y, 0, scale, layer);
+                space += characters[charIndex].Width + spacing;
+                if (text[i] == ' ') space += FontSize + spacing;
             }
+
+            return space;
         }
 
         public void SetShader(Shader shader)

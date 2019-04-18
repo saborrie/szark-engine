@@ -5,13 +5,11 @@ using OpenTK.Graphics.OpenGL4;
 
 namespace Szark
 {
-    /// <summary>
-    /// A Class that contains an array of 
-    /// s
-    /// and may represent an image
-    /// </summary>
-    public class Sprite
+    public sealed class Sprite
     {
+        /// <summary>
+        /// The OpenGL texture ID of the Sprite
+        /// </summary>
         public int ID { get; private set; }
         public Shader Shader { get; set; }
 
@@ -22,8 +20,6 @@ namespace Szark
         /// <summary>
         /// Constructor for a blank sprite
         /// </summary>
-        /// <param name="width">Width</param>
-        /// <param name="height">Height</param>
         public Sprite(int width, int height)
         {
             Width = width;
@@ -38,7 +34,6 @@ namespace Szark
         /// <summary>
         /// Constructor to make a hard copy of another sprite
         /// </summary>
-        /// <param name="other"></param>
         public Sprite(Sprite other)
         {
             Width = other.Width;
@@ -57,7 +52,6 @@ namespace Szark
         /// Constructor for a sprite that will
         /// be retrieved from a file on the computer
         /// </summary>
-        /// <param name="path">The Path on the Computer</param>
         public Sprite(string path)
         {
             Width = 1;
@@ -114,9 +108,6 @@ namespace Szark
         /// <summary>
         /// Retrieves a pixel from the sprite
         /// </summary>
-        /// <param name="x">X</param>
-        /// <param name="y">Y</param>
-        /// <returns>A Pixel</returns>
         public Color GetPixel(int x, int y)
         {
             if (x >= 0 && x < Width && y >= 0 && y < Height)
@@ -127,9 +118,6 @@ namespace Szark
         /// <summary>
         /// Sets a pixel in the sprite
         /// </summary>
-        /// <param name="x">X</param>
-        /// <param name="y">Y</param>
-        /// <param name="color">Pixel Replacement</param>
         public void SetPixel(int x, int y, Color p)
         {
             if (x >= 0 && x < Width && y >= 0 && y < Height)
@@ -139,7 +127,6 @@ namespace Szark
         /// <summary>
         /// Clears the sprite to a specific color
         /// </summary>
-        /// <param name="p">Pixel / Color</param>
         public void ClearToColor(Color p)
         {
             for(int i = 0; i < Pixels.Length; i++)
