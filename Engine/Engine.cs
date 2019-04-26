@@ -97,7 +97,6 @@ namespace Szark
         private void Update(FrameEventArgs e)
         {
             Update((float)e.Time);
-            Monitor.Update((float)e.Time);
             Input.Update();
         }
 

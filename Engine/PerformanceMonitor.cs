@@ -1,32 +1,15 @@
-﻿using System.Diagnostics;
-
-namespace Szark
+﻿namespace Szark
 {
     public sealed class PerformanceMonitor
     {
         public bool Active { get; set; } = true;
         public float FPS { get; private set; }
-        public float UPS { get; private set; }
 
-        private float lastUPS, lastFPS;
-        private readonly Process process;
+        private float lastFPS;
         private readonly Text text;
 
-        internal PerformanceMonitor()
-        {
-            text = new Text("Arial", 16);
-            process = Process.GetCurrentProcess();
-        }
-
-        internal void Update(float dt)
-        {
-            if (!Active) return;
-
-            if ((lastUPS += dt) > 1)
-            {
-                UPS = (int)(1 / dt);
-                lastUPS = 0;
-            }
+        internal PerformanceMonitor() {
+            text = new Text("", "Arial", 16);
         }
 
         internal void Render(float dt)
@@ -37,11 +20,10 @@ namespace Szark
             {
                 FPS = (int)(1 / dt);
                 lastFPS = 0;
-                process.Refresh();
+                text.Set($"FPS: {(int)FPS}", "Arial", 16);
             }
 
-            text.DrawString($"FPS: {(int)FPS}, UPS: {(int)UPS}", 0f, 0f);
-            text.DrawString($"Memory Usage: {(int)(process.PrivateMemorySize64 / 1e+6)}MB", 0f, 20f);
+            text.Render();
         }
     }
 }
