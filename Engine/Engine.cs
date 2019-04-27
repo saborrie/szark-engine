@@ -113,7 +113,7 @@ namespace Szark
 
         /// <summary>
         /// Makes this instance of the Engine the
-        /// prefered focused instance.
+        /// preferred focused instance.
         /// </summary>
         public void MakeContext()
         {
