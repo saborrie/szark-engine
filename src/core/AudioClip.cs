@@ -5,12 +5,9 @@ using System;
 
 namespace Szark
 {
-    public class AudioClip
+    public sealed class AudioClip
     {
-        private readonly int buffer, channels;
-        private readonly int source, bitsPerSample, sampleRate;
-        private readonly ALFormat soundFormat;
-        private readonly byte[] audioData;
+        private readonly int source;
 
         // Check to see if OpenAL is Installed
         static AudioClip()
@@ -44,17 +41,18 @@ namespace Szark
 
                         int format_chunk_size = reader.ReadInt32();
                         int audio_format = reader.ReadInt16();
-                        channels = reader.ReadInt16();
-                        sampleRate = reader.ReadInt32();
+                        var channels = reader.ReadInt16();
+                        var sampleRate = reader.ReadInt32();
                         int byte_rate = reader.ReadInt32();
                         int block_align = reader.ReadInt16();
-                        bitsPerSample = reader.ReadInt16();
+                        var bitsPerSample = reader.ReadInt16();
 
                         string data_signature = new string(reader.ReadChars(4));
                         if (data_signature != "data") throw new NotSupportedException();
                         int data_chunk_size = reader.ReadInt32();
 
-                        audioData = reader.ReadBytes((int)reader.BaseStream.Length);
+                        var audioData = reader.ReadBytes((int)reader.BaseStream.Length);
+                        ALFormat soundFormat;
 
                         switch (channels)
                         {
@@ -68,7 +66,7 @@ namespace Szark
                             default: throw new NotSupportedException();
                         }
 
-                        buffer = AL.GenBuffer();
+                        var buffer = AL.GenBuffer();
                         source = AL.GenSource();
 
                         AL.BufferData(buffer, soundFormat, audioData, audioData.Length, sampleRate);

@@ -4,9 +4,6 @@ namespace Szark
 {
     public sealed class Graphics2D
     {
-        /// <summary>
-        /// The current frame or sprite that is being drawn on
-        /// </summary>
         public Texture Target { get; set; }
 
         public Graphics2D(int width, int height) =>
@@ -15,15 +12,9 @@ namespace Szark
         public Graphics2D(Texture tex) =>
             Target = tex;
 
-        /// <summary>
-        /// Draws a pixel on the screen
-        /// </summary>
         public void Draw(int x, int y, Color color) =>
             Target.Set(x, y, color);
 
-        /// <summary>
-        /// Draws a line
-        /// </summary>
         public void DrawLine(int x1, int y1, int x2, int y2, Color color, int thickness = 1)
         {
             float x, y, step;
@@ -59,9 +50,6 @@ namespace Szark
             }
         }
 
-        /// <summary>
-        /// Draws a rectangle outline
-        /// </summary>
         public void DrawRectangle(int x, int y, int w, int h, Color color)
         {
             if (w < 0)
@@ -76,9 +64,6 @@ namespace Szark
             DrawLine(x, y, x, y + h, color);
         }
 
-        /// <summary>
-        /// Draws a filled In rectangle
-        /// </summary>
         public void FillRectangle(int x, int y, int w, int h, Color color)
         {
             for (int i = 0; i < w; i++)
@@ -86,9 +71,6 @@ namespace Szark
                     Draw(x + i, y + j, color);
         }
 
-        /// <summary>
-        /// Draws a circle outline
-        /// </summary>
         public void DrawCircle(int x0, int y0, int r, Color color)
         {
             x0 += r - 1;
@@ -127,9 +109,6 @@ namespace Szark
             }
         }
 
-        /// <summary>
-        /// Draws a filled in circle
-        /// </summary>
         public void FillCircle(int x, int y, int r, Color color)
         {
             for (int i = 0; i < r * 2; i++)
@@ -142,9 +121,6 @@ namespace Szark
             }
         }
 
-        /// <summary>
-        /// Draw a triangle outline
-        /// </summary>
         public void DrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Color color)
         {
             DrawLine(x1, y1, x2, y2, color);
@@ -152,9 +128,6 @@ namespace Szark
             DrawLine(x1, y1, x3, y3, color);
         }
 
-        /// <summary>
-        /// Draws a filled in triangle
-        /// </summary>
         public void FillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Color color)
         {
             float Sign(int aX, int aY, int bX, int bY, int cX, int cY) =>
@@ -186,14 +159,11 @@ namespace Szark
             }
         }
 
-        /// <summary>
-        /// Draws a sprite on the screen
-        /// </summary>
-        public void DrawSprite(int x, int y, Texture sprite, int scale = 1)
+        public void DrawTexture(int x, int y, Texture sprite, int scale = 1)
         {
             if (scale <= 0) return;
-            for (int i = 0; i < sprite.Width; i++)
-                for (int j = 0; j < sprite.Height; j++)
+            for (int i = 0; i < sprite.width; i++)
+                for (int j = 0; j < sprite.height; j++)
                     FillRectangle((x + i) * scale, (y + j) * scale,
                         scale, scale, sprite.Get(i, j));
         }

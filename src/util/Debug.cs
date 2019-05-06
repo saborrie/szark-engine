@@ -8,25 +8,23 @@ namespace Szark
         /// <summary>
         /// Logs a message to the console
         /// </summary>
-        /// <param name="text">The Message</param>
-        /// <param name="level">Level of Importance</param>
-        public static void Log(string text, LogLevel level = LogLevel.INFO)
+        public static void Log(object obj, LogLevel level = LogLevel.INFO)
         {
             switch(level)
             {
                 case LogLevel.INFO:
                     Console.ForegroundColor = ConsoleColor.White;
-                    Console.WriteLine($"[INFO]: {text}");
+                    Console.WriteLine($"[INFO]: {obj.ToString()}");
                     break;
 
                 case LogLevel.WARNING:
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine($"[WARNING]: {text}");
+                    Console.WriteLine($"[WARNING]: {obj.ToString()}");
                     break;
 
                 case LogLevel.ERROR:
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"[ERROR]: {text}");
+                    Console.WriteLine($"[ERROR]: {obj.ToString()}");
                     break;
             }
 
@@ -34,17 +32,15 @@ namespace Szark
         }
 
         /// <summary>
-        /// Creates a Stopwatch and times the action provided
+        /// Creates a Stopwatch and times the action
         /// </summary>
-        /// <param name="action">The action to be performed</param>
-        /// <returns>The time it took in milliseconds</returns>
-        public static float Stopwatch(Action action)
+        public static TimeSpan Stopwatch(Action action)
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             action();
             stopwatch.Stop();
-            return stopwatch.ElapsedMilliseconds;
+            return stopwatch.Elapsed;
         }
     }
 

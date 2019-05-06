@@ -4,22 +4,22 @@ namespace Szark
 {
     public sealed class Sprite
     {
-        public int ID { get; private set; }
+        public readonly int id;
+        public readonly int width, height;
+
         public Shader Shader { get; set; }
-        public int Width { get; private set; }
-        public int Height { get; private set; }
 
         public Sprite(Texture texture)
         {
-            ID = GL.GenTexture();
+            id = GL.GenTexture();
             Shader = Shader.Default;
 
-            Width = texture.Width;
-            Height = texture.Height;
+            width = texture.width;
+            height = texture.height;
 
-            GL.BindTexture(TextureTarget.Texture2D, ID);
+            GL.BindTexture(TextureTarget.Texture2D, id);
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba,
-                texture.Width, texture.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte,
+                texture.width, texture.height, 0, PixelFormat.Rgba, PixelType.UnsignedByte,
                     texture.Pixels);
 
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
@@ -30,7 +30,7 @@ namespace Szark
 
         public void Refresh(Texture texture)
         {
-            GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, texture.Width, texture.Height,
+            GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, texture.width, texture.height,
                 PixelFormat.Rgba, PixelType.UnsignedByte, texture.Pixels);
         }
     }

@@ -5,14 +5,13 @@ namespace Szark
 {
     public sealed class Texture
     {
-        public int Width { get; private set; }
-        public int Height { get; private set; }        
+        public readonly int width, height;        
         public Color[] Pixels { get; set; }
 
         public Texture(int width, int height)
         {
-            Width = width;
-            Height = height;
+            this.width = width;
+            this.height = height;
             Pixels = new Color[width * height];
         }
 
@@ -23,10 +22,10 @@ namespace Szark
                 var image = Image.FromFile(path);
                 var bitmap = new Bitmap(image);
 
-                Width = bitmap.Width;
-                Height = bitmap.Height;
+                width = bitmap.Width;
+                height = bitmap.Height;
 
-                Pixels = new Color[Width * Height];
+                Pixels = new Color[width * height];
 
                 for (var x = 0; x < bitmap.Width; x++)
                 {
@@ -51,8 +50,8 @@ namespace Szark
         /// </summary>
         public Color Get(int x, int y)
         {
-            if (x >= 0 && x < Width && y >= 0 && y < Height)
-                return Pixels[y * Width + x];
+            if (x >= 0 && x < width && y >= 0 && y < height)
+                return Pixels[y * width + x];
             else return new Color();
         }
 
@@ -61,8 +60,8 @@ namespace Szark
         /// </summary>
         public void Set(int x, int y, Color color)
         {
-            if (x >= 0 && x < Width && y >= 0 && y < Height)
-                Pixels[y * Width + x] = color;
+            if (x >= 0 && x < width && y >= 0 && y < height)
+                Pixels[y * width + x] = color;
         }
 
         /// <summary>

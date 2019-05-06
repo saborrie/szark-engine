@@ -2,16 +2,9 @@
 
 namespace Szark
 {
-    public struct Shader
+    public sealed class Shader
     {
-        /// <summary>
-        /// Program ID for the Shader
-        /// </summary>
         public int ID { get; private set; }
-
-        /// <summary>
-        /// The MVP Location
-        /// </summary>
         public int MVP { get; private set; }
 
         public static Shader Default { get; private set; }

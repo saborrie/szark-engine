@@ -23,9 +23,9 @@ namespace Szark
             var result = new Texture(charBitmap.Width, charBitmap.Height);
             graphics.Flush();
 
-            for (int i = 0; i < result.Width; i++)
+            for (int i = 0; i < result.width; i++)
             {
-                for (int j = 0; j < result.Height; j++)
+                for (int j = 0; j < result.height; j++)
                 {
                     var pixel = charBitmap.GetPixel(i, j);
                     result.Set(i, j, new Color(pixel.R, pixel.G, pixel.B, pixel.A));

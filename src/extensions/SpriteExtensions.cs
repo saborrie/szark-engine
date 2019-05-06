@@ -16,7 +16,7 @@ namespace Szark
         {
             GL.UseProgram(sprite.Shader.ID);
 
-            float ratioX = sprite.Width * 0.5f, ratioY = sprite.Height * 0.5f;
+            float ratioX = sprite.width * 0.5f, ratioY = sprite.height * 0.5f;
             float posX = x / ratioX, posY = y / ratioY;
 
             var mvp = Matrix4.Identity;
@@ -30,7 +30,7 @@ namespace Szark
             GL.UniformMatrix4(sprite.Shader.MVP, false, ref mvp);
 
             // Bind texture the the shader
-            GL.BindTexture(TextureTarget.Texture2D, sprite.ID);
+            GL.BindTexture(TextureTarget.Texture2D, sprite.id);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, QuadData.EBO);
             GL.BindVertexArray(QuadData.VAO);
 

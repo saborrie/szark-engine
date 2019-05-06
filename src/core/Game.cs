@@ -5,10 +5,6 @@ using System;
 
 namespace Szark
 {
-    /// <summary>
-    /// Derive from this class to access the engine.
-    /// Use this as a starting point for your application.
-    /// </summary>
     public static partial class Game
     {
         public static event Action Started, Disposed;
@@ -18,9 +14,6 @@ namespace Szark
         private static Vector renderOffset;
         internal static GameWindow window;
 
-        /// <summary>
-        /// Creates a window and starts the Engine.
-        /// </summary>
         public static void Start(string title, int width, int height)
         {
             if (window != null) return;
@@ -42,6 +35,13 @@ namespace Szark
 
             Input.Init();
             window.Run();
+        }
+
+        public static void Stop()
+        {
+            if (window == null) return;
+            window.Exit();
+            window = null;
         }
 
         private static void Update(FrameEventArgs e)
