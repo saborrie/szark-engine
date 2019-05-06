@@ -1,8 +1,9 @@
+using System;
 using OpenTK.Graphics.OpenGL4;
 
 namespace Szark
 {
-    public sealed class Sprite
+    public sealed class Sprite : IDisposable
     {
         public readonly int id;
         public readonly int width, height;
@@ -32,6 +33,12 @@ namespace Szark
         {
             GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, texture.width, texture.height,
                 PixelFormat.Rgba, PixelType.UnsignedByte, texture.pixels);
+        }
+
+        public void Dispose()
+        {
+            GL.DeleteTexture(id);
+            GC.SuppressFinalize(this);
         }
     }
 }
