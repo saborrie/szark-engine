@@ -1,6 +1,5 @@
 ﻿using OpenTK;
 using OpenTK.Graphics.OpenGL4;
-using OpenTK.Graphics;
 using System;
 
 namespace Szark

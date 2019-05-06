@@ -4,8 +4,8 @@ namespace Szark
 {
     public sealed class Shader
     {
-        public int ID { get; private set; }
-        public int MVP { get; private set; }
+        public readonly int id;
+        public readonly int mvpLocation;
 
         public static Shader Default { get; private set; }
 
@@ -47,7 +47,7 @@ namespace Szark
         /// Creates a Shader Program from a
         /// vertex shader and a fragment shader
         /// </summary>
-        public Shader(string vertexShader, string fragmentShader, string mvp)
+        public Shader(string vertexShader, string fragmentShader, string mvpLocationName)
         {
             int vertexShaderID = GL.CreateShader(ShaderType.VertexShader);
             int fragmentShaderID = GL.CreateShader(ShaderType.FragmentShader);
@@ -78,8 +78,8 @@ namespace Szark
             GL.DeleteShader(vertexShaderID);
             GL.DeleteShader(fragmentShaderID);
 
-            ID = programID;
-            MVP = GL.GetUniformLocation(ID, mvp);
+            id = programID;
+            mvpLocation = GL.GetUniformLocation(id, mvpLocationName);
         }
     }
 }

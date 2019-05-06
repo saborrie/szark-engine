@@ -14,7 +14,7 @@ namespace Szark
         public static void Render(this Sprite sprite, float x, 
             float y, float rotation = 0, float scale = 1, int layer = 1)
         {
-            GL.UseProgram(sprite.Shader.ID);
+            GL.UseProgram(sprite.Shader.id);
 
             float ratioX = sprite.width * 0.5f, ratioY = sprite.height * 0.5f;
             float posX = x / ratioX, posY = y / ratioY;
@@ -27,7 +27,7 @@ namespace Szark
                 Game.ScreenHeight / ratioY, 0, -zRange, zRange);
 
             // Send matrices to the shader
-            GL.UniformMatrix4(sprite.Shader.MVP, false, ref mvp);
+            GL.UniformMatrix4(sprite.Shader.mvpLocation, false, ref mvp);
 
             // Bind texture the the shader
             GL.BindTexture(TextureTarget.Texture2D, sprite.id);
