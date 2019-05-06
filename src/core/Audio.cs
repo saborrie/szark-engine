@@ -1,11 +1,11 @@
 using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
-using System;
 using System.IO;
+using System;
 
 namespace Szark
 {
-    public struct AudioClip
+    public class AudioClip
     {
         private readonly int buffer, channels;
         private readonly int source, bitsPerSample, sampleRate;
@@ -83,17 +83,11 @@ namespace Szark
                 Debug.Log("Sound file not found or not of valid type!",
                     LogLevel.ERROR);
             }
-
-            audioData = null;
-            bitsPerSample = 0;
-            sampleRate = 0;
-            channels = 0;
-            soundFormat = 0;
-            buffer = 0;
-            source = 0;
-
-            Debug.Log("Audio clip could not be successfully created!",
-                LogLevel.ERROR);
+            finally
+            {
+                Debug.Log("Audio clip could not be successfully created!",
+                    LogLevel.ERROR);
+            }
         }
 
         public void Play(float volume = 1)

@@ -7,19 +7,19 @@ namespace Szark
         /// <summary>
         /// The current frame or sprite that is being drawn on
         /// </summary>
-        public Sprite Sprite { get; set; }
+        public Texture Target { get; set; }
 
         public Graphics2D(int width, int height) =>
-            Sprite = new Sprite(width, height);
+            Target = new Texture(width, height);
 
-        public Graphics2D(Sprite sprite) =>
-            Sprite = sprite;
+        public Graphics2D(Texture tex) =>
+            Target = tex;
 
         /// <summary>
         /// Draws a pixel on the screen
         /// </summary>
         public void Draw(int x, int y, Color color) =>
-            Sprite.SetPixel(x, y, color);
+            Target.Set(x, y, color);
 
         /// <summary>
         /// Draws a line
@@ -189,13 +189,13 @@ namespace Szark
         /// <summary>
         /// Draws a sprite on the screen
         /// </summary>
-        public void DrawSprite(int x, int y, Sprite sprite, int scale = 1)
+        public void DrawSprite(int x, int y, Texture sprite, int scale = 1)
         {
             if (scale <= 0) return;
             for (int i = 0; i < sprite.Width; i++)
                 for (int j = 0; j < sprite.Height; j++)
                     FillRectangle((x + i) * scale, (y + j) * scale,
-                        scale, scale, sprite.GetPixel(i, j));
+                        scale, scale, sprite.Get(i, j));
         }
     }
 }
