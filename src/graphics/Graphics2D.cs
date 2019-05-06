@@ -4,16 +4,16 @@ namespace Szark
 {
     public sealed class Graphics2D
     {
-        public Texture Target { get; set; }
+        public readonly Texture target;
 
         public Graphics2D(int width, int height) =>
-            Target = new Texture(width, height);
+            target = new Texture(width, height);
 
         public Graphics2D(Texture tex) =>
-            Target = tex;
+            target = tex;
 
         public void Draw(int x, int y, Color color) =>
-            Target.Set(x, y, color);
+            target.Set(x, y, color);
 
         public void DrawLine(int x1, int y1, int x2, int y2, Color color, int thickness = 1)
         {

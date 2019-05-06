@@ -20,7 +20,7 @@ namespace Szark
             GL.BindTexture(TextureTarget.Texture2D, id);
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba,
                 texture.width, texture.height, 0, PixelFormat.Rgba, PixelType.UnsignedByte,
-                    texture.Pixels);
+                    texture.pixels);
 
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
                 (int)TextureMinFilter.Nearest);
@@ -31,7 +31,7 @@ namespace Szark
         public void Refresh(Texture texture)
         {
             GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, texture.width, texture.height,
-                PixelFormat.Rgba, PixelType.UnsignedByte, texture.Pixels);
+                PixelFormat.Rgba, PixelType.UnsignedByte, texture.pixels);
         }
     }
 }
