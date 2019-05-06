@@ -6,14 +6,14 @@ namespace Szark
 {
     public static partial class Game
     {
-        public static event Action Started, Disposed;
-        public static event Action<float> Updated, Rendered;
+        public static event Action Start, Disposed;
+        public static event Action<float> Update, Render;
 
         private static float lastFPSCheck;
         private static Vector renderOffset;
         internal static GameWindow window;
 
-        public static void Start(string title, int width, int height)
+        public static void Init(string title, int width, int height)
         {
             if (window != null) return;
 
@@ -21,11 +21,11 @@ namespace Szark
             window.WindowBorder = (WindowBorder)1;
             window.Title = title;
 
-            window.Load += (s, f) => Started?.Invoke();
+            window.Load += (s, f) => Start?.Invoke();
             window.Disposed += (s, f) => Disposed?.Invoke();
 
-            window.RenderFrame += (s, f) => Render(f);
-            window.UpdateFrame += (s, f) => Update(f);
+            window.RenderFrame += (s, f) => PreRender(f);
+            window.UpdateFrame += (s, f) => PreUpdate(f);
 
             GL.Enable(EnableCap.Texture2D);
             GL.Enable(EnableCap.Blend);
@@ -38,18 +38,20 @@ namespace Szark
 
         public static void Stop()
         {
-            if (window == null) return;
-            window.Exit();
-            window = null;
+            if (window != null)
+            {
+                window.Exit();
+                window = null;
+            }
         }
 
-        private static void Update(FrameEventArgs e)
+        private static void PreUpdate(FrameEventArgs e)
         {
-            Updated?.Invoke((float)e.Time);
+            Update?.Invoke((float)e.Time);
             Input.Update();
         }
 
-        private static void Render(FrameEventArgs e)
+        private static void PreRender(FrameEventArgs e)
         {
             GL.Viewport((int)renderOffset.x, (int)renderOffset.y, ScreenWidth, ScreenHeight);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -62,8 +64,8 @@ namespace Szark
                 lastFPSCheck = 0;
             }
 
-            Rendered?.Invoke((float)e.Time);
-            window.SwapBuffers();
+            Render?.Invoke((float)e.Time);
+            window?.SwapBuffers();
         }
     }
 }

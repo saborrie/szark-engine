@@ -6,31 +6,31 @@ namespace Szark
     {
         public static string WindowTitle
         {
-            get => window.Title;
+            get => window != null ? window.Title : "";
             set => window.Title = value;
         }
 
         public static int ScreenWidth
         {
-            get => window.Width;
+            get => window != null ? window.Width : 0;
             set => window.Width = value;
         }
 
         public static int ScreenHeight
         {
-            get => window.Height;
+            get => window != null ? window.Height : 0;
             set => window.Height = value;
         }
 
         public static bool Resizeable
         {
-            get => window.WindowBorder == WindowBorder.Resizable;
+            get => window != null ? window.WindowBorder == WindowBorder.Resizable : false;
             set => window.WindowBorder = (WindowBorder)(value ? 0 : 1);
         }
 
         public static bool Fullscreen
         {
-            get => window.WindowState == (WindowState)3;
+            get => window?.WindowState == (WindowState)3;
             set
             {
                 window.WindowState = (WindowState)(value ? 3 : 0);
@@ -41,23 +41,23 @@ namespace Szark
 
         public static bool Vsync
         {
-            get => window.VSync == VSyncMode.On;
+            get => window?.VSync == VSyncMode.On;
             set => window.VSync = (VSyncMode)(value ? 1 : 0);
         }
 
         public static float TargetFramerate
         {
-            get => (float)window.TargetRenderFrequency;
+            get => window != null ? (float)window.TargetRenderFrequency : 0;
             set => window.TargetRenderFrequency = value;
         }
 
         public static bool Visible
         {
-            get => window.Visible;
+            get => window != null ? window.Visible : false;
             set => window.Visible = value;
         }
 
-        public static bool Focused => window.Focused;
+        public static bool Focused => window != null ? window.Focused : false;
 
         public static float Framerate { get; private set; }
 
