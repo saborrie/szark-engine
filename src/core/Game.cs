@@ -33,6 +33,7 @@ namespace Szark
                 BlendingFactor.OneMinusSrcAlpha);
 
             Input.Init();
+            EntityManager.Init();
             window.Run();
         }
 
@@ -47,6 +48,7 @@ namespace Szark
 
         private static void PreUpdate(FrameEventArgs e)
         {
+            EntityManager.Update((float)e.Time);
             Update?.Invoke((float)e.Time);
             Input.Update();
         }
@@ -64,6 +66,7 @@ namespace Szark
                 lastFPSCheck = 0;
             }
 
+            EntityManager.Render((float)e.Time);
             Render?.Invoke((float)e.Time);
             window?.SwapBuffers();
         }
