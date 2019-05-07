@@ -1,8 +1,9 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿using System;
+using OpenTK.Graphics.OpenGL4;
 
 namespace Szark
 {
-    public sealed class Shader
+    public sealed class Shader : IDisposable
     {
         public readonly int id;
         public readonly int mvpLocation;
@@ -80,6 +81,12 @@ namespace Szark
 
             id = programID;
             mvpLocation = GL.GetUniformLocation(id, mvpLocationName);
+        }
+
+        public void Dispose()
+        {
+            GL.DeleteProgram(id);
+            GC.SuppressFinalize(true);
         }
     }
 }

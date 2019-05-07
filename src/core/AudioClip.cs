@@ -5,7 +5,7 @@ using System;
 
 namespace Szark
 {
-    public sealed class AudioClip
+    public sealed class AudioClip : IDisposable
     {
         private readonly int source;
 
@@ -92,6 +92,12 @@ namespace Szark
         {
             AL.Listener(ALListenerf.Gain, volume);
             AL.SourcePlay(source);
+        }
+
+        public void Dispose()
+        {
+            AL.DeleteSource(source);
+            GC.SuppressFinalize(true);
         }
     }
 }
