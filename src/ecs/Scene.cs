@@ -5,10 +5,10 @@ namespace Szark
 {
     public sealed class Scene
     {
-        internal Dictionary<int, List<IComponent>> Entities { get; }
+        internal Dictionary<Entity, List<IComponent>> Entities { get; }
 
         public Scene() =>
-            Entities = new Dictionary<int, List<IComponent>>();
+            Entities = new Dictionary<Entity, List<IComponent>>();
 
         public Entity Instantiate(params IComponent[] components)
         {
@@ -16,38 +16,38 @@ namespace Szark
             {
                 Random random = new Random();
                 int id = random.Next(int.MaxValue);
-                while (Entities.ContainsKey(id))
+                while (Entities.ContainsKey(new Entity(id)))
                     id = random.Next(int.MaxValue);
                 return id;
             }
 
-            int newID = GenerateID();
-            Entities.Add(newID, new List<IComponent>(components));
-            return new Entity(newID);
+            Entity entity = new Entity(GenerateID());
+            Entities.Add(entity, new List<IComponent>(components));
+            return entity;
         }
 
         public void Destroy(Entity entity)
         {
-            if (Entities.ContainsKey(entity.id))
-                Entities.Remove(entity.id);
+            if (Entities.ContainsKey(entity))
+                Entities.Remove(entity);
         }
 
         public void AddComponent(Entity entity, IComponent component)
         {
-            if (Entities.ContainsKey(entity.id))
-                Entities[entity.id].Add(component);
+            if (Entities.ContainsKey(entity))
+                Entities[entity].Add(component);
         }
 
         public void RemoveComponent<T>(Entity entity) where T : IComponent
         {
-            if (Entities.ContainsKey(entity.id))
-                Entities[entity.id].RemoveAll(c => c is T);
+            if (Entities.ContainsKey(entity))
+                Entities[entity].RemoveAll(c => c is T);
         }
 
         public IComponent GetComponent<T>(Entity entity) where T : IComponent
         {
-            if (Entities.ContainsKey(entity.id))
-                foreach (var component in Entities[entity.id])
+            if (Entities.ContainsKey(entity))
+                foreach (var component in Entities[entity])
                     if (component is T) return (T)component;
             return null;
         }
