@@ -29,8 +29,6 @@ namespace Szark
                 (int)TextureMagFilter.Nearest);
         }
 
-        ~Sprite() => GL.DeleteTexture(id);
-
         public void Refresh(Texture texture)
         {
             GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, texture.width, texture.height,

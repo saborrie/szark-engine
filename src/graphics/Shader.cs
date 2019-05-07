@@ -83,8 +83,6 @@ namespace Szark
             mvpLocation = GL.GetUniformLocation(id, mvpLocationName);
         }
 
-        ~Shader() => GL.DeleteProgram(id);
-
         public void Dispose()
         {
             GL.DeleteProgram(id);
