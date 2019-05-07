@@ -88,6 +88,8 @@ namespace Szark
             }
         }
 
+        ~AudioClip() => AL.DeleteSource(source);
+
         public void Play(float volume = 1)
         {
             AL.Listener(ALListenerf.Gain, volume);
