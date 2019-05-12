@@ -19,11 +19,9 @@ namespace Szark
             updateSystems = new List<ISystem>();
             renderSystems = new List<ISystem>();
 
-            var systems = Assembly.GetEntryAssembly().GetTypes()
-                    .Where(type => typeof(ISystem).IsAssignableFrom(type)
-                        && !type.IsInterface).ToList();
+            var foundSystems = GetAllTypesOf<ISystem>();
 
-            foreach (var type in systems)
+            foreach (var type in foundSystems)
             {
                 var system = (ISystem)Activator.CreateInstance(type);
                 bool isRender = type.GetCustomAttribute<ExcecuteInRender>() != null;
@@ -31,6 +29,18 @@ namespace Szark
                 if (isRender) renderSystems.Add(system);
                 else updateSystems.Add(system);
             }
+        }
+
+        static List<Type> GetAllTypesOf<T>()
+        {
+            List<Type> result = new List<Type>();
+            Type[] allTypes = Assembly.GetEntryAssembly().GetTypes();
+        
+            foreach (var type in allTypes)
+                if (typeof(T).IsAssignableFrom(type) && !type.IsInterface)
+                    result.Add(type);
+
+            return result;
         }
 
         internal static void Update(float deltaTime) =>
