@@ -6,22 +6,18 @@ namespace Szark
     public sealed class Scene
     {
         internal Dictionary<Entity, List<IComponent>> Entities { get; }
+        internal static Random random = new Random();
 
         public Scene() =>
             Entities = new Dictionary<Entity, List<IComponent>>();
 
         public Entity Instantiate(params IComponent[] components)
         {
-            int GenerateID()
-            {
-                Random random = new Random();
-                int id = random.Next(int.MaxValue);
-                while (Entities.ContainsKey(new Entity(id)))
-                    id = random.Next(int.MaxValue);
-                return id;
-            }
+            int id = random.Next(int.MaxValue);
+            while (Entities.ContainsKey(new Entity(id)))
+                id = random.Next(int.MaxValue);
 
-            Entity entity = new Entity(GenerateID());
+            Entity entity = new Entity(id);
             Entities.Add(entity, new List<IComponent>(components));
             return entity;
         }
