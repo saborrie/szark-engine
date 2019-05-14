@@ -2,7 +2,7 @@
 1. Create .Net Core Project
 2. Get Latest Release Version
 3. Add Reference to that .dll in your project
-4. Install OpenTK.NetStandard
+4. Install Dependecies
 
 ## Dependencies
 * OpenTK.NetStandard
