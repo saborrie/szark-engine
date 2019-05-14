@@ -5,14 +5,13 @@ namespace Szark
     public partial struct Vector
     {
         /// <summary>
-        /// Linearly interpolates the vector a by vector b
-        /// based on the time value.
+        /// Linearly interpolates a -> b based on the time.
         /// </summary>
         public static Vector Lerp(Vector a, Vector b, float time) =>
             new Vector(Mathf.Lerp(a.x, b.x, time), Mathf.Lerp(a.y, b.y, time));
 
         /// <summary>
-        /// Returns the distance between vector a and b.
+        /// Returns the distance between a and b.
         /// </summary>
         public static float Distance(Vector a, Vector b) =>
             (float)Math.Sqrt((b.x - a.x) * (b.x - a.x) + 

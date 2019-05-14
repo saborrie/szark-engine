@@ -16,10 +16,10 @@ namespace Szark
 
         // -- Mouse Static Values --
 
-        public static float MouseX => Game.Fullscreen ? 
+        public static float MouseX => Engine.Fullscreen ? 
             (mouseState.X - mouseOffset.x) : mouseState.X;
 
-        public static float MouseY => Game.Fullscreen ? 
+        public static float MouseY => Engine.Fullscreen ? 
             (mouseState.Y - mouseOffset.y) : mouseState.Y;
 
         public static float MouseWheel { get; private set; }
@@ -28,18 +28,18 @@ namespace Szark
 
         internal static void Init()
         {
-            Game.window.KeyUp += (o, a) => UpdateKeyboardState(a);
-            Game.window.KeyDown += (o, a) => UpdateKeyboardState(a);
-            Game.window.MouseDown += (o, a) => UpdateMouseState(a);
-            Game.window.MouseUp += (o, a) => UpdateMouseState(a);
-            Game.window.MouseMove += (o, a) => UpdateMouseState(a);
-            Game.window.MouseWheel += (o, a) => UpdateMouseState(a);
+            Engine.window.KeyUp += (o, a) => UpdateKeyboardState(a);
+            Engine.window.KeyDown += (o, a) => UpdateKeyboardState(a);
+            Engine.window.MouseDown += (o, a) => UpdateMouseState(a);
+            Engine.window.MouseUp += (o, a) => UpdateMouseState(a);
+            Engine.window.MouseMove += (o, a) => UpdateMouseState(a);
+            Engine.window.MouseWheel += (o, a) => UpdateMouseState(a);
         }
 
         internal static void Update()
         {
-            mouseOffset.x = Game.Fullscreen ? Game.ScreenWidth * 0.5f : 0;
-            mouseOffset.y = Game.Fullscreen ? Game.ScreenHeight * 0.5f : 0;
+            mouseOffset.x = Engine.Fullscreen ? Engine.ScreenWidth * 0.5f : 0;
+            mouseOffset.y = Engine.Fullscreen ? Engine.ScreenHeight * 0.5f : 0;
 
             lastKeyboardState = keyboardState;
             lastMouseState = mouseState;

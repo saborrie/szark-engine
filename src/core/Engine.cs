@@ -4,14 +4,15 @@ using System;
 
 namespace Szark
 {
-    public static partial class Game
+    public static partial class Engine
     {
-        public static event Action Start, Disposed;
-        public static event Action<float> Update, Render;
+        internal static GameWindow window;
+
+        public static event Action Started, Disposed;
+        public static event Action<float> Updated, Rendered;
 
         private static float lastFPSCheck;
         private static Vector renderOffset;
-        internal static GameWindow window;
 
         public static void Init(string title, int width, int height)
         {
@@ -21,7 +22,7 @@ namespace Szark
             window.WindowBorder = (WindowBorder)1;
             window.Title = title;
 
-            window.Load += (s, f) => Start?.Invoke();
+            window.Load += (s, f) => Started?.Invoke();
             window.Disposed += (s, f) => Disposed?.Invoke();
 
             window.RenderFrame += (s, f) => PreRender(f);
@@ -47,7 +48,7 @@ namespace Szark
 
         private static void PreUpdate(FrameEventArgs e)
         {
-            Update?.Invoke((float)e.Time);
+            Updated?.Invoke((float)e.Time);
             Input.Update();
         }
 
@@ -64,7 +65,7 @@ namespace Szark
                 lastFPSCheck = 0;
             }
 
-            Render?.Invoke((float)e.Time);
+            Rendered?.Invoke((float)e.Time);
             window?.SwapBuffers();
         }
     }

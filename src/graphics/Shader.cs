@@ -31,18 +31,23 @@ namespace Szark
         @"
             #version 420
 
+            precision mediump int;
+            precision mediump float;
+
             out vec4 FragColor;
             in vec2 texCoord;
+
             uniform sampler2D tex;
+            uniform vec4 tint = vec4(1.0, 1.0, 1.0, 1.0);
 
             void main() {
-                FragColor = texture(tex, texCoord);
+                FragColor = tint * texture(tex, texCoord);
             } 
         ";
 
-        static Shader() =>
-            Default = new Shader(defaultVertex, 
-                defaultFragment, "mvp");
+        static Shader() {
+            Default = new Shader(defaultVertex, defaultFragment, "mvp");
+        }
 
         /// <summary>
         /// Creates a Shader Program from a
@@ -88,5 +93,11 @@ namespace Szark
             GL.DeleteProgram(id);
             GC.SuppressFinalize(true);
         }
+
+        public int GetLocation(string name) =>
+            GL.GetUniformLocation(id, name);
+
+        public void SetColor(int location, Color color) =>
+            GL.ProgramUniform4(id, location, new OpenTK.Color(color.r, color.g, color.b, color.a));
     }
 }

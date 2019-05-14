@@ -2,7 +2,7 @@ using OpenTK;
 
 namespace Szark
 {
-    public static partial class Game
+    public static partial class Engine
     {
         public static string WindowTitle
         {
