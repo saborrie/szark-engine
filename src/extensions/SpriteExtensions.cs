@@ -67,8 +67,8 @@ namespace Szark
                 mvp *= Matrix4.CreateScale(transform.scale, transform.scale, 1);
 
             mvp *= Matrix4.CreateTranslation(posX + 1, posY + 1, transform.layer / Clipping);
-            mvp *= Matrix4.CreateOrthographicOffCenter(0, Engine.ScreenWidth / ratioX,
-                Engine.ScreenHeight / ratioY, 0, -Clipping, Clipping);
+            mvp *= Matrix4.CreateOrthographicOffCenter(0, Window.Width / ratioX,
+                Window.Height / ratioY, 0, -Clipping, Clipping);
         }
     }
 }

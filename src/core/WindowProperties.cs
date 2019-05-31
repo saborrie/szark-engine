@@ -2,21 +2,21 @@ using OpenTK;
 
 namespace Szark
 {
-    public static partial class Engine
+    public static partial class Window
     {
-        public static string WindowTitle
+        public static string Title
         {
             get => window != null ? window.Title : "";
             set => window.Title = value;
         }
 
-        public static int ScreenWidth
+        public static int Width
         {
             get => window != null ? window.Width : 0;
             set => window.Width = value;
         }
 
-        public static int ScreenHeight
+        public static int Height
         {
             get => window != null ? window.Height : 0;
             set => window.Height = value;
@@ -34,8 +34,8 @@ namespace Szark
             set
             {
                 window.WindowState = (WindowState)(value ? 3 : 0);
-                renderOffset.x = value ? (window.Width - ScreenWidth) / 2 : 0;
-                renderOffset.y = value ? (window.Height - ScreenHeight) / 2 : 0;
+                renderOffset.x = value ? (window.Width - Width) / 2 : 0;
+                renderOffset.y = value ? (window.Height - Height) / 2 : 0;
             }
         }
 

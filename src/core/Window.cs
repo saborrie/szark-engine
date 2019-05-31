@@ -4,7 +4,7 @@ using System;
 
 namespace Szark
 {
-    public static partial class Engine
+    public static partial class Window
     {
         internal static GameWindow window;
 
@@ -14,7 +14,7 @@ namespace Szark
         private static float lastFPSCheck;
         private static Vector renderOffset;
 
-        public static void Init(string title, int width, int height)
+        public static void Create(string title, int width, int height)
         {
             if (window != null) return;
 
@@ -54,7 +54,7 @@ namespace Szark
 
         private static void PreRender(FrameEventArgs e)
         {
-            GL.Viewport((int)renderOffset.x, (int)renderOffset.y, ScreenWidth, ScreenHeight);
+            GL.Viewport((int)renderOffset.x, (int)renderOffset.y, Width, Height);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.ClearColor(Background.r / 255f, Background.g / 255f, Background.b / 255f, 1);
 
