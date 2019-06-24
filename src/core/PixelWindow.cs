@@ -50,6 +50,8 @@ namespace Szark
                 screenSprite = new Sprite(drawTarget);
                 GFX = new Graphics2D(drawTarget);
 
+                Input.SetPixelScale(pixelSize);
+
                 Start();
             };  
 

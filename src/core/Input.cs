@@ -13,18 +13,22 @@ namespace Szark
         private static Vector mouseOffset;
         private static KeyboardState keyboardState, lastKeyboardState;
         private static MouseState mouseState, lastMouseState;
+        private static int pixelScale = 1;
 
         // -- Mouse Static Values --
 
-        public static float MouseX => Window.Fullscreen ? 
-            (mouseState.X - mouseOffset.x) : mouseState.X;
+        public static float MouseX => (Window.Fullscreen ? 
+            (mouseState.X - mouseOffset.x) : mouseState.X) / pixelScale;
 
-        public static float MouseY => Window.Fullscreen ? 
-            (mouseState.Y - mouseOffset.y) : mouseState.Y;
+        public static float MouseY => (Window.Fullscreen ? 
+            (mouseState.Y - mouseOffset.y) : mouseState.Y) / pixelScale;
 
         public static float MouseWheel { get; private set; }
 
         // -- Internal Static Methods --
+
+        internal static void SetPixelScale(int scale) =>
+            pixelScale = scale;
 
         internal static void Init()
         {
