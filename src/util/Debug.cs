@@ -8,23 +8,23 @@ namespace Szark
         /// <summary>
         /// Logs a message to the console
         /// </summary>
-        public static void Log(object obj, LogLevel level = LogLevel.INFO)
+        public static void Log(string text, LogLevel level = LogLevel.INFO)
         {
             switch(level)
             {
                 case LogLevel.INFO:
                     Console.ForegroundColor = ConsoleColor.White;
-                    Console.WriteLine($"[INFO]: {obj.ToString()}");
+                    Console.WriteLine($"[INFO]: {text}");
                     break;
 
                 case LogLevel.WARNING:
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine($"[WARNING]: {obj.ToString()}");
+                    Console.WriteLine($"[WARNING]: {text}");
                     break;
 
                 case LogLevel.ERROR:
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"[ERROR]: {obj.ToString()}");
+                    Console.WriteLine($"[ERROR]: {text}");
                     break;
             }
 
