@@ -1,3 +1,5 @@
+using System;
+
 namespace Szark
 {
     /// <summary>
@@ -33,18 +35,13 @@ namespace Szark
         private Texture drawTarget;
         private Sprite screenSprite;
 
-        private int hWidth, hHeight;
-
         public PixelWindow(string title, int width, int height, int pixelSize = 4)
         {
             Window.Started += () => 
             {
-                ScreenWidth = Window.Width / pixelSize;
-                ScreenHeight = Window.Height / pixelSize;
+                ScreenWidth = (int)Math.Ceiling(Window.Width / (float)pixelSize);
+                ScreenHeight = (int)Math.Ceiling(Window.Height / (float)pixelSize);
                 PixelSize = pixelSize;
-
-                hWidth = Window.Width / 2;
-                hHeight = Window.Height / 2;
 
                 drawTarget = new Texture(ScreenWidth, ScreenHeight);
                 screenSprite = new Sprite(drawTarget);
@@ -63,8 +60,7 @@ namespace Szark
             {
                 Render(f);
 
-                screenSprite.Render(new Transform(hWidth - ScreenWidth / 2, 
-                    hHeight - ScreenHeight / 2, 0, pixelSize + 0.01f));
+                screenSprite.Render(new Transform(0, 0, 0, pixelSize));
                 screenSprite.Refresh(drawTarget);
             };
 
