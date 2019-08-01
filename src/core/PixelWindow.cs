@@ -31,8 +31,17 @@ namespace Szark
         /// Use this in Render Method
         /// </summary>
         public Graphics2D GFX { get; private set; }
-        
-        private Texture drawTarget;
+
+        /// <summary>
+        /// Background Color
+        /// </summary>
+        public Color Background
+        {
+            get { return background.Get(0, 0); }
+            set { background.Fill(value); }
+        }
+
+        private Texture drawTarget, background;
         private Sprite screenSprite;
 
         public PixelWindow(string title, int width, int height, int pixelSize = 4)
@@ -44,6 +53,9 @@ namespace Szark
                 PixelSize = pixelSize;
 
                 drawTarget = new Texture(ScreenWidth, ScreenHeight);
+                background = new Texture(ScreenWidth, ScreenHeight);
+                Background = Color.Black;
+
                 screenSprite = new Sprite(drawTarget);
                 GFX = new Graphics2D(drawTarget);
 
@@ -62,6 +74,9 @@ namespace Szark
 
                 screenSprite.Render(new Transform(0, 0, 0, pixelSize));
                 screenSprite.Refresh(drawTarget);
+
+                Array.Copy(background.pixels, drawTarget.pixels, 
+                    drawTarget.pixels.Length);
             };
 
             Window.Disposed += Destroyed;
