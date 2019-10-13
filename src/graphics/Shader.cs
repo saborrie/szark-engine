@@ -98,6 +98,6 @@ namespace Szark
             GL.GetUniformLocation(id, name);
 
         public void SetColor(int location, Color color) =>
-            GL.ProgramUniform4(id, location, new OpenTK.Color(color.r, color.g, color.b, color.a));
+            GL.ProgramUniform4(id, location, color.r, color.g, color.b, color.a);
     }
 }

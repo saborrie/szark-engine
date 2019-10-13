@@ -7,25 +7,13 @@ namespace Szark
     {
         public byte r, g, b, a;
 
-        public Color(byte red, byte green, byte blue, byte alpha = 255)
+        public Color(byte red, byte green, 
+            byte blue, byte alpha = 255)
         {
             r = red;
             g = green;
             b = blue;
             a = alpha;
-        }
-
-        // -- Methods --
-
-        public Color Saturate()
-        {
-            return new Color
-            {
-                r = (byte)Mathf.Clamp(r, 0, 255),
-                g = (byte)Mathf.Clamp(g, 0, 255),
-                b = (byte)Mathf.Clamp(b, 0, 255),
-                a = (byte)Mathf.Clamp(a, 0, 255),
-            };
         }
 
         // -- Constants --
@@ -143,22 +131,12 @@ namespace Szark
 
         // -- Object Overrides --
 
-        public override bool Equals(object obj)
-        {
-            return obj is Color color && r == color.r &&
-                g == color.g && b == color.b &&
-                   a == color.a;
-        }
+        public override bool Equals(object obj) =>
+            obj is Color color && r == color.r &&
+                g == color.g && b == color.b && a == color.a;
 
-        public override int GetHashCode()
-        {
-            var hashCode = 0;
-            hashCode = (hashCode * 397) ^ r;
-            hashCode = (hashCode * 397) ^ g;
-            hashCode = (hashCode * 397) ^ b;
-            hashCode = (hashCode * 397) ^ a;
-            return hashCode;
-        }
+        public override int GetHashCode() =>
+            HashCode.Combine(r, g, b, a);
 
         public override string ToString() =>
             $"({r},{g},{b},{a})";
