@@ -1,4 +1,3 @@
-using OpenTK;
 using OpenTK.Input;
 using System;
 
