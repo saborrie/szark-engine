@@ -9,7 +9,18 @@ namespace Szark
     /// </summary>
     public partial struct Vector
     {
+        public static readonly Vector One = new Vector(1, 1);
+        public static readonly Vector Zero = new Vector(0, 0);
+
+        public static readonly Vector Right = new Vector(1, 0);
+        public static readonly Vector Left = new Vector(-1, 0);
+        public static readonly Vector Down = new Vector(0, -1);
+        public static readonly Vector Up = new Vector(0, 1);
+
         public float x, y;
+
+        public Vector(float unit) : 
+            this(unit, unit) { }
 
         public Vector(float x, float y)
         {
@@ -99,13 +110,8 @@ namespace Szark
         public override bool Equals(object obj) =>
             obj is Vector vector && x == vector.x && y == vector.y;
 
-        public override int GetHashCode()
-        {
-            var hashCode = 0;
-            hashCode = (hashCode * 397) ^ x.GetHashCode();
-            hashCode = (hashCode * 397) ^ y.GetHashCode();
-            return hashCode;
-        }
+        public override int GetHashCode() =>
+            HashCode.Combine(x, y);
 
         public override string ToString() => $"({x},{y})";
     }

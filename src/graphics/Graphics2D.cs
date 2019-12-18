@@ -15,6 +15,9 @@ namespace Szark
         public void Draw(int x, int y, Color color) =>
             target.Set(x, y, color);
 
+        public void Draw(Vector point, Color color) =>
+            Draw((int)point.x, (int)point.y, color);
+
         public void DrawLine(int x1, int y1, int x2, int y2, Color color, int thickness = 1)
         {
             float x, y, step;
@@ -50,26 +53,35 @@ namespace Szark
             }
         }
 
-        public void DrawRectangle(int x, int y, int w, int h, Color color)
+        public void DrawLine(Vector pointA, Vector pointB, Color color, int thickness = 1) =>
+            DrawLine((int)pointA.x, (int)pointA.y, (int)pointB.x, (int)pointB.y, color, thickness);
+
+        public void DrawRectangle(int x, int y, int width, int height, Color color)
         {
-            if (w < 0)
+            if (width < 0)
             {
-                w *= -1;
-                x -= w;
+                width *= -1;
+                x -= width;
             }
 
-            DrawLine(x, y, x + w, y, color);
-            DrawLine(x + w - 1, y, x + w - 1, y + h, color);
-            DrawLine(x, y + h - 1, x + w, y + h - 1, color);
-            DrawLine(x, y, x, y + h, color);
+            DrawLine(x, y, x + width, y, color);
+            DrawLine(x + width - 1, y, x + width - 1, y + height, color);
+            DrawLine(x, y + height - 1, x + width, y + height - 1, color);
+            DrawLine(x, y, x, y + height, color);
         }
 
-        public void FillRectangle(int x, int y, int w, int h, Color color)
+        public void DrawRectangle(Vector point, int width, int height, Color color) =>
+            DrawRectangle((int)point.x, (int)point.y, width, height, color);
+
+        public void FillRectangle(int x, int y, int width, int height, Color color)
         {
-            for (int i = 0; i < w; i++)
-                for (int j = 0; j < h; j++)
+            for (int i = 0; i < width; i++)
+                for (int j = 0; j < height; j++)
                     Draw(x + i, y + j, color);
         }
+
+        public void FillRectangle(Vector point, int width, int height, Color color) =>
+            FillRectangle((int)point.x, (int)point.y, width, height, color);
 
         public void DrawCircle(int x0, int y0, int r, Color color)
         {
@@ -109,17 +121,24 @@ namespace Szark
             }
         }
 
-        public void FillCircle(int x, int y, int r, Color color)
+        public void DrawCircle(Vector point, int radius, Color color) =>
+            DrawCircle((int)point.x, (int)point.y, radius, color);
+
+        public void FillCircle(int x, int y, int radius, Color color)
         {
-            for (int i = 0; i < r * 2; i++)
+            for (int i = 0; i < radius * 2; i++)
             {
-                for (int j = 0; j < r * 2; j++)
+                for (int j = 0; j < radius * 2; j++)
                 {
-                    var dist = Math.Sqrt((r - i) * (r - i) + (r - j) * (r - j));
-                    if (dist < r) Draw(x - 1 + i, y - 1 + j, color);
+                    var dist = Math.Sqrt((radius - i) * (radius - i) + 
+                        (radius - j) * (radius - j));
+                    if (dist < radius) Draw(x - 1 + i, y - 1 + j, color);
                 }
             }
         }
+
+        public void FillCircle(Vector point, int radius, Color color) =>
+            FillCircle((int)point.x, (int)point.y, radius, color);
 
         public void DrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Color color)
         {
@@ -128,10 +147,14 @@ namespace Szark
             DrawLine(x1, y1, x3, y3, color);
         }
 
+        public void DrawTriangle(Vector pointA, Vector pointB, Vector pointC, Color color) =>
+            DrawTriangle((int)pointA.x, (int)pointA.y, (int)pointB.x, (int)pointB.y, 
+                (int)pointC.x, (int)pointC.y, color);
+
         public void FillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Color color)
         {
-            float Sign(int aX, int aY, int bX, int bY, int cX, int cY) =>
-                (aX - x3) * (bY - cY) - (bX - cX) * (aY - cY);
+            float Area(int x1, int y1, int x2, int y2, int x3, int y3) =>
+                Math.Abs((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0f);
 
             var minX = Math.Min(Math.Min(x1, x2), x3);
             var maxX = Math.Max(Math.Max(x1, x2), x3);
@@ -139,33 +162,36 @@ namespace Szark
             var minY = Math.Min(Math.Min(y1, y2), y3);
             var maxY = Math.Max(Math.Max(y1, y2), y3);
 
+            float a = Area(x1, y1, x2, y2, x3, y3);
+
             for (int x = minX; x < maxX; x++)
             {
                 for (int y = minY; y < maxY; y++)
                 {
-                    float d1, d2, d3;
-                    bool hasNeg, hasPos;
+                    float a1 = Area(x, y, x2, y2, x3, y3);
+                    float a2 = Area(x1, y1, x, y, x3, y3);
+                    float a3 = Area(x1, y1, x2, y2, x, y);
 
-                    d1 = Sign(x, y, x1, y1, x2, y2);
-                    d2 = Sign(x, y, x2, y2, x3, y3);
-                    d3 = Sign(x, y, x3, y3, x1, y1);
-
-                    hasNeg = (d1 < 0) || (d2 < 0) || (d3 < 0);
-                    hasPos = (d1 > 0) || (d2 > 0) || (d3 > 0);
-
-                    if (!(hasNeg && hasPos))
+                    if (a == a1 + a2 + a3)
                         Draw(x, y, color);
                 }
             }
         }
 
-        public void DrawTexture(int x, int y, Texture sprite, int scale = 1)
+        public void FillTriangle(Vector pointA, Vector pointB, Vector pointC, Color color) =>
+            FillTriangle((int)pointA.x, (int)pointA.y, (int)pointB.x, (int)pointB.y, 
+                (int)pointC.x, (int)pointC.y, color);
+
+        public void DrawTexture(int x, int y, Texture texture, int scale = 1)
         {
             if (scale <= 0) return;
-            for (int i = 0; i < sprite.width; i++)
-                for (int j = 0; j < sprite.height; j++)
+            for (int i = 0; i < texture.width; i++)
+                for (int j = 0; j < texture.height; j++)
                     FillRectangle((x + i) * scale, (y + j) * scale,
-                        scale, scale, sprite.Get(i, j));
+                        scale, scale, texture.Get(i, j));
         }
+
+        public void DrawTexture(Vector point, Texture texture, int scale = 1) =>
+            DrawTexture((int)point.x, (int)point.y, texture, scale);
     }
 }

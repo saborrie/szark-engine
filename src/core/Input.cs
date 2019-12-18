@@ -59,25 +59,43 @@ namespace Szark
 
         // -- Keyboard Static Methods --
 
+        /// <summary>
+        /// Returns whether a key is being pressed currently
+        /// </summary>
         public static bool GetKey(string key) =>
             Enum.TryParse(key, out Key result) ? keyboardState[result] : false;
 
+        /// <summary>
+        /// Returns whether a key was pressed once
+        /// </summary>
         public static bool GetKeyDown(string key) =>
             Enum.TryParse(key, out Key result) ? keyboardState[result] && 
                 (keyboardState[result] != lastKeyboardState[result]) : false;
 
+        /// <summary>
+        /// Returns whether a key was released after being pressed
+        /// </summary>
         public static bool GetKeyUp(string key) =>
             Enum.TryParse(key, out Key result) ? lastKeyboardState[result] &&
                 (keyboardState[result] != lastKeyboardState[result]) : false;
 
         // -- Mouse Static Methods --
 
+        /// <summary>
+        /// Returns whether a mouse button is pressed currently
+        /// </summary>
         public static bool GetMouseButton(int button) => mouseState[(MouseButton)button];
 
+        /// <summary>
+        /// Returns whether a mouse button was pressed once
+        /// </summary>
         public static bool GetMouseButtonDown(int button) => 
             mouseState[(MouseButton)button] && (mouseState[(MouseButton)button] != 
                 lastMouseState[(MouseButton)button]);
 
+        /// <summary>
+        /// Returns whether a mouse button was released after being pressed
+        /// </summary>
         public static bool GetMouseButtonUp(int button) => 
             lastMouseState[(MouseButton)button] && (mouseState[(MouseButton)button] != 
                 lastMouseState[(MouseButton)button]);
