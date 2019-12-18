@@ -15,6 +15,8 @@ Requests are also welcome!
 4. Add OpenTK.NetStandard as Nuget Package
 
 # Examples
+https://github.com/JakubSzark/szark-engine-example
+
 <img src="https://i.imgur.com/SPTGHfe.gif" width="400"><img src="https://i.imgur.com/sgPtLmT.gif" width="400">
 
 # Acknowledgments
