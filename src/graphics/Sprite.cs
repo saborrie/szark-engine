@@ -92,17 +92,17 @@ namespace Szark
         private static void GetMVP(Sprite sprite, Transform transform, out Matrix4 mvp)
         {
             float ratioX = sprite.width * 0.5f, ratioY = sprite.height * 0.5f;
-            float posX = transform.position.x / ratioX, posY = transform.position.y / ratioY;
+            float posX = transform.Position.x / ratioX, posY = transform.Position.y / ratioY;
 
             mvp = Matrix4.Identity;
 
-            if (transform.rotation != 0)
-                mvp *= Matrix4.CreateRotationZ(transform.rotation);
+            if (transform.Rotation != 0)
+                mvp *= Matrix4.CreateRotationZ(transform.Rotation);
 
-            mvp *= Matrix4.CreateTranslation(posX + 1, posY + 1, transform.layer / Clipping);
+            mvp *= Matrix4.CreateTranslation(posX + 1, posY + 1, transform.Layer / Clipping);
             
-            if (transform.scale != 1)
-                mvp *= Matrix4.CreateScale(transform.scale, transform.scale, 1);
+            if (transform.Scale != 1)
+                mvp *= Matrix4.CreateScale(transform.Scale, transform.Scale, 1);
 
             mvp *= Matrix4.CreateOrthographicOffCenter(0, Window.Width / ratioX,
                 Window.Height / ratioY, 0, -Clipping, Clipping);

@@ -56,6 +56,7 @@ namespace Szark
 
                 screenSprite = new Sprite(drawTarget);
                 Canvas = drawTarget.GetCanvas();
+                drawTarget.Unlock();
 
                 Input.SetPixelScale(pixelSize);
 

@@ -9,7 +9,7 @@ namespace Szark
     /// </summary>
     public static class Input
     {
-        private static Vector mouseOffset;
+        private static Vector2 mouseOffset;
         private static KeyboardState keyboardState, lastKeyboardState;
         private static MouseState mouseState, lastMouseState;
         private static int pixelScale = 1;

@@ -71,7 +71,7 @@ namespace Szark
         public static event Action<float> Updated, Rendered;
 
         private static float lastFPSCheck;
-        private static Vector renderOffset;
+        private static Vector2 renderOffset;
 
         public static void Create(string title, int width, int height)
         {

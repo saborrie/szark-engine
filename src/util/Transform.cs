@@ -1,26 +1,26 @@
 namespace Szark
 {
     /// <summary>
-    /// Represents a Position, Rotation, 
-    /// Scale, and Layer of a Rendering Object.
-    /// Used for individual sprite rendering.
+    /// Represents a Position, Rotation, Scale, and Layer.
     /// </summary>
     public struct Transform
     {
-        public Vector position;
-        public float rotation, scale;
-        public int layer;
+        public Vector2 Position { get; set; }
+        
+        public float Scale { get; set; }
+        public float Rotation { get; set; }
+        public int Layer { get; set; }
 
         public Transform(float x, float y, float rotation = 0, float scale = 1, 
-            int layer = 1) : this(new Vector(x, y), rotation, scale, layer) {}
+            int layer = 1) : this(new Vector2(x, y), rotation, scale, layer) {}
 
-        public Transform(Vector position, float rotation = 0, 
+        public Transform(Vector2 position, float rotation = 0, 
             float scale = 1, int layer = 1)
         {
-            this.position = position;
-            this.layer = layer;
-            this.rotation = rotation;
-            this.scale = scale;
+            Position = position;
+            Layer = layer;
+            Rotation = rotation;
+            Scale = scale;
         }
     }
 }

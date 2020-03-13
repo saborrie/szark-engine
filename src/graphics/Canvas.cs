@@ -22,7 +22,7 @@ namespace Szark
         /// <summary>
         /// Puts a color at the given point
         /// </summary>
-        public void Draw(Vector point, Color color) =>
+        public void Draw(Vector2 point, Color color) =>
             Draw((int)point.x, (int)point.y, color);
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace Szark
         /// <summary>
         /// Draws a line given two points
         /// </summary>
-        public void DrawLine(Vector pointA, Vector pointB, Color color, int thickness = 1) =>
+        public void DrawLine(Vector2 pointA, Vector2 pointB, Color color, int thickness = 1) =>
             DrawLine((int)pointA.x, (int)pointA.y, (int)pointB.x, (int)pointB.y, color, thickness);
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace Szark
         /// <summary>
         /// Given a point, draws a hollow rectangle
         /// </summary>
-        public void DrawRectangle(Vector point, int width, int height, Color color) =>
+        public void DrawRectangle(Vector2 point, int width, int height, Color color) =>
             DrawRectangle((int)point.x, (int)point.y, width, height, color);
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace Szark
         /// <summary>
         /// Draws a filled in rectangle with a given point
         /// </summary>
-        public void FillRectangle(Vector point, int width, int height, Color color) =>
+        public void FillRectangle(Vector2 point, int width, int height, Color color) =>
             FillRectangle((int)point.x, (int)point.y, width, height, color);
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace Szark
         /// <summary>
         /// Draws a hollow circle given a point
         /// </summary>
-        public void DrawCircle(Vector point, int radius, Color color) =>
+        public void DrawCircle(Vector2 point, int radius, Color color) =>
             DrawCircle((int)point.x, (int)point.y, radius, color);
 
         /// <summary>
@@ -190,7 +190,7 @@ namespace Szark
         /// <summary>
         /// Draws a filled in circle, given a point
         /// </summary>
-        public void FillCircle(Vector point, int radius, Color color) =>
+        public void FillCircle(Vector2 point, int radius, Color color) =>
             FillCircle((int)point.x, (int)point.y, radius, color);
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace Szark
         /// <summary>
         /// Draws a hollow triangle, given a point
         /// </summary>
-        public void DrawTriangle(Vector pointA, Vector pointB, Vector pointC, Color color) =>
+        public void DrawTriangle(Vector2 pointA, Vector2 pointB, Vector2 pointC, Color color) =>
             DrawTriangle((int)pointA.x, (int)pointA.y, (int)pointB.x, (int)pointB.y, 
                 (int)pointC.x, (int)pointC.y, color);
 
@@ -243,7 +243,7 @@ namespace Szark
         /// <summary>
         /// Draws a filled in triangle, given three points
         /// </summary>
-        public void FillTriangle(Vector pointA, Vector pointB, Vector pointC, Color color) =>
+        public void FillTriangle(Vector2 pointA, Vector2 pointB, Vector2 pointC, Color color) =>
             FillTriangle((int)pointA.x, (int)pointA.y, (int)pointB.x, (int)pointB.y, 
                 (int)pointC.x, (int)pointC.y, color);
 
@@ -262,7 +262,7 @@ namespace Szark
         /// <summary>
         /// Draws a texture on top of the target, give a point
         /// </summary>
-        public void DrawTexture(Vector point, Texture texture, int scale = 1) =>
+        public void DrawTexture(Vector2 point, Texture texture, int scale = 1) =>
             DrawTexture((int)point.x, (int)point.y, texture, scale);
     }
 }
