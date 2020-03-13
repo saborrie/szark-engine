@@ -2,22 +2,48 @@ using System;
 
 namespace Szark
 {
-    public sealed class Graphics2D
+    /// <summary>
+    /// Provides simple drawing function for Textures.
+    /// </summary>
+    public struct Canvas
     {
-        public readonly Texture target;
+        /// <summary>
+        /// The texture for this canvas to draw to.
+        /// </summary>
+        public Texture Target { get; internal set; }
 
-        public Graphics2D(int width, int height) =>
-            target = new Texture(width, height);
-
-        public Graphics2D(Texture tex) =>
-            target = tex;
-
+        /// <summary>
+        /// Puts a color at the given x and y coords
+        /// on the texture.
+        /// </summary>
         public void Draw(int x, int y, Color color) =>
-            target.Set(x, y, color);
+            Target[x, y] = color;
 
+        /// <summary>
+        /// Puts a color at the given point
+        /// </summary>
         public void Draw(Vector point, Color color) =>
             Draw((int)point.x, (int)point.y, color);
 
+        /// <summary>
+        /// Clears the target to a spcific color
+        /// </summary>
+        public void Clear(Color color) =>
+            Target.ClearToColor(color);
+
+        /// <summary>
+        /// Unlocks the Target to be written to.
+        /// </summary>
+        public void Unlock() => Target.Unlock();
+
+        /// <summary>
+        /// Locks the Target from being written to.
+        /// </summary>
+        public void Lock() => Target.Lock();
+
+        /// <summary>
+        /// Draws a straight line
+        /// </summary>
         public void DrawLine(int x1, int y1, int x2, int y2, Color color, int thickness = 1)
         {
             float x, y, step;
@@ -53,9 +79,15 @@ namespace Szark
             }
         }
 
+        /// <summary>
+        /// Draws a line given two points
+        /// </summary>
         public void DrawLine(Vector pointA, Vector pointB, Color color, int thickness = 1) =>
             DrawLine((int)pointA.x, (int)pointA.y, (int)pointB.x, (int)pointB.y, color, thickness);
 
+        /// <summary>
+        /// Draws a hollow rectangle
+        /// </summary>
         public void DrawRectangle(int x, int y, int width, int height, Color color)
         {
             if (width < 0)
@@ -70,9 +102,15 @@ namespace Szark
             DrawLine(x, y, x, y + height, color);
         }
 
+        /// <summary>
+        /// Given a point, draws a hollow rectangle
+        /// </summary>
         public void DrawRectangle(Vector point, int width, int height, Color color) =>
             DrawRectangle((int)point.x, (int)point.y, width, height, color);
 
+        /// <summary>
+        /// Draws a filled in rectangle
+        /// </summary>
         public void FillRectangle(int x, int y, int width, int height, Color color)
         {
             for (int i = 0; i < width; i++)
@@ -80,9 +118,15 @@ namespace Szark
                     Draw(x + i, y + j, color);
         }
 
+        /// <summary>
+        /// Draws a filled in rectangle with a given point
+        /// </summary>
         public void FillRectangle(Vector point, int width, int height, Color color) =>
             FillRectangle((int)point.x, (int)point.y, width, height, color);
 
+        /// <summary>
+        /// Draws a hollow circle
+        /// </summary>
         public void DrawCircle(int x0, int y0, int r, Color color)
         {
             x0 += r - 1;
@@ -121,9 +165,15 @@ namespace Szark
             }
         }
 
+        /// <summary>
+        /// Draws a hollow circle given a point
+        /// </summary>
         public void DrawCircle(Vector point, int radius, Color color) =>
             DrawCircle((int)point.x, (int)point.y, radius, color);
 
+        /// <summary>
+        /// Draws a filled in circle
+        /// </summary>
         public void FillCircle(int x, int y, int radius, Color color)
         {
             for (int i = 0; i < radius * 2; i++)
@@ -137,9 +187,15 @@ namespace Szark
             }
         }
 
+        /// <summary>
+        /// Draws a filled in circle, given a point
+        /// </summary>
         public void FillCircle(Vector point, int radius, Color color) =>
             FillCircle((int)point.x, (int)point.y, radius, color);
 
+        /// <summary>
+        /// Draws a hollow triangle
+        /// </summary>
         public void DrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Color color)
         {
             DrawLine(x1, y1, x2, y2, color);
@@ -147,10 +203,16 @@ namespace Szark
             DrawLine(x1, y1, x3, y3, color);
         }
 
+        /// <summary>
+        /// Draws a hollow triangle, given a point
+        /// </summary>
         public void DrawTriangle(Vector pointA, Vector pointB, Vector pointC, Color color) =>
             DrawTriangle((int)pointA.x, (int)pointA.y, (int)pointB.x, (int)pointB.y, 
                 (int)pointC.x, (int)pointC.y, color);
 
+        /// <summary>
+        /// Draws a filled in triangle
+        /// </summary>
         public void FillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Color color)
         {
             float Area(int x1, int y1, int x2, int y2, int x3, int y3) =>
@@ -178,19 +240,28 @@ namespace Szark
             }
         }
 
+        /// <summary>
+        /// Draws a filled in triangle, given three points
+        /// </summary>
         public void FillTriangle(Vector pointA, Vector pointB, Vector pointC, Color color) =>
             FillTriangle((int)pointA.x, (int)pointA.y, (int)pointB.x, (int)pointB.y, 
                 (int)pointC.x, (int)pointC.y, color);
 
+        /// <summary>
+        /// Draws a texture on top of the target.
+        /// Texture is scaled with nearest.
+        /// </summary>
         public void DrawTexture(int x, int y, Texture texture, int scale = 1)
         {
-            if (scale <= 0) return;
-            for (int i = 0; i < texture.width; i++)
-                for (int j = 0; j < texture.height; j++)
+            for (int i = 0; i < texture.Width; i++)
+                for (int j = 0; j < texture.Height; j++)
                     FillRectangle((x + i) * scale, (y + j) * scale,
-                        scale, scale, texture.Get(i, j));
+                        scale, scale, texture[i, j]);
         }
 
+        /// <summary>
+        /// Draws a texture on top of the target, give a point
+        /// </summary>
         public void DrawTexture(Vector point, Texture texture, int scale = 1) =>
             DrawTexture((int)point.x, (int)point.y, texture, scale);
     }

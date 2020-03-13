@@ -20,15 +20,15 @@ namespace Szark
             graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
 
             graphics.DrawString(text, font, Brushes.White, 0, 0);
-            var result = new Texture(charBitmap.Width, charBitmap.Height);
+            var result = Texture.Create(charBitmap.Width, charBitmap.Height);
             graphics.Flush();
 
-            for (int i = 0; i < result.width; i++)
+            for (int i = 0; i < result.Width; i++)
             {
-                for (int j = 0; j < result.height; j++)
+                for (int j = 0; j < result.Height; j++)
                 {
                     var pixel = charBitmap.GetPixel(i, j);
-                    result.Set(i, j, new Color(pixel.R, pixel.G, pixel.B, pixel.A));
+                    result[i, j] = new Color(pixel.R, pixel.G, pixel.B, pixel.A);
                 }
             }
 

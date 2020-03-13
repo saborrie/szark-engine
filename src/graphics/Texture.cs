@@ -1,76 +1,148 @@
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using System.IO;
+using System;
 
 namespace Szark
 {
+    /// <summary>
+    /// Holds a representation of an Image
+    /// </summary>
     public sealed class Texture
     {
-        public readonly int width, height;        
-        public readonly Color[] pixels;
+        public int Width { get; private set; }
+        public Color[] Pixels { get; internal set; }
+        public int Height { get; private set; }
 
-        public Texture(int width, int height)
+        /// <summary>
+        /// Whether or not the texture can be written to.
+        /// </summary>
+        public bool IsLocked { get; private set; }
+
+        public Color this[int x, int y]
         {
-            this.width = width;
-            this.height = height;
-            pixels = new Color[width * height];
+            get => IsInside(x, y) ? Pixels[y * Width + x] : Color.Black;
+            set 
+            { 
+                if (!IsLocked && IsInside(x, y)) 
+                    Pixels[y * Width + x] = value; 
+            }
         }
 
-        public Texture(string path)
+        /// <summary>
+        /// Creates a texture from a file at the specified path.
+        /// Returns None if file is not found.
+        /// </summary>
+        public static Option<Texture> FromFile(string path)
         {
             try
             {
-                var image = Image.FromFile(path);
-                var bitmap = new Bitmap(image);
+                using var image = Image.FromFile(path);
+                using var bitmap = new Bitmap(image);
+                Texture tex = Create(bitmap.Width, bitmap.Height);
 
-                width = bitmap.Width;
-                height = bitmap.Height;
-
-                pixels = new Color[width * height];
-
-                for (var x = 0; x < bitmap.Width; x++)
+                for (int x = 0; x < bitmap.Width; x++)
                 {
-                    for (var y = 0; y < bitmap.Height; y++)
+                    for (int y = 0; y < bitmap.Height; y++)
                     {
                         var p = bitmap.GetPixel(x, y);
-                        var col = new Color(p.R, p.G, p.B, p.A);
-                        Set(x, y, col);
+                        tex[x, y] = new Color(p.R, p.G, p.B, p.A);
                     }
                 }
 
-                image.Dispose();
-                bitmap.Dispose();
+                return Option<Texture>.Some(tex);
             }
-            catch(FileNotFoundException) {
-                Debug.Log($"Image / File not found at\n \"{path}\"", LogLevel.ERROR);
+            catch (FileNotFoundException)
+            {
+                Debug.Log($"Image not found at: [{path}]", LogLevel.ERROR);
+                return Option<Texture>.None();
             }
         }
 
         /// <summary>
-        /// Retrieves a pixel from the texture
+        /// Creates a texture with a desired width and height
         /// </summary>
-        public Color Get(int x, int y)
+        public static Texture Create(int width, int height)
         {
-            if (x >= 0 && x < width && y >= 0 && y < height)
-                return pixels[y * width + x];
-            else return new Color();
+            return new Texture
+            {
+                Width = width,
+                Pixels = new Color[width * height],
+                Height = height
+            };
         }
 
         /// <summary>
-        /// Sets a pixel in the texture
+        /// Clears the texture to a solid color.
+        /// Texture must be unlocked.
         /// </summary>
-        public void Set(int x, int y, Color color)
+        public void ClearToColor(Color color)
         {
-            if (x >= 0 && x < width && y >= 0 && y < height)
-                pixels[y * width + x] = color;
+            if (IsLocked) return;
+            for(int i = 0; i < Pixels.Length; i++)
+                Pixels[i] = color;
         }
 
         /// <summary>
-        /// Makes the texture to a solid color
+        /// Copies this texture's pixels to another.
         /// </summary>
-        public void Fill(Color color)
+        public void CopyTo(Texture other)
         {
-            for(int i = 0; i < pixels.Length; i++)
-                pixels[i] = color;
+            if (IsLocked && other == this) return;
+            Array.Copy(Pixels, 0, other.Pixels, 0, 
+                Math.Min(other.Pixels.Length, Pixels.Length));
         }
+
+        /// <summary>
+        /// Returns a sliced out chunk of this texture.
+        /// If slice requested is out of bounds, then None is returned.
+        /// </summary>
+        public Option<Texture> Slice(int x0, int y0, int width, int height)
+        {
+            if (x0 >= 0 && (x0 + width) < Width && y0 >= 0 && (y0 + height) < Height)
+            {
+                Texture tex = Create(width, height);
+                for (int x = x0; x < width; x++)
+                    for (int y = y0; y < height; y++)
+                        tex[x, y] = this[x, y];
+                return Option<Texture>.Some(tex);
+            }
+
+            return Option<Texture>.None();
+        }
+
+        /// <summary>
+        /// Loops over the texture with x and y index.
+        /// Texture must be unlocked.
+        /// </summary>
+        public void ForEach(Func<int, int, Color> action)
+        {
+            if (IsLocked) return;
+            for (int x = 0; x < Width; x++)
+                for (int y = 0; y < Height; y++)
+                    this[x, y] = action(x, y);
+        }
+
+        /// <summary>
+        /// Unlocks the texture to be written to.
+        /// </summary>
+        public void Unlock() => IsLocked = false;
+
+        /// <summary>
+        /// Locks the texture from being written to.
+        /// </summary>
+        public void Lock() => IsLocked = true;
+
+        /// <summary>
+        /// Creates a canvas from this texture
+        /// </summary>
+        public Canvas GetCanvas() => new Canvas() { Target = this };
+
+        /// <summary>
+        /// Checks if a Point is within the texture
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private bool IsInside(int x, int y) =>
+            x >= 0 && x < Width && y >= 0 && y < Height;
     }
 }

@@ -3,48 +3,46 @@ using System;
 namespace Szark
 {
     /// <summary>
-    /// This window is a Window for drawing pixel graphics,
+    /// This window is for drawing pixel graphics,
     /// easily with the CPU. All you need to do is inherit
-    /// from it and implement the required methods.
+    /// from it, implement the required methods and run.
+    /// To draw in the window, use the canvas object.
     /// </summary>
     public abstract class PixelWindow
     {
         /// <summary>
-        /// Width of the Screen in Pixels,
-        /// Use this over Window.Width
+        /// Width of the screen in pixels,
         /// </summary>
         public int ScreenWidth { get; private set; }
 
         /// <summary>
-        /// Height of the Screen in Pixels,
-        /// Use this over Window.Height
+        /// Height of the screen in pixels,
         /// </summary>
         public int ScreenHeight { get; private set; }
 
         /// <summary>
-        /// Density / Size of each Pixel
+        /// Size of each pixel
         /// </summary>
         public int PixelSize { get; private set; }
 
         /// <summary>
-        /// Graphics2D Object for Drawing to the Screen,
-        /// Use this in Render Method
+        /// Canvas for drawing to the screen
         /// </summary>
-        public Graphics2D GFX { get; private set; }
+        public Canvas Canvas { get; private set; }
 
         /// <summary>
-        /// Background Color
+        /// Background color
         /// </summary>
         public Color Background
         {
-            get { return background.Get(0, 0); }
-            set { background.Fill(value); }
+            get { return background[0, 0]; }
+            set { background.ClearToColor(value); }
         }
 
         private Texture drawTarget, background;
         private Sprite screenSprite;
 
-        public PixelWindow(string title, int width, int height, int pixelSize = 4)
+        public void Run(string title, int width, int height, int pixelSize = 4)
         {
             Window.Started += () => 
             {
@@ -52,21 +50,17 @@ namespace Szark
                 ScreenHeight = (int)Math.Ceiling(Window.Height / (float)pixelSize);
                 PixelSize = pixelSize;
 
-                drawTarget = new Texture(ScreenWidth, ScreenHeight);
-                background = new Texture(ScreenWidth, ScreenHeight);
+                drawTarget = Texture.Create(ScreenWidth, ScreenHeight);
+                background = Texture.Create(ScreenWidth, ScreenHeight);
                 Background = Color.Black;
 
                 screenSprite = new Sprite(drawTarget);
-                GFX = new Graphics2D(drawTarget);
+                Canvas = drawTarget.GetCanvas();
 
                 Input.SetPixelScale(pixelSize);
 
                 Start();
             };  
-
-            Window.Updated += f => {
-                Update(f);
-            };
 
             Window.Rendered += f => 
             {
@@ -75,10 +69,11 @@ namespace Szark
                 screenSprite.Render(new Transform(0, 0, 0, pixelSize));
                 screenSprite.Refresh(drawTarget);
 
-                Array.Copy(background.pixels, drawTarget.pixels, 
-                    drawTarget.pixels.Length);
+                Array.Copy(background.Pixels, drawTarget.Pixels, 
+                    drawTarget.Pixels.Length);
             };
 
+            Window.Updated += Update;
             Window.Disposed += Destroyed;
 
             Window.Create(title, width, height);
