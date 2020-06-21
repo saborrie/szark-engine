@@ -99,12 +99,12 @@ namespace Szark
         /// </summary>
         public Option<Texture> Slice(int x0, int y0, int width, int height)
         {
-            if (x0 >= 0 && (x0 + width) < Width && y0 >= 0 && (y0 + height) < Height)
+            if (x0 >= 0 && (x0 + width) <= Width && y0 >= 0 && (y0 + height) <= Height)
             {
                 Texture tex = Create(width, height);
-                for (int x = x0; x < width; x++)
-                    for (int y = y0; y < height; y++)
-                        tex[x, y] = this[x, y];
+                for (int x = x0; x < x0 + width; x++)
+                    for (int y = y0; y < y0 + height; y++)
+                        tex[x - x0, y - y0] = this[x, y];
                 return Option<Texture>.Some(tex);
             }
 
